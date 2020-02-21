@@ -20,3 +20,11 @@ $ yarn generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+To-Do
+----
+- [x] Installer Typescript
+- [x] Configurer le PWA
+- [ ] Installer les tests unitaires (en TS ?)
+- [ ] Faire la pipeline
+- [ ] Configurer prettier + Installer sur pipeline
