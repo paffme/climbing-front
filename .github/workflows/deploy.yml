@@ -10,20 +10,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup configuration
-      uses: actions/setup-node@v1
-      with:
-        node-version: '10.x'
-    - name: Install npm dependencies
-      run: yarn install
-    - name: Run build task
-      run: yarn run build
     - name: Deploy to Server
       uses: easingthemes/ssh-deploy@v2.0.8
       env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY_BIS }}
           ARGS: "-rltgoDzqO --delete"
-          SOURCE: "./dist/"
+          SOURCE: "dist/"
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
