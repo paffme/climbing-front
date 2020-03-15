@@ -1,0 +1,27 @@
+name: Deploy Dev
+
+on:
+ push:
+  branches: [ dev ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Deploy to Server
+      uses: easingthemes/ssh-deploy@v2.0.8
+      env:
+          SSH_PRIVATE_KEY: ${{ secrets.RUBZ_SERVER_SSH_KEY }}
+          ARGS: "-rltgoDzqO --delete"
+          SOURCE: "dist/"
+          REMOTE_HOST: ${{ secrets.RUBZ_REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.RUBZ_REMOTE_USER }}
+          TARGET: ${{ secrets.RUBZ_REMOTE_TARGET }}
+    - name: Install dependencies and start
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.RUBZ_REMOTE_HOST }}
+        username: ${{ secrets.RUBZ_REMOTE_USER }}
+        key: ${{ secrets.RUBZ_SERVER_SSH_KEY }}
