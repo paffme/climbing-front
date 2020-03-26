@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <h1>Test Deploy - 1</h1>
+    <h1>Test Deploy - 3</h1>
     <div class="columns is-mobile">
       <card title="Free" icon="github-circle">
         Open source on
