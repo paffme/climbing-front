@@ -27,9 +27,9 @@
               <nuxt-link to='/subscriptions'>
                 <span id="subscriptions" class="has-text-info form_link">Je n'ai pas encore de compte</span>
               </nuxt-link>
-              <div class="is-pulled-right">
-                <button class="button is-primary" v-on:click="connectUser(credential.email, credential.password)">Se connecter</button>
-              </div>
+              <p class="control is-pulled-right">
+                <b-button class="button" v-on:click="connectUser(credential.email, credential.password)" type="is-primary">Se connecter</b-button>
+              </p>
             </form>
           </div>
         </div>
@@ -45,6 +45,7 @@
 
   @Component({
     layout: 'blank',
+    middleware: 'isAuth'
   })
   export default class Login extends Vue {
     form = {
@@ -56,7 +57,7 @@
       email: 'admin@test.com',
       password: 'admin@test.com'
     }
-    fromSubscription = false
+    fromSubscription = false // Utiliser pour afficher message perso si l'utilisateur provient de la page d'inscription
 
     mounted() {
       this.fromSubscription = !!this.$route.query.fromSubscription
@@ -73,9 +74,7 @@
         authUser.setUserCredentials(userCredential)
         this.form.success = true
         this.form.message = "Vous allez être redirigé vers la page d\'accueil"
-        setTimeout(() => {
-          this.$router.push('/dashboard')
-        }, 1500)
+        this.$router.push('/dashboard')
       } catch(error) {
         this.form.error = true
         this.form.message = 'Identifiant / Mot de passe incorrecte'

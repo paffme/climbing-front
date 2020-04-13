@@ -1,7 +1,12 @@
 import { Middleware } from '@nuxt/types'
 
-const isAuth: Middleware = ({store, redirect}) => {
-  if (!store.getters['authUser/Authenticated']) {
+const unauthorizedRoute = ['login', 'subscriptions']
+const isAuth: Middleware = ({route, store, redirect}) => {
+  if (!route.name) return
+
+  const isUnauthorizedRouteWhenConnected = unauthorizedRoute.includes(route.name)
+
+  if (!isUnauthorizedRouteWhenConnected && !store.getters['authUser/Authenticated']) {
     return redirect('/login')
   }
 }

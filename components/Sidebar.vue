@@ -28,7 +28,7 @@
             </b-menu-item>
           </template>
           <b-menu-list label="Actions">
-            <b-menu-item icon="logout" label="Se déconnecter"></b-menu-item>
+            <b-menu-item icon="logout" label="Se déconnecter" v-on:click="disconnectUser"></b-menu-item>
           </b-menu-list>
         </b-menu-list>
       </b-menu>
@@ -44,6 +44,7 @@
 
 <script lang="ts">
   import { Vue, Component } from "vue-property-decorator";
+  import { authUser } from '~/store'
 
   @Component
   export default class Sidebar extends Vue {
@@ -69,6 +70,11 @@
     fullheight = true;
     fullwidth = false;
     mobile = "reduce";
+
+    disconnectUser() {
+      authUser.disconnectUser()
+      this.$router.push('/login')
+    }
   }
 </script>
 
