@@ -1,7 +1,5 @@
 <template>
-  <section class="section">
-    <h1>Compétitions</h1>
-  </section>
+
 </template>
 
 <script lang="ts">
