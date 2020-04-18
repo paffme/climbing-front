@@ -1,69 +1,61 @@
 <template>
-  <!--<nav
-    class="navbar header has-shadow is-primary"
-    role="navigation"
-    aria-label="main navigation"
-  >
-    <div class="navbar-brand">
-      <a
-        class="navbar-item"
-        href="/"
-      >
-        <img
-          src="~assets/buefy.png"
-          alt="Buefy"
-          height="28"
-        >
-      </a>
-
-      <div class="navbar-burger">
-        <span/>
-        <span/>
-        <span/>
-      </div>
-    </div>
-  </nav>-->
     <b-navbar type="is-light">
-      <template slot="start">
-        <b-navbar-item href="#">
-          Home
+      <template slot="brand">
+        <b-navbar-item tag="div">
+          <nuxt-link to="/dashboard">
+            <h1 class="subtitle">{{ APP_TITLE }}</h1>
+          </nuxt-link>
         </b-navbar-item>
-        <b-navbar-item href="#">
-          Documentation
-        </b-navbar-item>
-        <b-navbar-dropdown label="Info">
-          <b-navbar-item href="#">
-            About
-          </b-navbar-item>
-          <b-navbar-item href="#">
-            Contact
-          </b-navbar-item>
-        </b-navbar-dropdown>
       </template>
 
       <template slot="end">
         <b-navbar-item tag="div">
-          <div class="buttons">
-            <a class="button is-primary">
-              <strong>Sign up</strong>
-            </a>
-            <a class="button is-light">
-              Log in
-            </a>
-          </div>
+          <template v-for="item of itemNavbars">
+            <nuxt-link :to="item.linkTo" class="end-icon-link">
+              <b-icon
+                :icon="item.icon">
+              </b-icon>
+            </nuxt-link>
+          </template>
         </b-navbar-item>
       </template>
     </b-navbar>
 </template>
 
 <script lang="ts">
-  import { Vue, Component } from "vue-property-decorator";
+  import { Vue, Component, Prop } from "vue-property-decorator";
+
+  type NavbarItem = {
+    linkTo: string
+    icon: string
+  }
 
   @Component
   export default class Navbar extends Vue {
+    @Prop({type: Array, required: true}) readonly navbarItems: NavbarItem[] | undefined
+    itemNavbars?: NavbarItem[] = []
+    data() {
+      return {
+        APP_TITLE: process.env.NUXT_ENV_APP_TITLE || 'PAFFME'
+      }
+    }
+
+    mounted() {
+      this.itemNavbars = this.navbarItems ? this.fillNavbarItems() : []
+    }
+
+    /**
+     * Utiliser pour créer la barre d'item
+     * @param items
+     */
+    public fillNavbarItems(): NavbarItem[] {
+      return this.navbarItems?.filter((data) => (data.linkTo && data.icon)) || []
+    }
   }
 </script>
 
 <style scoped>
-
+  .end-icon-link {
+    margin: 0 15px;
+  }
 </style>
