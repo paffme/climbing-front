@@ -1,11 +1,16 @@
 <template>
-  <div class="columns is-gapless">
+  <div>
+    <Navbar :navbarItems="metadataNavbar"></Navbar>
     <Sidebar></Sidebar>
-    <div class="column">
-      <Navbar :navbarItems="metadataNavbar"></Navbar>
-      <section class="main-content">
-        <nuxt/>
-      </section>
+
+    <div class="columns is-gapless">
+      <div class="column">
+      </div>
+      <div class="column">
+        <section class="main-content">
+          <nuxt/>
+        </section>
+      </div>
     </div>
   </div>
 </template>
