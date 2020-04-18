@@ -25,6 +25,29 @@ span.form_link {
   position: fixed;
 }
 
+.page_header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.custom_section {
+  padding: 2rem 0 0 0;
+}
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.is-sticky-column-one {
+  background: #23d160 !important;
+  color: white !important;
+}
+.is-sticky-column-two {
+  background: #167df0 !important;
+  color: white !important;
+}
+
 @media screen and (max-width: 1023px) {
   .b-sidebar {
     .sidebar-content {
