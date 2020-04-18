@@ -4,10 +4,12 @@
 
     <div class="contents">
       <Sidebar></Sidebar>
+
       <div class="app">
         <nuxt/>
       </div>
     </div>
+
   </div>
 </template>
 
