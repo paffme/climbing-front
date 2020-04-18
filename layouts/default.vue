@@ -1,12 +1,12 @@
 <template>
   <div>
+    <Navbar :navbarItems="metadataNavbar"></Navbar>
+    <Sidebar></Sidebar>
 
     <div class="columns is-gapless">
-      <div class="column is-2">
-        <Sidebar></Sidebar>
+      <div class="column">
       </div>
-      <div class="column ">
-        <Navbar :navbarItems="metadataNavbar"></Navbar>
+      <div class="column">
         <section class="main-content">
           <nuxt/>
         </section>
