@@ -1,15 +1,12 @@
 <template>
-  <div>
-    <Navbar :navbarItems="metadataNavbar"></Navbar>
-
-    <div class="contents">
-      <Sidebar></Sidebar>
-
-      <div class="app">
+  <div class="columns is-gapless">
+    <Sidebar></Sidebar>
+    <div class="column">
+      <Navbar :navbarItems="metadataNavbar"></Navbar>
+      <section class="main-content">
         <nuxt/>
-      </div>
+      </section>
     </div>
-
   </div>
 </template>
 
@@ -47,18 +44,3 @@
     }
   };
 </script>
-
-<style scoped>
-  .contents {
-    position: relative;
-  }
-  .app {
-    padding-left: 260px;
-  }
-
-  @media screen and (max-width: 1023px) {
-    .app {
-      padding-left: 80px;
-    }
-  }
-</style>
