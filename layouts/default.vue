@@ -6,7 +6,7 @@
         <Sidebar></Sidebar>
       </div>
       <div class="column ">
-        <Navbar></Navbar>
+        <Navbar :navbarItems="metadataNavbar"></Navbar>
         <section class="main-content">
           <nuxt/>
         </section>
@@ -18,11 +18,17 @@
 <script>
   import Sidebar from '~/components/Sidebar'
   import Navbar from '~/components/Navbar'
+  import { NAVBAR_METADATA } from "~/constants";
 
   export default {
     components: {
       Sidebar,
       Navbar
+    },
+    data: function() {
+      return {
+        metadataNavbar: NAVBAR_METADATA
+      }
     }
   };
 </script>
