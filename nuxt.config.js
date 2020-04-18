@@ -16,7 +16,7 @@ module.exports = {
     ]
   },
   server: {
-    port: 8080,
+    port: 8002,
   },
   /*
   ** Customize the progress-bar color
@@ -26,6 +26,7 @@ module.exports = {
   ** Global CSS
   */
   css: [
+    '@/assets/css/bulma_customize.scss'
   ],
   /*
   ** Plugins to load before mounting the App

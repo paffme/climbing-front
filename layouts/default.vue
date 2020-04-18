@@ -1,24 +1,24 @@
 <template>
   <div>
-    <div id="nav">
-      <Navbar></Navbar>
-    </div>
 
-    <section class="main-content columns">
-      <aside class="column is-2 section">
+    <div class="columns is-gapless">
+      <div class="column is-2">
         <Sidebar></Sidebar>
-      </aside>
-
-      <div class="container column is-10">
-        <nuxt/>
       </div>
-    </section>
+      <div class="column ">
+        <Navbar></Navbar>
+        <section class="main-content">
+          <nuxt/>
+        </section>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
   import Sidebar from '~/components/Sidebar'
   import Navbar from '~/components/Navbar'
+
   export default {
     components: {
       Sidebar,
