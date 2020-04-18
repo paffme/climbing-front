@@ -1,7 +1,7 @@
 @import "~bulma/sass/utilities/_all";
 
 // Set your colors
-$primary: #8c67ef;
+$primary: #03378c;
 $primary-invert: findColorInvert($primary);
 $twitter: #4099FF;
 $twitter-invert: findColorInvert($twitter);
@@ -20,10 +20,8 @@ $colors: (
   "twitter": ($twitter, $twitter-invert)
 );
 
-// $sidebar-box-shadow: none;
-
 // Links
-$link: $grey;
+$link: $white;
 $link-invert: $primary-invert;
 $link-focus-border: $primary;
 

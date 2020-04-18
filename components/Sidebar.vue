@@ -2,6 +2,7 @@
   <b-sidebar
     type="is-light"
     :fullheight="fullheight"
+    :fullWidth="fullwidth"
     :overlay="overlay"
     position="static"
     mobile="reduce"
