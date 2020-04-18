@@ -22,7 +22,9 @@ span.form_link {
 }
 .b-sidebar {
  height: 100vh;
+  position: fixed;
 }
+
 @media screen and (max-width: 1023px) {
   .b-sidebar {
     .sidebar-content {

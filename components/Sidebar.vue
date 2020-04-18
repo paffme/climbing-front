@@ -3,11 +3,9 @@
     type="is-light"
     :fullheight="fullheight"
     :fullWidth="fullwidth"
-    :overlay="overlay"
     position="static"
-    mobile="reduce"
-    open
-  >
+    :mobile=mobile
+    open>
     <div class="p-1">
       <div class="profil-user is-flex is-hidden-touch">
         <figure class="image is-128x128">
@@ -64,7 +62,6 @@
         to: { name: "user-id" }
       }
     ];
-    open = true;
     overlay = false;
     fullheight = true;
     fullwidth = false;
