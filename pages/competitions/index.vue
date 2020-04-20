@@ -17,23 +17,13 @@
           <div class="custom_section page_stats">
             <div class="tile is-ancestor">
               <div class="tile is-4 is-parent">
-                <div class="tile is-child notification is-primary">
-                  <p class="title">24</p>
-                  <p class="subtitle">Compétitions en cours</p>
-                </div>
+                <StatsBlock number="12" description="Compétitions en cours" type="is-primary"></StatsBlock>
               </div>
               <div class="tile is-4 is-parent">
-                <div class="tile is-child notification is-warning">
-                  <p class="title">24</p>
-                  <p class="subtitle">Compétitions en cours</p>
-                </div>
+                <StatsBlock number="1320" description="Grimpeur depuis 2020" type="is-warning"></StatsBlock>
               </div>
-
               <div class="tile is-4 is-parent">
-                <div class="tile is-child notification is-danger">
-                  <p class="title">24</p>
-                  <p class="subtitle">Compétitions en cours</p>
-                </div>
+                <StatsBlock number="1920" description="Compétitions au total" type="is-danger"></StatsBlock>
               </div>
             </div>
           </div>
@@ -41,7 +31,7 @@
           <div class="custom_section page_contents">
             <div class="is-flex">
               <span class="title">Compétition féminine</span>
-              <span>Voir les autres compétitions</span>
+              <span>Autres compétitions</span>
             </div>
             <div class="tile is-ancestor">
               <div class="tile is-parent">
@@ -61,9 +51,10 @@
 <script lang="ts">
   import { Vue, Component } from "vue-property-decorator";
   import Rank from "~/components/Rank.vue";
+  import StatsBlock from "~/components/StatsBlock.vue";
 
   @Component({
-    components: { Rank }
+    components: { Rank, StatsBlock }
   })
   export default class Competitions extends Vue {
   }
