@@ -33,6 +33,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '~/plugins/axios-accessor.ts'
   ],
   pwa: {
     manifest: {
@@ -74,6 +75,8 @@ module.exports = {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    baseURL: 'https://paffme.hdaroit.fr/api',
+    https: true,
   },
   /*
   ** Build configuration

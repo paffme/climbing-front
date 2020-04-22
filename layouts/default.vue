@@ -27,7 +27,24 @@
     },
     data: function() {
       return {
-        metadataNavbar: NAVBAR_METADATA
+        metadataNavbar: NAVBAR_METADATA,
+        items: [
+          {
+            title: "Tableau de bord",
+            icon: "home",
+            to: { name: "dashboard" }
+          },
+          {
+            title: "Compétitions",
+            icon: "lightbulb",
+            to: { name: "competitions" }
+          },
+          {
+            title: "Mon profile",
+            icon: "account",
+            to: { name: "user-id" }
+          }
+        ]
       }
     }
   };
