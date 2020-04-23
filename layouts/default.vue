@@ -1,15 +1,15 @@
 <template>
   <div>
     <Navbar :navbarItems="metadataNavbar"></Navbar>
-    <Sidebar></Sidebar>
+    <div class="custom_content">
+      <Sidebar></Sidebar>
 
-    <div class="columns is-gapless">
-      <div class="column">
-      </div>
-      <div class="column">
-        <section class="main-content">
-          <nuxt/>
-        </section>
+      <div class="columns is-gapless">
+        <div class="column is-12">
+          <section class="main-content">
+            <nuxt/>
+          </section>
+        </div>
       </div>
     </div>
   </div>
@@ -49,3 +49,11 @@
     }
   };
 </script>
+
+<style scoped lang="scss">
+  .custom_content {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+</style>
