@@ -8,6 +8,15 @@ export enum CategoryName {
   Senior = 'senior',
   Veteran = 'veteran',
 }
+
+export enum RoleName {
+  Juges = 'Juges',
+  President = 'Président',
+  ChefRouteSetter = 'Chef routes setters',
+  RouteSetter = 'Routes setters',
+  DelegueTechnique = 'Délégués techniques',
+  Organisateur = 'Organisateur'
+}
 export enum Sex {
   Male = 'male',
   Female = 'female',
