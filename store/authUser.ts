@@ -1,6 +1,6 @@
 import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators";
 import { $axios } from "~/utils/api";
-import { APIUserSubscription, AuthCredentials, SubscriptionCredentials, TokenCredentials, UserCredentials } from "~/definitions";
+import { APIUser, AuthCredentials, SubscriptionCredentials, TokenCredentials, UserCredentials } from "~/definitions";
 import { createCookie, getCookie, removeCookie } from "~/utils/cookieHelper";
 
 @Module({
@@ -48,7 +48,7 @@ export default class AuthUser extends VuexModule {
   }
 
   @Action({rawError: true})
-  async subscribeUser(credentials: SubscriptionCredentials): Promise<APIUserSubscription | any> {
+  async subscribeUser(credentials: SubscriptionCredentials): Promise<APIUser | any> {
     return await $axios.$post(`/users`, credentials)
   }
 }
