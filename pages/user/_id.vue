@@ -1,7 +1,9 @@
 <template>
-  <section class="section">
-    <h1>User Id Page</h1>
-  </section>
+  <div class="columns">
+    <div class="column">
+      <h1 class="title">En cours de création...</h1>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">

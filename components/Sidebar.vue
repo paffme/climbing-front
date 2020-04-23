@@ -51,12 +51,7 @@
       {
         title: "Tableau de bord",
         icon: "home",
-        to: { name: "dashboard" }
-      },
-      {
-        title: "Compétitions",
-        icon: "lightbulb",
-        to: { name: "competitions" }
+        to: { name: "index" }
       },
       {
         title: "Mon profile",

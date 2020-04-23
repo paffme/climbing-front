@@ -1,162 +1,79 @@
 <template>
   <div>
-    <b-field grouped group-multiline>
-    </b-field>
-    <b-table :data="data" :columns="columns" :sticky-header="stickyHeaders"></b-table>
+    <b-table
+      :data="competitions"
+      :hovered="true"
+      default-sort="id"
+      aria-next-label="Next page"
+      aria-previous-label="Previous page"
+      aria-page-label="Page"
+      aria-current-label="Current page">
+
+      <template slot-scope="props">
+        <b-table-column field="name" label="Nom" sortable>
+          {{ props.row.name }}
+        </b-table-column>
+
+        <b-table-column field="type" label="Type" sortable>
+          {{ props.row.type }}
+        </b-table-column>
+
+        <b-table-column field="startDate" label="Date début" sortable>
+          <span class="tag is-success">
+              {{ new Date(props.row.startDate).toLocaleDateString() }}
+          </span>
+        </b-table-column>
+
+        <b-table-column field="endDate" label="Date fin" sortable>
+          <span class="tag is-danger">
+              {{ new Date(props.row.endDate).toLocaleDateString() }}
+          </span>
+        </b-table-column>
+
+        <b-table-column field="city" label="Ville" sortable>
+          {{ props.row.city }}
+        </b-table-column>
+
+        <b-table-column field="city" label="Apercu">
+          <nuxt-link :to="'competitions/' + props.row.id">
+            <b-button icon-left="arrow-right-bold" type="is-primary"></b-button>
+          </nuxt-link>
+        </b-table-column>
+      </template>
+    </b-table>
   </div>
 </template>
 
 <script lang="ts">
-  import { Vue, Component } from "vue-property-decorator";
+  import { Vue, Component, Prop } from "vue-property-decorator";
+  import { Competition } from "~/definitions";
 
   @Component
   export default class Rank extends Vue {
-    data = [
-      {
-        "id": 1,
-        "user": { "first_name": "Jesse", "last_name": "Simmons" },
-        "date": "2016/10/15 13:43:27",
-        "gender": "Male"
-      },
-      {
-        "id": 2,
-        "user": { "first_name": "John", "last_name": "Jacobs" },
-        "date": "2016/12/15 06:00:53",
-        "gender": "Male"
-      },
-      {
-        "id": 3,
-        "user": { "first_name": "Tina", "last_name": "Gilbert" },
-        "date": "2016/04/26 06:26:28",
-        "gender": "Female"
-      },
-      {
-        "id": 4,
-        "user": { "first_name": "Clarence", "last_name": "Flores" },
-        "date": "2016/04/10 10:28:46",
-        "gender": "Male"
-      },
-      {
-        "id": 5,
-        "user": { "first_name": "Anne", "last_name": "Lee" },
-        "date": "2016/12/06 14:38:38",
-        "gender": "Female"
-      },
-      {
-        "id": 6,
-        "user": { "first_name": "Sara", "last_name": "Armstrong" },
-        "date": "2016/09/23 18:50:04",
-        "gender": "Female"
-      },
-      {
-        "id": 7,
-        "user": { "first_name": "Anthony", "last_name": "Webb" },
-        "date": "2016/08/30 23:49:38",
-        "gender": "Male"
-      },
-      {
-        "id": 8,
-        "user": { "first_name": "Andrew", "last_name": "Greene" },
-        "date": "2016/11/20 14:57:47",
-        "gender": "Male"
-      },
-      {
-        "id": 9,
-        "user": { "first_name": "Russell", "last_name": "White" },
-        "date": "2016/07/13 09:29:49",
-        "gender": "Male"
-      },
-      {
-        "id": 10,
-        "user": { "first_name": "Lori", "last_name": "Hunter" },
-        "date": "2016/12/09 01:44:05",
-        "gender": "Female"
-      }
-    ];
+    @Prop(Array) competitions?: Competition
     columns = [
       {
-        field: "id",
+        field: "name",
         label: "ID",
-        width: "40",
-        numeric: true,
-        sticky: true,
-        headerClass: "is-sticky-column-one",
-        cellClass: "is-sticky-column-one"
+        width: "40"
       },
       {
-        field: "user.first_name",
-        label: "First Name"
+        field: "type",
+        label: "Type"
       },
       {
-        field: "user.last_name",
-        label: "Last Name"
+        field: "startDate",
+        label: "Date début"
       },
       {
-        field: "date",
-        label: "Date",
-        centered: true,
-        sticky: true,
-        headerClass: "is-sticky-column-two",
-        cellClass: "is-sticky-column-two"
+        field: "endDate",
+        label: "Date fin"
       },
       {
-        field: "gender",
-        label: "Gender"
-      },
-      {
-        field: "id",
-        label: "Column A"
-      },
-      {
-        field: "id",
-        label: "Column B"
-      },
-      {
-        field: "id",
-        label: "Column C"
-      },
-      {
-        field: "id",
-        label: "Column D"
-      },
-      {
-        field: "id",
-        label: "Column E"
-      },
-      {
-        field: "id",
-        label: "Column F"
-      },
-      {
-        field: "id",
-        label: "Column G"
-      },
-      {
-        field: "id",
-        label: "Column H"
-      },
-      {
-        field: "id",
-        label: "Column I"
-      },
-      {
-        field: "id",
-        label: "Column L"
-      },
-      {
-        field: "id",
-        label: "Column M"
-      },
-      {
-        field: "id",
-        label: "Column N"
-      },
-      {
-        field: "id",
-        label: "Column O"
+        field: "city",
+        label: "Ville"
       }
     ];
-    stickyHeaders = true;
   }
 </script>
 

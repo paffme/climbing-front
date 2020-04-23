@@ -1,22 +1,22 @@
 <template>
   <b-field grouped>
-    <b-field label="Sexe">
+    <b-field>
       <b-select :disabled="formIsValid" placeholder="Selectionner type de compétition" v-model="data.sex">
         <option v-for="sexe in sexes" :value="sexe">{{ sexe === sexes.Female ? 'Femme' : 'Homme' }}</option>
       </b-select>
     </b-field>
-    <b-field label="Catégorie">
+    <b-field>
       <b-select :disabled="formIsValid" placeholder="Selectionner catégorie" v-model="data.category">
         <option v-for="name in categoryName" :value="name">{{ name }}</option>
       </b-select>
     </b-field>
     <template v-if="!formIsValid">
-      <b-field label="Valider">
+      <b-field>
         <b-button icon-left="plus" type="is-success" v-on:click="emitData">Valider</b-button>
       </b-field>
     </template>
     <template v-else>
-      <b-field label="Supprimer">
+      <b-field>
         <b-button icon-left="plus" type="is-danger" v-on:click="deleteInput">Supprimer</b-button>
       </b-field>
     </template>
@@ -43,6 +43,7 @@
       category: this.defaultValue?.name
     }
     formIsValid = false
+    currentVal: Array<CompetitionCategories> = []
 
     deleteInput() {
       if (!this.canBeDelete) {
@@ -56,6 +57,7 @@
     }
     emitData() {
       this.$emit('category-value', this.data)
+      this.currentVal.push(this.data)
       this.formIsValid = true
     }
   }
