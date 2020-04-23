@@ -4,12 +4,14 @@
     <div class="custom_content">
       <Sidebar></Sidebar>
 
-      <div class="columns is-gapless">
-        <div class="column is-12">
-          <section class="main-content">
-            <nuxt/>
+      <div class="perso_content">
+        <section class="main-content">
+          <section class="section">
+            <div class="container is-fluid">
+              <nuxt/>
+            </div>
           </section>
-        </div>
+        </section>
       </div>
     </div>
   </div>
@@ -55,5 +57,8 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+  }
+  .perso_content {
+    width: 100%;
   }
 </style>

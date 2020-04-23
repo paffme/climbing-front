@@ -25,7 +25,7 @@
 
 <script lang="ts">
   import { Vue, Component, Prop } from "vue-property-decorator";
-  import { CategoryName, CompetitionCategories, Sex } from "~/definitions/definitions";
+  import { CategoryName, CompetitionCategories, Sex } from "~/definitions";
 
   @Component({
     data: function() {
