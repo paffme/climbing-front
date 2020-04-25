@@ -74,7 +74,7 @@
         authUser.setUserCredentials(userCredential)
         this.form.success = true
         this.form.message = "Vous allez être redirigé vers la page d\'accueil"
-        this.$router.push('/dashboard')
+        this.$router.push('/')
       } catch(error) {
         this.form.error = true
         this.form.message = 'Identifiant / Mot de passe incorrecte'

@@ -43,7 +43,7 @@ export type Competition = {
   categories: CompetitionCategories[]
 }
 
-export type FormSubscription = { error: boolean, success: boolean, message: string, passwordIsValid?: boolean }
+export type FormSubscription = { error: boolean, success: boolean, message: string, passwordIsValid?: boolean, isLoading: boolean }
 export type SubscriptionCredentials = {
   email: string,
   name: string,

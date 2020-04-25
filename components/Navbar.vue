@@ -2,7 +2,7 @@
     <b-navbar type="is-primary" fixed-top>
       <template slot="brand">
         <b-navbar-item tag="div">
-          <nuxt-link to="/dashboard">
+          <nuxt-link to="/">
             <h1 class="subtitle has-text-white">{{ APP_TITLE }}</h1>
           </nuxt-link>
         </b-navbar-item>
