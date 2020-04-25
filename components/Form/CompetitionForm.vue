@@ -1,3 +1,4 @@
+import { TypeCompetition } from "~/definitions";
 <template>
   <div>
     <div class="block">
@@ -136,10 +137,10 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component, PropSync } from "vue-property-decorator";
+  import { Component, PropSync, Vue } from "vue-property-decorator";
   import { CategoryName, Competition, Sex, TypeCompetition } from "~/definitions";
   import FormCompetitionCategories from "~/components/Form/FormCompetitionCategories.vue";
-  import _ from 'lodash'
+  import _ from "lodash";
   import { ApiHelper } from "~/utils/api_helper/apiHelper";
 
   @Component({
@@ -152,7 +153,7 @@
     typeCompetiton = TypeCompetition
     competition: Competition = {
       name: 'Chalais Savoyard',
-      type: 'Bouldering',
+      type: TypeCompetition.Bouldering,
       startDate: new Date('2020-04-25T14:50:54.009Z'),
       endDate: new Date('2020-04-25T14:50:54.009Z'),
       address: '19 Avenue Villejuif',
