@@ -48,7 +48,7 @@
 <script lang="ts">
   import { Vue, Component, Prop } from "vue-property-decorator";
   import { APIUser, RoleName } from "~/definitions";
-  import { ApiHelper } from "~/utils/apiHelper";
+  import { ApiHelper } from "~/utils/api_helper/apiHelper";
 
   @Component
   export default class TabUserSelector extends Vue {

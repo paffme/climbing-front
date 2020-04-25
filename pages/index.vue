@@ -84,31 +84,6 @@
         ]
       }
     ]
-    columns = [
-      {
-        field: 'id',
-        label: 'ID',
-        width: '40',
-        numeric: true
-      },
-      {
-        field: 'first_name',
-        label: 'First Name',
-      },
-      {
-        field: 'last_name',
-        label: 'Last Name',
-      },
-      {
-        field: 'date',
-        label: 'Date',
-        centered: true
-      },
-      {
-        field: 'gender',
-        label: 'Gender',
-      }
-    ]
   }
 </script>
 

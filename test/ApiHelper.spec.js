@@ -1,5 +1,5 @@
-import { API_URL, ApiHelper } from "~/utils/apiHelper";
-import axios from 'axios';
+import { API_URL, ApiHelper } from "~/utils/api_helper/apiHelper";
+import axios from 'axios'
 
 jest.mock('axios');
 
@@ -22,6 +22,7 @@ describe('ApiHelper', () => {
       expect(API_URL.addOrRemoveOrganizers(2, 1)).toEqual('​/competitions​/2​/organizers/1')
       expect(API_URL.addRound(2)).toEqual('/competitions/2/bouldering-rounds')
       expect(API_URL.addBoulderingResult(2, 2, 3)).toEqual('/competitions/2/bouldering-rounds/2/boulders/3/results')
+      expect(API_URL.createOrGetCompetition()).toEqual('/competitions')
     })
   })
 
@@ -275,6 +276,29 @@ describe('ApiHelper', () => {
 
         const result = await ApiHelper.AddBoulderingResult({}, 1, 2, 3)
         expect(spy).toHaveBeenCalledWith(1, 2, 3);
+        expect(result).toEqual('success')
+      })
+    })
+
+    describe('CreateCompetition', () => {
+      test('Should call with right args', async () => {
+        const spy = jest.spyOn(API_URL, 'createOrGetCompetition');
+        axios.post.mockResolvedValue('success');
+        const bodyExample = {
+          name: 'Chalais Savoyard',
+          type: 'Block',
+          startDate: new Date(),
+          endDate: new Date(),
+          address: '19 Avenue Villejuif',
+          city: 'Choisy',
+          postalCode: '944320',
+          categories: [
+            {sex: 'female', name: 'minime'}
+          ]
+        }
+
+        const result = await ApiHelper.CreateCompetition(bodyExample)
+        expect(spy).toHaveBeenCalled();
         expect(result).toEqual('success')
       })
     })

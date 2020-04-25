@@ -17,7 +17,7 @@
   import { Vue, Component } from "vue-property-decorator";
   import TabUserSelector from "~/components/TabUserSelector.vue";
   import {  RoleName } from "~/definitions";
-  import { ApiHelper } from "~/utils/apiHelper";
+  import { ApiHelper } from "~/utils/api_helper/apiHelper";
 
   @Component({
     components: {TabUserSelector}
