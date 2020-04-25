@@ -23,24 +23,31 @@ export enum Sex {
 }
 
 export enum TypeCompetition {
-  Difficulte = 'Difficulté',
-  Block = 'Block',
-  Vitesse = 'Vitesse'
+  Bouldering = 'bouldering',
+  Lead = 'lead',
+  Speed = 'speed'
 }
 
 export type CompetitionCategories = {
-  sex?: Sex
-  name?: CategoryName
+  sex: Sex
+  name: CategoryName
 }
+
 export type Competition = {
-  name: string | null,
-  type: string | null,
-  startDate: string | null,
-  endDate: string | null,
-  address: string | null,
-  city: string | null,
-  postalCode: number | null,
+  id?: number | null
+  name: string
+  type: TypeCompetition
+  startDate: Date
+  endDate: Date
+  address: string
+  city: string
+  postalCode: string
   categories: CompetitionCategories[]
+}
+
+export type ApiCompetition = Competition & {
+  createdAt: Date,
+  updatedAt: Date,
 }
 
 export type FormSubscription = { error: boolean, success: boolean, message: string, passwordIsValid?: boolean, isLoading: boolean }
@@ -48,9 +55,11 @@ export type SubscriptionCredentials = {
   email: string,
   name: string,
   lastName: string,
-  genre: string,
+  sex: string,
   password: string,
   passwordConfirmation: string
+  birthDay: Date
+  birthYear?: number
 }
 
 export type APIUser = {

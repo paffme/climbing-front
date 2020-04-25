@@ -34,17 +34,17 @@
           {
             title: "Tableau de bord",
             icon: "home",
-            to: { name: "dashboard" }
+            to: { firstName: "dashboard" }
           },
           {
             title: "Compétitions",
             icon: "lightbulb",
-            to: { name: "competitions" }
+            to: { firstName: "competitions" }
           },
           {
             title: "Mon profile",
             icon: "account",
-            to: { name: "user-id" }
+            to: { firstName: "user-id" }
           }
         ]
       }

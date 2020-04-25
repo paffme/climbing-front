@@ -1,3 +1,4 @@
+import { Sex } from "~/definitions";
 <template>
   <div class="columns">
     <div class="column">
@@ -20,7 +21,8 @@
           <div class="column">
             <div class="tiles">
               <b-notification :closable="false">
-                <CompetitionForm></CompetitionForm>
+                {{ internal_competition}}
+                <CompetitionForm :test-compet="internal_competition"></CompetitionForm>
               </b-notification>
               <b-notification :closable="false">
                 <UserGestion></UserGestion>
@@ -34,15 +36,45 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component } from "vue-property-decorator";
+  import { Component, Vue } from "vue-property-decorator";
   import UserGestion from "~/components/UserGestion.vue";
   import CompetitionForm from "~/components/Form/CompetitionForm.vue";
   import GoBackBtn from "~/components/GoBackBtn.vue";
+  import { ApiCompetition, CategoryName, Competition, Sex, TypeCompetition } from "~/definitions";
 
   @Component({
+    middleware: 'isAuth',
     components: { UserGestion, CompetitionForm, GoBackBtn }
   })
   export default class EditOneCompetition extends Vue {
+    idCompetition?: number
+    internal_competition: ApiCompetition | null = null
+
+    async mounted() {
+      this.idCompetition = parseInt(this.$route.params['competitionId'], 10) || undefined
+      this.internal_competition = this.idCompetition ? await this.getCompetition(this.idCompetition) : null
+    }
+
+    async getCompetition(idCompetition: number): Promise<ApiCompetition> {
+      console.log('idCompetition', idCompetition)
+      return Promise.resolve(
+        {
+          id: 2,
+          name: 'Chalais Savoyard',
+          type: TypeCompetition.Bouldering,
+          startDate: new Date('2020-04-25T14:50:54.009Z'),
+          createdAt: new Date('2020-04-25T14:50:54.009Z'),
+          updatedAt: new Date('2020-04-25T14:50:54.009Z'),
+          endDate: new Date('2020-04-25T14:50:54.009Z'),
+          address: '19 Avenue Villejuif',
+          city: 'Choisy',
+          postalCode: '94320',
+          categories: [
+            {sex: Sex.Female, name: CategoryName.Benjamin}
+          ]
+        }
+      )
+    }
   }
 </script>
 

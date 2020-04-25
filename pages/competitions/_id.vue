@@ -43,11 +43,19 @@
 <script lang="ts">
   import { Vue, Component } from "vue-property-decorator";
   import GoBackBtn from "~/components/GoBackBtn.vue";
+  import { Competition } from "~/definitions";
+  import { ApiHelper } from "~/utils/api_helper/apiHelper";
 
   @Component({
+    middleware: 'isAuth',
     components: { GoBackBtn }
   })
   export default class OneCompetition extends Vue {
+    competiton: Competition | null = null
+
+    created() {
+      ApiHelper.GetCompetition()
+    }
   }
 </script>
 

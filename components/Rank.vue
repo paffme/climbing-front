@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-table
-      :data="competitions"
+      :data="internal_competitions"
       :hovered="true"
       default-sort="id"
       aria-next-label="Next page"
@@ -45,12 +45,12 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component, Prop } from "vue-property-decorator";
+  import { Vue, Component, Prop, PropSync } from "vue-property-decorator";
   import { Competition } from "~/definitions";
 
   @Component
   export default class Rank extends Vue {
-    @Prop(Array) competitions?: Competition
+    @PropSync('competitions', {type: Array}) internal_competitions?: Competition
     columns = [
       {
         field: "name",

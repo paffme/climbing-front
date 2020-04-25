@@ -53,7 +53,8 @@
   import CompetitionForm from "~/components/Form/CompetitionForm.vue";
 
   @Component({
-    components: { GoBackBtn, CompetitionForm }
+    components: { GoBackBtn, CompetitionForm },
+    middleware: 'isAuth'
   })
   export default class Competitions extends Vue {
   }

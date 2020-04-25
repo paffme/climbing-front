@@ -286,7 +286,7 @@ describe('ApiHelper', () => {
         axios.post.mockResolvedValue('success');
         const bodyExample = {
           name: 'Chalais Savoyard',
-          type: 'Block',
+          type: 'Speed',
           startDate: new Date(),
           endDate: new Date(),
           address: '19 Avenue Villejuif',
@@ -296,6 +296,17 @@ describe('ApiHelper', () => {
             {sex: 'female', name: 'minime'}
           ]
         }
+
+        const result = await ApiHelper.CreateCompetition(bodyExample)
+        expect(spy).toHaveBeenCalled();
+        expect(result).toEqual('success')
+      })
+    })
+
+    describe('GetCompetition', () => {
+      test('Should call with right args', async () => {
+        const spy = jest.spyOn(API_URL, 'createOrGetCompetition');
+        axios.post.mockResolvedValue('success');
 
         const result = await ApiHelper.CreateCompetition(bodyExample)
         expect(spy).toHaveBeenCalled();

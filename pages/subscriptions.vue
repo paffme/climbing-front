@@ -15,14 +15,14 @@
             <form v-on:submit.prevent="subscribeUser(credentials)">
 
               <b-field required>
-                <b-radio v-model="credentials.genre"
+                <b-radio v-model="credentials.sex"
                          name="name"
-                         native-value="Homme">
+                         :native-value="Sex.Male">
                   Homme
                 </b-radio>
-                <b-radio v-model="credentials.genre"
+                <b-radio v-model="credentials.sex"
                          name="name"
-                         native-value="Femme">
+                         :native-value="Sex.Female">
                   Femme
                 </b-radio>
               </b-field>
@@ -31,7 +31,7 @@
               </b-field>
               <b-field grouped group-multiline>
                 <b-field label="Prénom" required>
-                  <b-input v-model="credentials.name"></b-input>
+                  <b-input v-model="credentials.firstName"></b-input>
                 </b-field>
                 <b-field label="Nom" required>
                   <b-input v-model="credentials.lastName"></b-input>
@@ -39,7 +39,7 @@
               </b-field>
               <b-field label="Date de naissance">
                 <b-datepicker
-                  v-model="credentials.dateBirth"
+                  v-model="credentials.birthDay"
                   placeholder="Cliquer pour selectionner"
                   icon="calendar-today"
                   trap-focus>
@@ -70,11 +70,16 @@
 <script lang="ts">
   import { Vue, Component } from "vue-property-decorator";
   import { authUser } from '~/store'
-  import { FormSubscription, SubscriptionCredentials } from "~/definitions";
+  import { FormSubscription, Sex, SubscriptionCredentials } from "~/definitions";
 
   @Component({
     layout: 'blank',
-    middleware: 'isAuth'
+    middleware: 'isAuth',
+    data() {
+      return {
+        Sex
+      }
+    }
   })
   export default class Subscriptions extends Vue {
     MAX_PASSWORD_LENGTH = 6
@@ -86,13 +91,14 @@
       passwordIsValid: true
     }
     credentials = {
-      email: 'email@email.com',
-      name: 'Laurent',
+      email: 'admin@test.com',
+      firstName: 'Laurent',
       lastName: 'Gbagbo',
-      genre: 'Homme',
-      dateBirth: new Date(),
-      password: 'test',
-      passwordConfirmation: 'test'
+      sex: Sex.Male,
+      birthDay: new Date('01/29/1992'),
+      dateBirth: 0,
+      password: 'admin@test.com',
+      passwordConfirmation: 'admin@test.com'
     }
 
     async subscribeUser(credentials: SubscriptionCredentials): Promise<void> {
@@ -110,6 +116,12 @@
         this.form.isLoading = false
         return
       }
+
+      credentials.birthYear = new Date().getFullYear() - credentials.birthDay.getFullYear()
+
+      console.log('1', credentials.birthDay && credentials.birthDay.getFullYear())
+      console.log('2', new Date().getFullYear())
+      console.log('3', credentials.birthYear)
 
       try {
         await authUser.subscribeUser(credentials)

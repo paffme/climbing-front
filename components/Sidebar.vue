@@ -52,12 +52,12 @@
       {
         title: "Tableau de bord",
         icon: "home",
-        to: { name: "index" }
+        to: { firstName: "index" }
       },
       {
         title: "Mon profile",
         icon: "account",
-        to: { name: "user-id" }
+        to: { firstName: "user-id" }
       }
     ];
     open = true;

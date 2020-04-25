@@ -3,7 +3,73 @@
     <div class="block">
       <span class="subtitle">Configuration de la compétition</span>
     </div>
-    <form v-on:submit.prevent="registerCompetition()" id="form">
+    <form v-if="internal_competition" v-on:submit.prevent="updateCompetition()" class="form">
+      <b-field horizontal label="Nom compétition">
+        <b-input name="subject" expanded v-model="internal_competition.name"></b-input>
+      </b-field>
+
+      <b-field horizontal label="Date">
+        <b-field>
+          <b-datepicker
+            placeholder="Date de début"
+            icon="calendar-today"
+            trap-focus
+            v-model="internal_competition.startDate"
+          >
+          </b-datepicker>
+        </b-field>
+        <b-field>
+          <b-datepicker
+            placeholder="Date de fin"
+            icon="calendar-today"
+            trap-focus
+            v-model="internal_competition.endDate"
+          >
+          </b-datepicker>
+        </b-field>
+      </b-field>
+
+      <b-field horizontal label="Type">
+        <b-select placeholder="Selectionner type de compétition" v-model="internal_competition.type">
+          <option v-for="type in typeCompetiton" :value="type">{{ type }}</option>
+        </b-select>
+      </b-field>
+
+      <b-field horizontal grouped label="Adresse">
+        <b-field>
+          <b-input placeholder="Adresse" v-model="internal_competition.address"></b-input>
+        </b-field>
+        <b-field expanded>
+          <b-input placeholder="Ville" v-model="internal_competition.city"></b-input>
+        </b-field>
+        <b-field expanded>
+          <b-input placeholder="Code postal" v-model="internal_competition.postalCode"></b-input>
+        </b-field>
+      </b-field>
+
+      <b-field id="category" horizontal label="Categories" grouped>
+        <FormCompetitionCategories :default-value="internal_competition" v-on:category-value="addCategory" v-on:delete="removeCategory(index)" :can-be-delete="true"></FormCompetitionCategories>
+      </b-field>
+
+      <b-field v-if="internal_competition.categories.length > 0">
+        <b-select
+          multiple
+          v-model="selectedOptions">
+          <option v-for="(categorie, index) in internal_competition.categories" :key="index" v-on:click="categoryIndex = index">
+            <span>{{ categorie.sex }} - {{ categorie.name }}</span>
+          </option>
+        </b-select>
+        <b-button v-if="selectedOptions.length > 0" icon-right="delete" type="is-danger" v-on:click="removeCategory"></b-button>
+      </b-field>
+
+      <div class="is-pulled-right">
+        <b-button type="is-primary" tag="button" :loading="isLoading" v-on:click="updateCompetition">Valider compétition</b-button>
+      </div>
+    </form>
+
+
+
+    <form v-else v-on:submit.prevent="registerCompetition()" class="form">
       <b-field horizontal label="Nom compétition">
         <b-input name="subject" expanded v-model="competition.name"></b-input>
       </b-field>
@@ -48,7 +114,7 @@
       </b-field>
 
       <b-field id="category" horizontal label="Categories" grouped>
-        <FormCompetitionCategories :default-value="competition" v-on:category-value="addCategory" v-on:delete="removeCategory(index)" :can-be-delete="true"></FormCompetitionCategories>
+        <FormCompetitionCategories :default-value="competition" v-on:category-value="addCategory" v-on:delete="removeCategory" :can-be-delete="true"></FormCompetitionCategories>
       </b-field>
 
       <b-field v-if="competition.categories.length > 0">
@@ -63,48 +129,82 @@
       </b-field>
 
       <div class="is-pulled-right">
-        <b-button type="is-primary" tag="button" v-on:click="registerCompetition">Valider compétition</b-button>
+        <b-button type="is-primary" tag="button" :loading="isLoading" v-on:click="registerCompetition">Valider compétition</b-button>
       </div>
     </form>
   </div>
 </template>
 
 <script lang="ts">
-  import { Vue, Component } from "vue-property-decorator";
-  import { Competition, TypeCompetition } from "~/definitions";
+  import { Vue, Component, PropSync } from "vue-property-decorator";
+  import { CategoryName, Competition, Sex, TypeCompetition } from "~/definitions";
   import FormCompetitionCategories from "~/components/Form/FormCompetitionCategories.vue";
   import _ from 'lodash'
+  import { ApiHelper } from "~/utils/api_helper/apiHelper";
 
   @Component({
     components: {FormCompetitionCategories}
   })
   export default class CompetitionForm extends Vue {
-    competition: Competition = {
-      name: null,
-      type: null,
-      startDate: null,
-      endDate: null,
-      address: null,
-      city: null,
-      postalCode: null,
-      categories: []
-    };
+    @PropSync('testCompet', { type: Object }) internal_competition!: Competition
     categoryIndex: number | null = null
     selectedOptions = []
     typeCompetiton = TypeCompetition
+    competition: Competition = {
+      name: 'Chalais Savoyard',
+      type: 'Bouldering',
+      startDate: new Date('2020-04-25T14:50:54.009Z'),
+      endDate: new Date('2020-04-25T14:50:54.009Z'),
+      address: '19 Avenue Villejuif',
+      city: 'Choisy',
+      postalCode: '94420',
+      categories: [
+        {sex: Sex.Female, name: CategoryName.Benjamin}
+      ]
+    };
+    isLoading = false
 
-    registerCompetition() {
-      console.log('this.competition', this.competition)
+    async registerCompetition() {
+      this.isLoading = true
+      try {
+        console.log('this.competition', this.competition)
+        await ApiHelper.CreateCompetition(this.competition)
+        this.$buefy.toast.open({
+          type: 'is-success',
+          message: "Compétition créée"
+        })
+        this.isLoading = false
+      } catch(err) {
+        this.$buefy.toast.open({
+          type: 'is-danger',
+          message: "Une erreur s'est produite"
+        })
+        this.isLoading = false
+      }
+    }
+
+    async updateCompetition() {
+      try {
+        await ApiHelper.UpdateCompetition(this.internal_competition)
+        this.$buefy.toast.open({
+          type: 'is-success',
+          message: "Compétition mise à jours"
+        })
+      } catch(err) {
+        this.$buefy.toast.open({
+          type: 'is-danger',
+          message: "Une erreur s'est produite"
+        })
+      }
     }
 
     addCategory(result: any) {
-      console.log('this.competition.categories', this.competition.categories)
-      console.log('result', result)
+      let competitionCategories = this.internal_competition && this.internal_competition.categories || this.competition && this.competition.categories
       let alreadyExist = false
-      if (this.competition.categories.length === 0) {
+      if (competitionCategories.length === 0) {
         alreadyExist = false
       } else {
-        this.competition.categories.forEach(category => {
+        competitionCategories.forEach(category => {
           if (_.isEqual(category, result)) {
             alreadyExist = true
             return
@@ -113,19 +213,22 @@
       }
 
       console.log('alreadyexist', alreadyExist)
-      if (!alreadyExist) this.competition.categories.push(result)
+      if (!alreadyExist) competitionCategories.push(result)
     }
 
     removeCategory() {
       if (this.categoryIndex === null) return
 
-      console.log('this.competition.categories', this.competition.categories)
-      if (this.categoryIndex === 0 && this.competition.categories.length === 1) {
-        this.competition.categories = []
-        console.log('this.competition.categories', this.competition.categories)
+      let competitionCategories = this.internal_competition && this.internal_competition.categories || this.competition && this.competition.categories
+
+      if (this.categoryIndex === 0 && competitionCategories.length === 1) {
+        competitionCategories = []
         return
       }
-      this.competition.categories.splice(this.categoryIndex, 1)
+      competitionCategories.splice(this.categoryIndex, 1)
+    }
+
+    private competitionDTO(competition: Competition): any {
     }
   }
 </script>

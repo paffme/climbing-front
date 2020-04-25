@@ -34,7 +34,7 @@
                 <span class="subtitle">Voir les compétitions</span>
                 <span>Autres compétitions</span>
               </div>
-              <Rank :competitions="data"></Rank>
+              <Rank :competitions.sync="competitions"></Rank>
             </b-notification>
           </div>
         </div>
@@ -47,43 +47,41 @@
   import { Vue, Component } from "vue-property-decorator";
   import Rank from "~/components/Rank.vue";
   import StatsBlock from "~/components/StatsBlock.vue";
+  import { ApiHelper } from "~/utils/api_helper/apiHelper";
+  import { Competition } from "~/definitions";
 
   @Component({
+    middleware: 'isAuth',
     components: { Rank, StatsBlock }
   })
   export default class Competitions extends Vue {
     data = [
       {
-        "createdAt": "2020-04-24T15:06:28.786Z",
-        "updatedAt": "2020-04-24T15:06:28.786Z",
-        "id": 1,
-        "name": "Everest Recordz",
-        "type": "Difficulté",
-        "startDate": "2020-04-24T15:06:28.786Z",
-        "endDate": "2020-04-24T15:06:28.786Z",
-        "address": "string",
-        "city": "CHamonix",
-        "postalCode": "string",
-        "categories": [
-          "string"
-        ]
-      },
-      {
-        "createdAt": "2020-04-24T15:06:28.786Z",
-        "updatedAt": "2020-04-24T15:06:28.786Z",
-        "id": 0,
-        "name": "Compétition Chagny",
-        "type": "Block",
-        "startDate": "2020-04-24T15:06:28.786Z",
-        "endDate": "2020-04-24T15:06:28.786Z",
-        "address": "string",
-        "city": "Chagny",
-        "postalCode": "string",
-        "categories": [
-          "string"
-        ]
+          "id": 4,
+          "name": "Chalais Savoyard",
+          "categories": [
+            {
+              "sex": "female",
+              "name": "benjamin"
+            }
+          ],
+          "startDate": "2020-04-25T14:50:54.000Z",
+          "endDate": "2020-04-25T14:50:54.000Z",
+          "city": "Choisy",
+          "address": "19 Avenue Villejuif",
+          "postalCode": "94420",
+          "type": "lead",
+          "createdAt": "2020-04-25T17:18:33.000Z",
+          "updatedAt": "2020-04-25T17:18:33.000Z"
       }
     ]
+    competitions?: Competition[] = []
+
+    async created() {
+      const response = await ApiHelper.GetCompetition()
+      console.log('this.competitions', response.data)
+      this.competitions = response.data
+    }
   }
 </script>
 
