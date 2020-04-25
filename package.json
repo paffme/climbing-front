@@ -15,14 +15,18 @@
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/dotenv": "^1.4.0",
     "@nuxtjs/pwa": "^3.0.0-0",
+    "@types/lodash": "^4.14.150",
     "cross-env": "^5.2.0",
     "express": "^4.16.4",
+    "jest-jasmine2": "latest",
+    "lodash": "^4.17.15",
     "node-sass": "^4.13.1",
     "nuxt": "^2.0.0",
     "nuxt-buefy": "~0.3.27",
     "sass-loader": "^8.0.2",
+    "vue": "latest",
     "vue-property-decorator": "^8.4.0",
-    "jest-jasmine2": "latest"
+    "vue2-google-maps": "^0.10.7"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.6",

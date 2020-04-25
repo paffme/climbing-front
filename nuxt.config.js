@@ -33,7 +33,8 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/axios-accessor.ts'
+    '~/plugins/axios-accessor.ts',
+    '~/plugins/google-map.ts'
   ],
   pwa: {
     manifest: {
@@ -85,6 +86,7 @@ module.exports = {
     /*
     ** You can extend webpack config here
     */
+    transpile: [/^vue2-google-maps($|\/)/],
     extend (config, ctx) {
     }
   }

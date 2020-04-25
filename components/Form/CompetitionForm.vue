@@ -51,15 +51,21 @@
         <FormCompetitionCategories :default-value="competition" v-on:category-value="addCategory" v-on:delete="removeCategory(index)" :can-be-delete="true"></FormCompetitionCategories>
       </b-field>
 
+      <b-field v-if="competition.categories.length > 0">
+        <b-select
+          multiple
+          v-model="selectedOptions">
+          <option v-for="(categorie, index) in competition.categories" :key="index" v-on:click="categoryIndex = index">
+            <span>{{ categorie.sex }} - {{ categorie.name }}</span>
+          </option>
+        </b-select>
+        <b-button v-if="selectedOptions.length > 0" icon-right="delete" type="is-danger" v-on:click="removeCategory"></b-button>
+      </b-field>
+
       <div class="is-pulled-right">
         <b-button type="is-primary" tag="button" v-on:click="registerCompetition">Valider compétition</b-button>
       </div>
     </form>
-    <ul>
-      <li v-for="categorie in competition.categories">
-        {{ categorie.name }}
-      </li>
-    </ul>
   </div>
 </template>
 
@@ -67,6 +73,7 @@
   import { Vue, Component } from "vue-property-decorator";
   import { Competition, TypeCompetition } from "~/definitions";
   import FormCompetitionCategories from "~/components/Form/FormCompetitionCategories.vue";
+  import _ from 'lodash'
 
   @Component({
     components: {FormCompetitionCategories}
@@ -82,20 +89,43 @@
       postalCode: null,
       categories: []
     };
+    categoryIndex: number | null = null
+    selectedOptions = []
     typeCompetiton = TypeCompetition
 
     registerCompetition() {
       console.log('this.competition', this.competition)
     }
 
-    addCategory(data: any) {
+    addCategory(result: any) {
       console.log('this.competition.categories', this.competition.categories)
-      this.competition.categories.push(data)
+      console.log('result', result)
+      let alreadyExist = false
+      if (this.competition.categories.length === 0) {
+        alreadyExist = false
+      } else {
+        this.competition.categories.forEach(category => {
+          if (_.isEqual(category, result)) {
+            alreadyExist = true
+            return
+          }
+        })
+      }
+
+      console.log('alreadyexist', alreadyExist)
+      if (!alreadyExist) this.competition.categories.push(result)
     }
 
-    removeCategory(index: number) {
-      this.competition.categories.splice(index, 1)
+    removeCategory() {
+      if (this.categoryIndex === null) return
 
+      console.log('this.competition.categories', this.competition.categories)
+      if (this.categoryIndex === 0 && this.competition.categories.length === 1) {
+        this.competition.categories = []
+        console.log('this.competition.categories', this.competition.categories)
+        return
+      }
+      this.competition.categories.splice(this.categoryIndex, 1)
     }
   }
 </script>

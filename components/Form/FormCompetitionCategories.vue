@@ -1,23 +1,18 @@
 <template>
   <b-field grouped>
     <b-field>
-      <b-select :disabled="formIsValid" placeholder="Selectionner type de compétition" v-model="data.sex">
+      <b-select placeholder="Selectionner type de compétition" v-model="newVal.sex">
         <option v-for="sexe in sexes" :value="sexe">{{ sexe === sexes.Female ? 'Femme' : 'Homme' }}</option>
       </b-select>
     </b-field>
     <b-field>
-      <b-select :disabled="formIsValid" placeholder="Selectionner catégorie" v-model="data.category">
+      <b-select placeholder="Selectionner catégorie" v-model="newVal.name">
         <option v-for="name in categoryName" :value="name">{{ name }}</option>
       </b-select>
     </b-field>
-    <template v-if="!formIsValid">
+    <template>
       <b-field>
         <b-button icon-left="plus" type="is-success" v-on:click="emitData">Valider</b-button>
-      </b-field>
-    </template>
-    <template v-else>
-      <b-field>
-        <b-button icon-left="plus" type="is-danger" v-on:click="deleteInput">Supprimer</b-button>
       </b-field>
     </template>
   </b-field>
@@ -38,27 +33,20 @@
   export default class FormCompetitionCategories extends Vue {
     @Prop(Boolean) canBeDelete?: boolean
     @Prop() defaultValue?: CompetitionCategories
-    data = {
-      sex: this.defaultValue?.sex,
-      category: this.defaultValue?.name
+    newVal = {
+      sex: null,
+      name: null
     }
-    formIsValid = false
-    currentVal: Array<CompetitionCategories> = []
 
     deleteInput() {
-      if (!this.canBeDelete) {
-        console.log('this.canBeDelete', this.canBeDelete)
-        this.formIsValid = false
-        console.log('this.formIsValid', this.formIsValid)
-        this.$emit('delete')
-        return
-      }
       this.$emit('delete')
     }
     emitData() {
-      this.$emit('category-value', this.data)
-      this.currentVal.push(this.data)
-      this.formIsValid = true
+      this.$emit('category-value', this.newVal)
+      this.newVal = {
+        sex: null,
+        name: null
+      }
     }
   }
 </script>
