@@ -22,7 +22,7 @@ import { Sex } from "~/definitions";
             <div class="tiles">
               <b-notification :closable="false">
                 <template v-if="internal_competition">
-                  <CompetitionForm :clean-competition="internal_competition"></CompetitionForm>
+                  <EditCompetitionForm :internal_competition="internal_competition"></EditCompetitionForm>
                 </template>
               </b-notification>
               <b-notification :closable="false">
@@ -39,14 +39,14 @@ import { Sex } from "~/definitions";
 <script lang="ts">
   import { Component, Vue } from "vue-property-decorator";
   import UserGestion from "~/components/UserGestion.vue";
-  import CompetitionForm from "~/components/Form/CompetitionForm.vue";
+  import EditCompetitionForm from "~/components/Form/EditCompetitionForm.vue";
   import GoBackBtn from "~/components/GoBackBtn.vue";
-  import { ApiCompetition, CategoryName, Competition, Sex, TypeCompetition } from "~/definitions";
+  import { ApiCompetition } from "~/definitions";
   import { ApiHelper } from "~/utils/api_helper/apiHelper";
 
   @Component({
     middleware: 'isAuth',
-    components: { UserGestion, CompetitionForm, GoBackBtn }
+    components: { UserGestion, EditCompetitionForm, GoBackBtn }
   })
   export default class EditOneCompetition extends Vue {
     idCompetition?: number

@@ -70,7 +70,7 @@ export type APIUser = {
   firstName: string,
   lastName: string
   birthYear: number
-  club: string
+  club: string | null
 }
 
 export type TokenCredentials = {

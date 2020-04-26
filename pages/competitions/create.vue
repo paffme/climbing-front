@@ -38,7 +38,7 @@
           </div>
           <div class="tile is-9 is-parent">
             <div class="tile is-child notification">
-              <CompetitionForm></CompetitionForm>
+              <CreateCompetitionForm></CreateCompetitionForm>
             </div>
           </div>
         </div>
@@ -50,10 +50,10 @@
 <script lang="ts">
   import { Component, Vue } from "vue-property-decorator";
   import GoBackBtn from "~/components/GoBackBtn.vue";
-  import CompetitionForm from "~/components/Form/CompetitionForm.vue";
+  import CreateCompetitionForm from "~/components/Form/CreateCompetitionForm.vue";
 
   @Component({
-    components: { GoBackBtn, CompetitionForm },
+    components: { GoBackBtn, CreateCompetitionForm },
     middleware: 'isAuth'
   })
   export default class Competitions extends Vue {
