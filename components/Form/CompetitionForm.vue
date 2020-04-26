@@ -1,4 +1,3 @@
-import { TypeCompetition } from "~/definitions";
 <template>
   <div>
     <div class="block">
