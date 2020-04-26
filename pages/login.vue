@@ -76,6 +76,7 @@
         this.form.message = "Vous allez être redirigé vers la page d\'accueil"
         this.$router.push('/')
       } catch(error) {
+        console.log('err', error)
         this.form.error = true
         this.form.message = 'Identifiant / Mot de passe incorrecte'
       }

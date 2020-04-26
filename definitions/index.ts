@@ -38,7 +38,7 @@ export type Competition = {
   name: string
   type: TypeCompetition
   startDate: Date
-  endDate: Date
+  endDate: Date | string
   address: string
   city: string
   postalCode: string
@@ -69,6 +69,8 @@ export type APIUser = {
   email: string,
   firstName: string,
   lastName: string
+  birthYear: number
+  club: string
 }
 
 export type TokenCredentials = {

@@ -1,7 +1,7 @@
 import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators";
 import { $axios } from "~/utils/api";
 import { APIUser, AuthCredentials, SubscriptionCredentials, TokenCredentials, UserCredentials } from "~/definitions";
-import { createCookie, getCookie, removeCookie } from "~/utils/cookieHelper";
+import { createCookie, createCookieFromObject, getCookie, getCookieObject, removeCookie } from "~/utils/cookieHelper";
 
 @Module({
   name: "authUser",
@@ -20,21 +20,24 @@ export default class AuthUser extends VuexModule {
 
   @Mutation
   setUserCredentials(newUserCredential: UserCredentials) {
-    this.userCredentials = newUserCredential;
+    createCookieFromObject('credentials', newUserCredential)
   }
 
   @Mutation
   disconnectUser(): void {
-    this.tokenCredentials = undefined
-    this.userCredentials = undefined
     removeCookie('token')
+    removeCookie('credentials')
   }
 
-  get Credentials() {
+  get Token() {
+    console.log('getCookie(\'token\')', getCookie('token'))
     return getCookie('token');
   }
   get Authenticated() {
     return !!getCookie('token')
+  }
+  get Credentials(): APIUser {
+    return getCookieObject('credentials');
   }
 
   @Action({ rawError: true }) // Use to get a detailled errors

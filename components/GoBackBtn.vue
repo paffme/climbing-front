@@ -9,7 +9,6 @@
   export default class GoBackBtn extends Vue {
 
     goBack() {
-      console.log('fire')
       this.$router.go(-1);
     }
   }

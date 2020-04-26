@@ -47,7 +47,7 @@ module.exports = {
         suffix: 'v1'
       },
       config: {
-        debug: true
+        debug: false
       },
       skipWaiting: true,
       cacheAssets: true,

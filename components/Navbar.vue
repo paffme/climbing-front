@@ -3,7 +3,7 @@
       <template slot="brand">
         <b-navbar-item tag="div">
           <nuxt-link to="/">
-            <h1 class="subtitle has-text-white">{{ APP_TITLE }}</h1>
+            <img src="../assets/ffme_logo.png" alt="">
           </nuxt-link>
         </b-navbar-item>
       </template>

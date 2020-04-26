@@ -146,7 +146,7 @@
     components: {FormCompetitionCategories}
   })
   export default class CompetitionForm extends Vue {
-    @PropSync('testCompet', { type: Object }) internal_competition!: Competition
+    @PropSync('clean-competition', { type: Object }) internal_competition!: Competition
     categoryIndex: number | null = null
     selectedOptions = []
     typeCompetiton = TypeCompetition
@@ -167,7 +167,6 @@
     async registerCompetition() {
       this.isLoading = true
       try {
-        console.log('this.competition', this.competition)
         await ApiHelper.CreateCompetition(this.competition)
         this.$buefy.toast.open({
           type: 'is-success',
@@ -211,8 +210,6 @@
           }
         })
       }
-
-      console.log('alreadyexist', alreadyExist)
       if (!alreadyExist) competitionCategories.push(result)
     }
 

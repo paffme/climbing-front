@@ -78,7 +78,7 @@
     competitions?: Competition[] = []
 
     async created() {
-      const response = await ApiHelper.GetCompetition()
+      const response = await ApiHelper.GetCompetitions()
       console.log('this.competitions', response.data)
       this.competitions = response.data
     }

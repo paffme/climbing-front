@@ -1,4 +1,11 @@
-import { APIUser, BoulderingResult, BoulderingRounds, CompetitionsRegistrations, Competition } from "~/definitions";
+import {
+  APIUser,
+  BoulderingResult,
+  BoulderingRounds,
+  CompetitionsRegistrations,
+  Competition,
+  ApiCompetition
+} from "~/definitions";
 import { $axios } from '../api'
 import { AxiosResponse } from "~/node_modules/axios";
 
@@ -27,13 +34,16 @@ export const ApiHelper = {
   AddRound: addRound,
   AddBoulderingResult: addBoulderingResult,
   CreateCompetition: createCompetition,
+  GetCompetitions: getCompetitions,
   GetCompetition: getCompetition,
   UpdateCompetition: updateCompetition,
+  AddCompetitor: addCompetitor
 }
 
 export const API_URL = {
   registerOrRemoveUserInCompetition: (competitionId: number, userId: number): string => `/competitions/${competitionId}/registrations/${userId}`,
   getRegistrations: (competitionId: number): string => `/competitions/${competitionId}/registrations`,
+  addCompetitor: (competitionId: number, userId: number): string => `/competitions/${competitionId}/registrations/${userId}`,
   getJuryPresidents: (competitionId: number): string => `/competitions/${competitionId}/jury-presidents`,
   addOrRemoveJuryPresident: (competitionId: number, userId: number): string => `/competitions/${competitionId}/jury-presidents/${userId}`,
   getJudges: (competitionId: number): string => `/competitions/${competitionId}/judges`,
@@ -48,8 +58,8 @@ export const API_URL = {
   addOrRemoveOrganizers: (competitionId: number, userId: number): string => `​/competitions​/${competitionId}​/organizers/${userId}`,
   addRound: (competitionId: number) => `/competitions/${competitionId}/bouldering-rounds`,
   addBoulderingResult: (competitionId: number, roundId: number, boulderId: number) => `/competitions/${competitionId}/bouldering-rounds/${roundId}/boulders/${boulderId}/results`,
-  createOrGetCompetition: () => '/competitions',
-  updateCompetition: (competitionId: number) => `/competitions/${competitionId}`
+  createOrGetCompetitions: () => '/competitions',
+  updateOrGetCompetition: (competitionId: number) => `/competitions/${competitionId}`
 }
 
 async function registerUserInCompetition(competitionId: number, userId: number): Promise<void> {
@@ -60,7 +70,7 @@ async function removeUserFromCompetition(competitionId: number, userId: number):
   return $axios.delete(API_URL.registerOrRemoveUserInCompetition(competitionId, userId))
 }
 
-async function getRegistrations(competitionId: number): Promise<CompetitionsRegistrations> {
+async function getRegistrations(competitionId: number): Promise<AxiosResponse<CompetitionsRegistrations[]>> {
   return $axios.get(API_URL.getRegistrations(competitionId))
 }
 
@@ -143,14 +153,22 @@ async function addBoulderingResult(body: BoulderingResult,competitionId: number,
 }
 
 async function createCompetition(body: Competition): Promise<void> {
-  return $axios.post(API_URL.createOrGetCompetition(), body)
+  return $axios.post(API_URL.createOrGetCompetitions(), body)
 }
 
-async function getCompetition(): Promise<AxiosResponse<Competition[]>> {
-  return $axios.get(API_URL.createOrGetCompetition())
+async function getCompetitions(): Promise<AxiosResponse<Competition[]>> {
+  return $axios.get(API_URL.createOrGetCompetitions())
+}
+
+async function getCompetition(idCompetiton: number): Promise<AxiosResponse<ApiCompetition>> {
+  return $axios.get(API_URL.updateOrGetCompetition(idCompetiton))
 }
 
 async function updateCompetition(body: Competition): Promise<void> {
   if (!body.id) return Promise.reject('ID not defined')
-  return $axios.patch(API_URL.updateCompetition(body.id), body)
+  return $axios.patch(API_URL.updateOrGetCompetition(body.id), body)
+}
+
+async function addCompetitor(competitionId: number, userId: number): Promise<AxiosResponse<void>> {
+  return $axios.put(API_URL.addCompetitor(competitionId, userId))
 }
