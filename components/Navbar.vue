@@ -32,7 +32,7 @@
 
   @Component
   export default class Navbar extends Vue {
-    @Prop({type: Array, required: true}) readonly navbarItems: NavbarItem[] | undefined
+    @Prop({type: Array, required: true}) readonly navbarItems!: NavbarItem[]
     itemNavbars?: NavbarItem[] = []
     data() {
       return {

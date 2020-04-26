@@ -94,7 +94,6 @@
     components: { GoBackBtn },
     filters: {
       formatDate: (dirtyDate: string): string => {
-        console.log('locale', moment.locale());
         return moment(dirtyDate).format('LLLL')
       },
       capitalize: (value: string) => {
@@ -135,6 +134,11 @@
         props: {
           competitionId: this.competition && this.competition.id
         },
+        events: {
+          hasRegister: () => {
+            this.isAlreadyRegister = true
+          }
+        },
         component: UserRegisterToCompetition,
         hasModalCard: true,
         customClass: 'custom-class custom-class-2',
@@ -152,9 +156,7 @@
         const registrations = result.data
 
         const isRegistered = registrations.find((registration: CompetitionsRegistrations) => {
-          console.log('registration', registration)
-          console.log('authUser.Credentials.id', authUser.Credentials.id)
-          return registration.userId === authUser.Credentials.id;
+          return registration.userId === authUser.Credentials?.id;
         })
 
         return !!isRegistered

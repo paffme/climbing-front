@@ -34,12 +34,14 @@
       }
 
       try {
-        console.log('this.$store.getters[\'credentials\'].id', authUser.Credentials)
-        await ApiHelper.AddCompetitor(this.competitionId, authUser.Credentials.id)
+        if (!authUser.Credentials?.id) throw(`Should specify the id - ${authUser.Credentials} - was found`)
+        // await ApiHelper.AddCompetitor(this.competitionId, authUser.Credentials?.id)
         //@ts-ignore
         this.$parent.close()
+        this.$emit('hasRegister')
         this.isLoading = false
       } catch(err) {
+        console.log('err', err)
         this.isLoading = false
       }
     }

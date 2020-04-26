@@ -28,10 +28,10 @@ describe("Navbar", () => {
         NuxtLink: RouterLinkStub
       },
       propsData: {
-        navbarItems: [{linkTo: 'lol', icon: 'test'}]
+        navbarItems: [{linkTo: 'lol', icon: 'test'}, {linkTo: 'lol2', icon: 'test2'}]
       }
     });
-    expect(wrapper.vm.fillNavbarItems()).toEqual([{"icon": "test", "linkTo": "lol"}])
+    expect(wrapper.vm.fillNavbarItems()).toEqual([{"icon": "test", "linkTo": "lol"}, {linkTo: 'lol2', icon: 'test2'}])
   })
 
   test("Should not correctly fill all items ", () => {

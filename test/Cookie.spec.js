@@ -1,5 +1,5 @@
 import { getCookies, createCookie, getCookie, removeCookie, removeCookies } from "~/utils/cookieHelper.ts";
-import { createCookieFromObject, getCookieObject }                          from "~/utils/cookieHelper";
+import { createCookieFromObject, getCookieFromObject, getCookieObject }     from "~/utils/cookieHelper";
 
 describe('Cookie', () => {
 
@@ -17,8 +17,11 @@ describe('Cookie', () => {
   })
 
   test('Should create a new cookie from an object', () => {
-    createCookieFromObject('credentials', {name: 'Bob', id: 2}, 3600)
-    expect(getCookieObject('credentials')).toEqual({credentials: {name: 'Bob', id: 2}})
+    createCookieFromObject('credentials', {name: 'Bob', id: 2})
+
+    const finalResult = getCookieFromObject('credentials')
+
+    expect(finalResult).toEqual({name: 'Bob', id: 2})
   })
 
   test('Should remove on cookie create', () => {

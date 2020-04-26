@@ -10,7 +10,7 @@ export function getCookies(): Array<Object> {
 }
 
 export function getCookie(name: string): null | {} {
-  const cookies = document.cookie.split(";");
+  const cookies = document.cookie.replace('; ', ';').split(";");
   let finalCookie = null;
   cookies.forEach(cookie => {
     const splitted = cookie.split("=");
@@ -24,11 +24,17 @@ export function getCookie(name: string): null | {} {
   return finalCookie;
 }
 
-export function getCookieObject(name: string): any {
-  const cookie = document.cookie.split(";")[1];
-  const splitted = cookie.split("=");
-
-  return JSON.parse(splitted[1]);
+export function getCookieFromObject(name: string): any | undefined {
+  let finalResult
+  // On supprime les espaces vides pour bien checker la clé de l'objet
+  const cookies = document.cookie.replace('; ', ';').split(";");
+  cookies.forEach(cookie => {
+    const splitted = cookie.split('=')
+    if (splitted[0] === name) {
+      finalResult = JSON.parse(splitted[1])
+    }
+  })
+  return finalResult
 }
 
 export function removeCookies(): void {

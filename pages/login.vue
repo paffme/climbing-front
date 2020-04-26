@@ -17,7 +17,7 @@
             <b-notification :type="form.error ? 'is-danger' : 'is-success'" :closable=false :active.sync="form.success || form.error">
               {{ form.message }}
             </b-notification>
-            <form v-on:submit.prevent>
+            <form v-on:submit.prevent="connectUser(credential.email, credential.password)">
               <b-field label="Email" required>
                 <b-input v-model="credential.email" type="text"></b-input>
               </b-field>
@@ -28,7 +28,7 @@
                 <span id="subscriptions" class="has-text-info form_link">Je n'ai pas encore de compte</span>
               </nuxt-link>
               <p class="control is-pulled-right">
-                <b-button class="button" v-on:click="connectUser(credential.email, credential.password)" type="is-primary">Se connecter</b-button>
+                <b-button class="button" native-type="submit" type="is-primary">Se connecter</b-button>
               </p>
             </form>
           </div>

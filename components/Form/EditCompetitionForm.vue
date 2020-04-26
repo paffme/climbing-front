@@ -3,7 +3,6 @@
     <div class="block">
       <span class="subtitle">Configuration de la compétition</span>
     </div>
-    {{ internal_competition || 'Vide '}}
     <form v-if="internal_competition" v-on:submit.prevent="updateCompetition(internal_competition)" class="form">
       <b-field horizontal label="Nom compétition">
         <b-input name="subject" expanded v-model="internal_competition.name"></b-input>

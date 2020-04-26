@@ -1,5 +1,5 @@
 import { API_URL, ApiHelper } from "~/utils/api_helper/apiHelper";
-import axios from 'axios'
+import axios from 'axios';
 
 jest.mock('axios');
 
@@ -22,7 +22,7 @@ describe('ApiHelper', () => {
       expect(API_URL.addOrRemoveOrganizers(2, 1)).toEqual('​/competitions​/2​/organizers/1')
       expect(API_URL.addRound(2)).toEqual('/competitions/2/bouldering-rounds')
       expect(API_URL.addBoulderingResult(2, 2, 3)).toEqual('/competitions/2/bouldering-rounds/2/boulders/3/results')
-      expect(API_URL.createOrGetCompetition()).toEqual('/competitions')
+      expect(API_URL.createOrGetCompetitions()).toEqual('/competitions')
     })
   })
 
@@ -52,7 +52,7 @@ describe('ApiHelper', () => {
     describe('GetRegistrations', () => {
       test('Should call with right args', async () => {
         const spy = jest.spyOn(API_URL, 'getRegistrations');
-        axios.get.mockResolvedValue('success');
+        $axios.get.mockResolvedValue('success');
 
         const result = await ApiHelper.GetRegistrations(1)
         expect(spy).toHaveBeenCalledWith(1);

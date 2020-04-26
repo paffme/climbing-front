@@ -10,6 +10,7 @@ const isAuth: Middleware = ({route, store, redirect}) => {
   if (!isUnauthorizedRouteWhenConnected && !store.getters['authUser/Authenticated']) {
     return redirect('/login')
   }
+
   const credential = store.getters['authUser/Token']
   if (credential && credential.token) $axios.setToken(credential.token, 'Bearer')
 }
