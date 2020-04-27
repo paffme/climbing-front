@@ -152,7 +152,7 @@
 
     async checkIfUserIsRegisterToCompetition(competitionId: number): Promise<boolean> {
       try {
-        const result = await ApiHelper.GetRegistrations(competitionId)
+        const result = await ApiHelper.GetRegistrationsForACompetition(competitionId)
         const registrations = result.data
 
         const isRegistered = registrations.find((registration: CompetitionsRegistrations) => {

@@ -42,6 +42,7 @@
   import { Vue, Component } from "vue-property-decorator";
   import { authUser } from '~/store'
   import { TokenCredentials, UserCredentials } from "~/definitions";
+  import { AxiosResponse } from "~/node_modules/axios";
 
   @Component({
     layout: 'blank',
@@ -68,10 +69,10 @@
       this.form.error = false
       this.form.message = ''
       try {
-        const tokenCredentials: TokenCredentials = await authUser.fetchToken({email, password})
-        authUser.setTokenCredentials(tokenCredentials)
-        const userCredential: UserCredentials = await authUser.fetchUser(tokenCredentials.userId)
-        authUser.setUserCredentials(userCredential)
+        const tokenCredentials = await authUser.fetchToken({email, password})
+        authUser.setTokenCredentials(tokenCredentials.data)
+        const userCredential = await authUser.fetchUser(tokenCredentials.data.userId)
+        authUser.setUserCredentials(userCredential.data)
         this.form.success = true
         this.form.message = "Vous allez être redirigé vers la page d\'accueil"
         this.$router.push('/')

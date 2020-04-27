@@ -1,5 +1,4 @@
 import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators";
-import { $axios } from "~/utils/api";
 import { APIUser, AuthCredentials, SubscriptionCredentials, TokenCredentials, UserCredentials } from "~/definitions";
 import {
   createCookie,
@@ -8,6 +7,9 @@ import {
   getCookieFromObject,
   removeCookie
 } from "~/utils/cookieHelper";
+import { ApiHelper } from "~/utils/api_helper/apiHelper";
+import { AxiosResponse } from "~/node_modules/axios";
+import axios from "axios";
 
 @Module({
   name: "authUser",
@@ -17,7 +19,7 @@ import {
 export default class AuthUser extends VuexModule {
   @Mutation
   setTokenCredentials(newTokenCredential: TokenCredentials) {
-    $axios.setToken(newTokenCredential.token, 'Bearer')
+    ApiHelper.SetToken(newTokenCredential.token)
     createCookie('token', newTokenCredential.token)
   }
 
@@ -43,17 +45,17 @@ export default class AuthUser extends VuexModule {
   }
 
   @Action({ rawError: true }) // Use to get a detailled errors
-  async fetchToken(credentials: AuthCredentials): Promise<TokenCredentials> {
-    return await $axios.$post('/users/token', credentials)
+  async fetchToken(credentials: AuthCredentials): Promise<AxiosResponse<TokenCredentials>> {
+    return ApiHelper.GetToken(credentials)
   }
 
   @Action({ rawError: true }) // Use to get a detailled errors
-  async fetchUser(userId: number): Promise<UserCredentials> {
-    return await $axios.$get(`/users/${userId}`)
+  async fetchUser(userId: number): Promise<AxiosResponse<UserCredentials>> {
+    return await ApiHelper.GetUser(userId)
   }
 
   @Action({rawError: true})
-  async subscribeUser(credentials: SubscriptionCredentials): Promise<APIUser | any> {
-    return await $axios.$post(`/users`, credentials)
+  async subscribeUser(credentials: SubscriptionCredentials): Promise<AxiosResponse<void>> {
+    return await ApiHelper.SubscribeUser(credentials)
   }
 }

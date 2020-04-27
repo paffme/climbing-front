@@ -115,3 +115,19 @@ export type BoulderingResult = {
   zone: boolean,
   try: boolean
 }
+
+export type APIRankingResponse = {
+  [key: string]: {
+    [key: string]: Array<Ranking>,
+  }
+}
+
+export type Ranking = {
+  ranking: 0,
+  climber: {
+    id: 0,
+    firstName: string,
+    lastName: string,
+    club: string
+  }
+}

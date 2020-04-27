@@ -1,38 +1,17 @@
-import { API_URL, ApiHelper } from "~/utils/api_helper/apiHelper";
-import axios from 'axios';
+import { ApiHelper } from "~/utils/api_helper/apiHelper";
+import API_URL   from "~/utils/api_helper/apiUrl";
+import axios from 'axios'
 
 jest.mock('axios');
 
 describe('ApiHelper', () => {
-  describe('API_URL', () => {
-    test('Should return a correct URL', () => {
-      expect(API_URL.registerOrRemoveUserInCompetition(1, 2)).toEqual('/competitions/1/registrations/2')
-      expect(API_URL.getRegistrations(1, 2)).toEqual('/competitions/1/registrations')
-      expect(API_URL.getJuryPresidents(1, 2)).toEqual('/competitions/1/jury-presidents')
-      expect(API_URL.addOrRemoveJuryPresident(1, 2)).toEqual('/competitions/1/jury-presidents/2')
-      expect(API_URL.getJudges(1)).toEqual('/competitions/1/judges')
-      expect(API_URL.addOrRemoveJudge(1, 2)).toEqual('/competitions/1/judges/2')
-      expect(API_URL.getChiefRouteSetters(1)).toEqual('/competitions/1/chief-route-setters')
-      expect(API_URL.addOrRemoveChiefRouteSetters(1, 2)).toEqual('​/competitions​/1​/chief-route-setters​/2')
-      expect(API_URL.getRouteSetters(1)).toEqual('/competitions/1/route-setters')
-      expect(API_URL.addOrRemoveRouteSetters(2, 1)).toEqual('​/competitions​/2​/route-setters​/1')
-      expect(API_URL.getTechnicalDelegates(1)).toEqual('/competitions/1/technical-delegates')
-      expect(API_URL.addOrRemoveTechnicalDelegates(2, 1)).toEqual('​/competitions​/2​/technical-delegates/1')
-      expect(API_URL.getOrganizers(1)).toEqual('/competitions/1/organizers')
-      expect(API_URL.addOrRemoveOrganizers(2, 1)).toEqual('​/competitions​/2​/organizers/1')
-      expect(API_URL.addRound(2)).toEqual('/competitions/2/bouldering-rounds')
-      expect(API_URL.addBoulderingResult(2, 2, 3)).toEqual('/competitions/2/bouldering-rounds/2/boulders/3/results')
-      expect(API_URL.createOrGetCompetitions()).toEqual('/competitions')
-    })
-  })
-
   describe('ApiHelper Function', () => {
     describe('registerUserInCompetition', () => {
       test('Should call with right args', async () => {
         const spy = jest.spyOn(API_URL, 'registerOrRemoveUserInCompetition');
         axios.get.mockResolvedValue('success');
 
-        const result = await ApiHelper.RegisterUserInCompetition(1, 2)
+        const result = await ApiHelper.AddUserInCompetition(1, 2)
         expect(spy).toHaveBeenCalledWith(1, 2);
         expect(result).toEqual('success')
       })
@@ -52,9 +31,9 @@ describe('ApiHelper', () => {
     describe('GetRegistrations', () => {
       test('Should call with right args', async () => {
         const spy = jest.spyOn(API_URL, 'getRegistrations');
-        $axios.get.mockResolvedValue('success');
+        axios.get.mockResolvedValue('success');
 
-        const result = await ApiHelper.GetRegistrations(1)
+        const result = await ApiHelper.GetRegistrationsForACompetition(1)
         expect(spy).toHaveBeenCalledWith(1);
         expect(result).toEqual('success')
       })
@@ -282,7 +261,7 @@ describe('ApiHelper', () => {
 
     describe('CreateCompetition', () => {
       test('Should call with right args', async () => {
-        const spy = jest.spyOn(API_URL, 'createOrGetCompetition');
+        const spy = jest.spyOn(API_URL, 'createOrGetCompetitions');
         axios.post.mockResolvedValue('success');
         const bodyExample = {
           name: 'Chalais Savoyard',
@@ -305,10 +284,32 @@ describe('ApiHelper', () => {
 
     describe('GetCompetition', () => {
       test('Should call with right args', async () => {
-        const spy = jest.spyOn(API_URL, 'createOrGetCompetition');
-        axios.post.mockResolvedValue('success');
+        const spy = jest.spyOn(API_URL, 'updateOrGetCompetition');
+        axios.get.mockResolvedValue('success');
 
-        const result = await ApiHelper.CreateCompetition(bodyExample)
+        const result = await ApiHelper.GetCompetition(1)
+        expect(spy).toHaveBeenCalledWith(1);
+        expect(result).toEqual('success')
+      })
+    })
+
+    describe('GetCompetitionRankings', () => {
+      test('Should call with right args', async () => {
+        const spy = jest.spyOn(API_URL, 'getCompetitionRankings');
+        axios.get.mockResolvedValue('success');
+
+        const result = await ApiHelper.GetCompetitionRankings(1)
+        expect(spy).toHaveBeenCalledWith(1);
+        expect(result).toEqual('success')
+      })
+    })
+
+    describe('getCompetitions', () => {
+      test('Should call with right args', async () => {
+        const spy = jest.spyOn(API_URL, 'createOrGetCompetitions');
+        axios.get.mockResolvedValue('success');
+
+        const result = await ApiHelper.GetCompetitions()
         expect(spy).toHaveBeenCalled();
         expect(result).toEqual('success')
       })
