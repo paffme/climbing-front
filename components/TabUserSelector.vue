@@ -20,7 +20,7 @@
       <ul>
         <li class="panel-block is-active" v-for="(user, index) in internal_users" :key="user.id">
           <nuxt-link :to='"/user/" + user.id'>
-            {{ `${user.firstName} ${user.lastName}`  }}
+            <p>{{ `${user.firstName} ${user.lastName}`  }}</p>
           </nuxt-link>
           <b-button type="is-danger"
                     :key="user.id"

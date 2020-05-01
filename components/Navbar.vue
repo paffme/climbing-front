@@ -11,11 +11,16 @@
       <template slot="end">
         <b-navbar-item tag="div">
           <template v-for="item of itemNavbars">
-            <nuxt-link :to="item.linkTo" class="end-icon-link">
-              <b-icon
-                :icon="item.icon">
-              </b-icon>
-            </nuxt-link>
+            <template v-if="item.linkTo === 'logout'">
+              <b-button v-on:click="disconnect" :icon-left="item.icon"></b-button>
+            </template>
+            <template v-else>
+              <nuxt-link :to="item.linkTo" class="end-icon-link">
+                <b-icon
+                  :icon="item.icon">
+                </b-icon>
+              </nuxt-link>
+            </template>
           </template>
         </b-navbar-item>
       </template>
@@ -24,6 +29,7 @@
 
 <script lang="ts">
   import { Vue, Component, Prop } from "vue-property-decorator";
+  import { authUser } from "~/utils/store-accessor";
 
   type NavbarItem = {
     linkTo: string
@@ -33,11 +39,17 @@
   @Component
   export default class Navbar extends Vue {
     @Prop({type: Array, required: true}) readonly navbarItems!: NavbarItem[]
+    AuthUser = authUser
     itemNavbars?: NavbarItem[] = []
     data() {
       return {
         APP_TITLE: process.env.NUXT_ENV_APP_TITLE || 'PAFFME'
       }
+    }
+
+    disconnect() {
+      authUser.disconnectUser()
+      this.$router.push('/login')
     }
 
     mounted() {

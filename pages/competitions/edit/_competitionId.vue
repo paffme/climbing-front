@@ -20,13 +20,19 @@ import { Sex } from "~/definitions";
         <div class="columns">
           <div class="column">
             <div class="tiles">
+              <div :closable="false">
+                <UserGestion></UserGestion>
+              </div>
               <b-notification :closable="false">
                 <template v-if="internal_competition">
                   <EditCompetitionForm :internal_competition="internal_competition"></EditCompetitionForm>
                 </template>
               </b-notification>
+
               <b-notification :closable="false">
-                <UserGestion></UserGestion>
+                <template v-if="internal_competition">
+                  <RoundCompetitionForm></RoundCompetitionForm>
+                </template>
               </b-notification>
             </div>
           </div>
@@ -43,10 +49,11 @@ import { Sex } from "~/definitions";
   import GoBackBtn from "~/components/GoBackBtn.vue";
   import { ApiCompetition } from "~/definitions";
   import { ApiHelper } from "~/utils/api_helper/apiHelper";
+  import RoundCompetitionForm from "~/components/Form/RoundCompetitionForm.vue";
 
   @Component({
     middleware: 'isAuth',
-    components: { UserGestion, EditCompetitionForm, GoBackBtn }
+    components: { UserGestion, EditCompetitionForm, GoBackBtn, RoundCompetitionForm }
   })
   export default class EditOneCompetition extends Vue {
     idCompetition?: number

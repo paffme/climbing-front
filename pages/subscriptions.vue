@@ -4,9 +4,7 @@
       <div id="login">
         <div class="card">
           <div class="card-header">
-            <p class="card-header-title">
-              Inscriptions
-            </p>
+            <img src="../assets/ffme_logo.png" alt="" width="140">
           </div>
           <div class="card-content">
             <b-notification :type="form.error ? 'is-danger' : 'is-success'" :closable=false :active.sync="form.success || form.error">
@@ -145,6 +143,13 @@
 </script>
 
 <style scoped>
+  img {
+    margin: 20px
+  }
+  .card-header {
+    display: flex;
+    justify-content: center;
+  }
 #login {
   padding-top: 25%;
 }

@@ -17,6 +17,19 @@ export enum RoleName {
   DelegueTechnique = 'Délégués techniques',
   Organisateur = 'Organisateur'
 }
+
+export enum RankingType {
+  CIRCUIT,
+  UNLIMITED_CONTEST,
+  LIMITED_CONTEST
+}
+
+export enum TypeBouldering {
+  QUALIFIER,
+  SEMI_FINAL,
+  FINAL
+}
+
 export enum Sex {
   Male = 'male',
   Female = 'female',
@@ -51,6 +64,18 @@ export type ApiCompetition = Competition & {
 }
 
 export type FormSubscription = { error: boolean, success: boolean, message: string, passwordIsValid?: boolean, isLoading: boolean }
+export type FormBoulderingRound = {error: boolean, success: boolean, isLoading: boolean, input: BoulderingRoundInput}
+export type BoulderingRoundInput = {
+  category?: CategoryName,
+  sex?: Sex,
+  index?: number,
+  name?: string,
+  quota?: number,
+  boulders?: number,
+  rankingType?: 'CIRCUIT',
+  type?: 'QUALIFIER',
+  groups?: number
+}
 export type SubscriptionCredentials = {
   email: string,
   name: string,

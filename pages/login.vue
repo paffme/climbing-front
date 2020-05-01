@@ -4,9 +4,7 @@
       <div id="login">
         <div class="card">
           <div class="card-header">
-            <p class="card-header-title">
-              Se connecter
-            </p>
+            <img src="../assets/ffme_logo.png" alt="" width="140">
           </div>
           <div class="card-content">
             <template v-if="fromSubscription">
@@ -86,6 +84,13 @@
 </script>
 
 <style scoped>
+  img {
+    margin: 20px
+  }
+  .card-header {
+    display: flex;
+    justify-content: center;
+  }
 #login {
   padding-top: 25%;
 }
