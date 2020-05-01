@@ -1,5 +1,5 @@
 import { Middleware } from '@nuxt/types'
-import { $axios } from "~/utils/api";
+import { ApiHelper } from "~/utils/api_helper/apiHelper";
 
 const unauthorizedRoute = ['login', 'subscriptions']
 const isAuth: Middleware = ({route, store, redirect}) => {
@@ -10,9 +10,9 @@ const isAuth: Middleware = ({route, store, redirect}) => {
   if (!isUnauthorizedRouteWhenConnected && !store.getters['authUser/Authenticated']) {
     return redirect('/login')
   }
-  console.log('store.getters[\'authUser/Authenticated\']', store.getters['authUser/Credentials'])
-  const credential = store.getters['authUser/Credentials']
-  if (credential && credential.token) $axios.setToken(credential.token, 'Bearer')
+
+  const credential = store.getters['authUser/Token']
+  if (credential && credential.token) ApiHelper.SetToken(credential.token)
 }
 
 export default isAuth

@@ -13,7 +13,7 @@ import { Sex } from "~/definitions";
         <nav class="breadcrumb" aria-label="breadcrumbs">
           <ul>
             <li class="is-primary"><nuxt-link to="/competitions">Compétitions</nuxt-link></li>
-            <li class="is-active"><a href="#" aria-current="page">Champigny</a></li>
+            <li class="is-active"><a href="#" aria-current="page" v-if="internal_competition">{{ internal_competition.name }}</a></li>
           </ul>
         </nav>
 
@@ -21,8 +21,9 @@ import { Sex } from "~/definitions";
           <div class="column">
             <div class="tiles">
               <b-notification :closable="false">
-                {{ internal_competition}}
-                <CompetitionForm :test-compet="internal_competition"></CompetitionForm>
+                <template v-if="internal_competition">
+                  <EditCompetitionForm :internal_competition="internal_competition"></EditCompetitionForm>
+                </template>
               </b-notification>
               <b-notification :closable="false">
                 <UserGestion></UserGestion>
@@ -38,13 +39,14 @@ import { Sex } from "~/definitions";
 <script lang="ts">
   import { Component, Vue } from "vue-property-decorator";
   import UserGestion from "~/components/UserGestion.vue";
-  import CompetitionForm from "~/components/Form/CompetitionForm.vue";
+  import EditCompetitionForm from "~/components/Form/EditCompetitionForm.vue";
   import GoBackBtn from "~/components/GoBackBtn.vue";
-  import { ApiCompetition, CategoryName, Competition, Sex, TypeCompetition } from "~/definitions";
+  import { ApiCompetition } from "~/definitions";
+  import { ApiHelper } from "~/utils/api_helper/apiHelper";
 
   @Component({
     middleware: 'isAuth',
-    components: { UserGestion, CompetitionForm, GoBackBtn }
+    components: { UserGestion, EditCompetitionForm, GoBackBtn }
   })
   export default class EditOneCompetition extends Vue {
     idCompetition?: number
@@ -57,23 +59,12 @@ import { Sex } from "~/definitions";
 
     async getCompetition(idCompetition: number): Promise<ApiCompetition> {
       console.log('idCompetition', idCompetition)
-      return Promise.resolve(
-        {
-          id: 2,
-          name: 'Chalais Savoyard',
-          type: TypeCompetition.Bouldering,
-          startDate: new Date('2020-04-25T14:50:54.009Z'),
-          createdAt: new Date('2020-04-25T14:50:54.009Z'),
-          updatedAt: new Date('2020-04-25T14:50:54.009Z'),
-          endDate: new Date('2020-04-25T14:50:54.009Z'),
-          address: '19 Avenue Villejuif',
-          city: 'Choisy',
-          postalCode: '94320',
-          categories: [
-            {sex: Sex.Female, name: CategoryName.Benjamin}
-          ]
-        }
-      )
+      const result = await ApiHelper.GetCompetition(idCompetition)
+      return {
+        ...result.data,
+        startDate: new Date(result.data.startDate),
+        endDate: new Date(result.data.endDate),
+      }
     }
   }
 </script>

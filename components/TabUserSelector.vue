@@ -134,6 +134,8 @@
             "createdAt": "2020-04-23T23:13:37.202Z",
             "updatedAt": "2020-04-23T23:13:37.202Z",
             "id": 0,
+            club: null,
+            birthYear: 22,
             "email": "string",
             "firstName": "Pierre",
             "lastName": "Emanuel"
@@ -142,6 +144,8 @@
             "createdAt": "2020-04-23T23:13:37.202Z",
             "updatedAt": "2020-04-23T23:13:37.202Z",
             "id": 1,
+            birthYear: 22,
+            club: null,
             "email": "string",
             "firstName": "Marcus",
             "lastName": "Garvey"

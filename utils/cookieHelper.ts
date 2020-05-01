@@ -1,27 +1,40 @@
 export function getCookies(): Array<Object> {
-  const cookies = document.cookie.split(';')
-  const allCookies: Array<any> = []
+  const cookies = document.cookie.split(";");
+  const allCookies: Array<any> = [];
   cookies.forEach(cookie => {
-    const splitted = cookie.split('=')
-    if (!splitted[0] || !splitted[1]) return
-    allCookies.push({[splitted[0]]: splitted[1]})
-  })
-  return allCookies
+    const splitted = cookie.split("=");
+    if (!splitted[0] || !splitted[1]) return;
+    allCookies.push({ [splitted[0]]: splitted[1] });
+  });
+  return allCookies;
 }
 
 export function getCookie(name: string): null | {} {
-  const cookies = document.cookie.split(';')
-  let finalCookie = null
+  const cookies = document.cookie.replace('; ', ';').split(";");
+  let finalCookie = null;
   cookies.forEach(cookie => {
-    const splitted = cookie.split('=')
+    const splitted = cookie.split("=");
 
     if (splitted[0] === name) {
       finalCookie = {
         [splitted[0]]: splitted[1]
-      }
+      };
+    }
+  });
+  return finalCookie;
+}
+
+export function getCookieFromObject(name: string): any | undefined {
+  let finalResult
+  // On supprime les espaces vides pour bien checker la clé de l'objet
+  const cookies = document.cookie.replace('; ', ';').split(";");
+  cookies.forEach(cookie => {
+    const splitted = cookie.split('=')
+    if (splitted[0] === name) {
+      finalResult = JSON.parse(splitted[1])
     }
   })
-  return finalCookie
+  return finalResult
 }
 
 export function removeCookies(): void {
@@ -38,6 +51,11 @@ export function removeCookies(): void {
 export function removeCookie(cookieName: string): void {
   document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }
-export function createCookie(key: string, value: string, path = '/'): void {
-  document.cookie = `${key}=${value}; path=${path}`
+
+export function createCookie(key: string, value: string, path = "/"): void {
+  document.cookie = `${key}=${value}; path=${path}`;
+}
+
+export function createCookieFromObject(key: string, value: object, path = "/"): void {
+  document.cookie = `${key}=${JSON.stringify(value)}; path=${path}`;
 }

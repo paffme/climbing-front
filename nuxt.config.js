@@ -33,7 +33,6 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/axios-accessor.ts',
     '~/plugins/google-map.ts'
   ],
   pwa: {
@@ -47,7 +46,7 @@ module.exports = {
         suffix: 'v1'
       },
       config: {
-        debug: true
+        debug: false
       },
       skipWaiting: true,
       cacheAssets: true,

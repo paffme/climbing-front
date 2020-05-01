@@ -38,7 +38,7 @@ export type Competition = {
   name: string
   type: TypeCompetition
   startDate: Date
-  endDate: Date
+  endDate: Date | string
   address: string
   city: string
   postalCode: string
@@ -69,6 +69,8 @@ export type APIUser = {
   email: string,
   firstName: string,
   lastName: string
+  birthYear: number
+  club: string | null
 }
 
 export type TokenCredentials = {
@@ -112,4 +114,20 @@ export type BoulderingResult = {
   top: boolean,
   zone: boolean,
   try: boolean
+}
+
+export type APIRankingResponse = {
+  [key: string]: {
+    [key: string]: Array<Ranking>,
+  }
+}
+
+export type Ranking = {
+  ranking: 0,
+  climber: {
+    id: 0,
+    firstName: string,
+    lastName: string,
+    club: string
+  }
 }
