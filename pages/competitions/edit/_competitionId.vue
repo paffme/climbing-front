@@ -29,11 +29,14 @@ import { Sex } from "~/definitions";
                 </template>
               </b-notification>
 
-              <b-notification :closable="false">
-                <template v-if="internal_competition">
-                  <RoundCompetitionForm></RoundCompetitionForm>
-                </template>
-              </b-notification>
+              <div class="column is-6">
+                <b-notification :closable="false">
+                  <template v-if="internal_competition">
+                    <h3 class="subtitle">Ajout des rounds</h3>
+                    <RoundCompetitionForm></RoundCompetitionForm>
+                  </template>
+                </b-notification>
+              </div>
             </div>
           </div>
         </div>
@@ -65,12 +68,12 @@ import { Sex } from "~/definitions";
     }
 
     async getCompetition(idCompetition: number): Promise<ApiCompetition> {
-      console.log('idCompetition', idCompetition)
       const result = await ApiHelper.GetCompetition(idCompetition)
       return {
         ...result.data,
-        startDate: new Date(result.data.startDate),
-        endDate: new Date(result.data.endDate),
+        startDate: result.data?.startDate ? new Date(result.data?.startDate) : null,
+        endDate: result.data?.endDate ? new Date(result.data.endDate) : null,
+        welcomingDate: result.data?.welcomingDate ? new Date(result.data.welcomingDate) : null,
       }
     }
   }

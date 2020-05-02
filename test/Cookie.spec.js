@@ -1,5 +1,5 @@
 import { getCookies, createCookie, getCookie, removeCookie, removeCookies } from "~/utils/cookieHelper.ts";
-import { createCookieFromObject, getCookieFromObject, getCookieObject }     from "~/utils/cookieHelper";
+import { createCookieFromObject, getCookieFromObject }     from "~/utils/cookieHelper";
 
 describe('Cookie', () => {
 

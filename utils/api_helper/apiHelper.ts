@@ -4,13 +4,19 @@ import {
   BoulderingRounds,
   CompetitionsRegistrations,
   Competition,
-  ApiCompetition, SubscriptionCredentials, UserCredentials, AuthCredentials, TokenCredentials, APIRankingResponse
+  ApiCompetition,
+  SubscriptionCredentials,
+  UserCredentials,
+  AuthCredentials,
+  TokenCredentials,
+  APIRankingResponse,
+  BoulderingRoundInput
 } from "~/definitions";
 import axios from 'axios'
 import { AxiosResponse } from "~/node_modules/axios";
 import API_URL from "~/utils/api_helper/apiUrl";
 
-axios.defaults.baseURL = 'https://paffme.hdaroit.fr/api'
+axios.defaults.baseURL = 'https://paffme.hdaroit.fr/api/v1'
 
 export const ApiHelper = {
   AddUserInCompetition: addUserInCompetition,
@@ -130,15 +136,15 @@ async function removeOrganizers(competitionId: number, userId: number): Promise<
   return axios.delete(API_URL.addOrRemoveOrganizers(competitionId, userId))
 }
 
-async function addRound(competitionId: number): Promise<BoulderingRounds> {
-  return axios.post(API_URL.addRound(competitionId))
+async function addRound(competitionId: number, body: BoulderingRoundInput): Promise<BoulderingRounds> {
+  return axios.post(API_URL.addRound(competitionId), body)
 }
 
 async function addBoulderingResult(body: BoulderingResult,competitionId: number, roundId: number, boulderId: number): Promise<void> {
   return axios.post(API_URL.addBoulderingResult(competitionId, roundId, boulderId), body)
 }
 
-async function createCompetition(body: Competition): Promise<void> {
+async function createCompetition(body: Competition): Promise<AxiosResponse<Competition>> {
   return axios.post(API_URL.createOrGetCompetitions(), body)
 }
 

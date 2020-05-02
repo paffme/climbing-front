@@ -25,12 +25,21 @@
           <div class="columns">
             <div class="column is-6">
               <div class="content">
+
+                <b-notification
+                  v-if="competition.cancelled"
+                  type="is-danger"
+                  :closable="false"
+                  has-icon>
+                  Cette compétition est annulé
+                </b-notification>
                 <h1 class="title"> {{ competition.name }} </h1>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan, metus ultrices eleifend gravida, nulla nunc varius lectus, nec rutrum justo nibh eu lectus. Ut vulputate semper dui. Fusce erat odio, sollicitudin vel erat vel, interdum mattis neque.
+                  {{ competition.description }}
                 </p>
+                <b-tag :type="competition.open ? 'is-success' : 'is-danger'">{{ competition.open ? 'Compétition Open' : 'Competition non Open' }}</b-tag>
                 <ul id="detail">
-                  <li>Date début : <b-tag type="is-success">{{ competition.startDate | formatDate }}</b-tag></li>
+                  <li>Date début : <b-tag type="is-info">{{ competition.startDate | formatDate }}</b-tag></li>
                   <li>Date fin : <b-tag type="is-danger">{{ competition.endDate | formatDate }}</b-tag></li>
                   <li>Type compétition : <b-tag>{{ competition.type | capitalize}}</b-tag></li>
                   <li>Adresse : <span>{{ competition.address}} - {{ competition.postalCode}}</span></li>
@@ -42,17 +51,17 @@
                       </li>
                     </ul>
                   </li>
-                  <li>Heure d'accueil : <span>14:30</span></li>
+                  <li>Heure d'accueil : <span>{{ competition.welcomingDate | formatDate }}</span></li>
                   <hr>
                   <li class="detail_text">
                     <h1 class="subtitle is-size-4">Programme :</h1>
                     <span>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan, metus ultrices eleifend gravida, nulla nunc varius lectus, nec rutrum justo nibh eu lectus. Ut vulputate semper dui. Fusce erat odio, sollicitudin vel erat vel, interdum mattis neque.
+                      {{ competition.agenda }}
                     </span>
                   </li>
                 </ul>
 
-                <div class="is-pulled-right">
+                <div class="is-pulled-right" v-if="!competition.cancelled">
                   <b-button type="is-primary" v-on:click="openRegisterModal" :loading="isLoading" :disabled="isAlreadyRegister">
                     {{ isAlreadyRegister ? 'Vous êtes déjà inscrit': 'Je souhaite participer !'}}</b-button>
                 </div>
@@ -94,6 +103,7 @@
     components: { GoBackBtn },
     filters: {
       formatDate: (dirtyDate: string): string => {
+        moment.locale('fr')
         return moment(dirtyDate).format('LLLL')
       },
       capitalize: (value: string) => {

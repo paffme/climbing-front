@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-table
-      :data="internal_competitions"
+      :data="internal_competitions ? internal_competitions : []"
       :hovered="true"
       default-sort="id"
       aria-next-label="Next page"
@@ -39,6 +39,19 @@
             <b-button icon-left="arrow-right-bold" type="is-primary"></b-button>
           </nuxt-link>
         </b-table-column>
+      </template>
+      <template slot="empty">
+        <section class="section">
+          <div class="content has-text-grey has-text-centered">
+            <p>
+              <b-icon
+                icon="emoticon-sad"
+                size="is-large">
+              </b-icon>
+            </p>
+            <p>Aucune compétition trouvée</p>
+          </div>
+        </section>
       </template>
     </b-table>
   </div>

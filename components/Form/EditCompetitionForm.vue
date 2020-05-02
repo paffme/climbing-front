@@ -23,10 +23,22 @@
             placeholder="Date de fin"
             icon="calendar-today"
             trap-focus
-            v-model="internal_competition.endDate"
-          >
+            v-model="internal_competition.endDate">
           </b-datepicker>
         </b-field>
+      </b-field>
+
+      <b-field horizontal label="Compétition open">
+        <b-switch v-model="internal_competition.open"></b-switch>
+      </b-field>
+      <b-field horizontal label="Date d'accueil">
+        <b-datetimepicker
+          placeholder="Date d'accueil"
+          icon="calendar-today"
+          trap-focus
+          v-model="internal_competition.welcomingDate"
+        >
+        </b-datetimepicker>
       </b-field>
 
       <b-field horizontal label="Type">
@@ -62,6 +74,14 @@
         <b-button v-if="selectedOptions.length > 0" icon-right="delete" type="is-danger" v-on:click="removeCategory"></b-button>
       </b-field>
 
+      <b-field horizontal label="Description">
+        <b-input type="textarea" v-model="internal_competition.description"></b-input>
+      </b-field>
+
+      <b-field horizontal label="Agenda">
+        <b-input type="textarea" v-model="internal_competition.agenda"></b-input>
+      </b-field>
+
       <div class="is-pulled-right">
         <b-button type="is-primary" tag="button" native-type="submit" :loading="isLoading">Valider compétition</b-button>
       </div>
@@ -89,6 +109,7 @@
 
     async updateCompetition(competitionData: Competition) {
       competitionData.id = this.internal_competition.id
+      console.log('competitionData', competitionData)
       try {
         await ApiHelper.UpdateCompetition(competitionData)
         this.$buefy.toast.open({
@@ -106,6 +127,7 @@
 
     addCategory(result: any) {
       let competitionCategories = this.internal_competition && this.internal_competition.categories
+      if (!competitionCategories) return
       let alreadyExist = false
       if (competitionCategories.length === 0) {
         alreadyExist = false
@@ -117,13 +139,22 @@
           }
         })
       }
-      if (!alreadyExist) competitionCategories.push(result)
+      if (!alreadyExist) {
+        competitionCategories.push(result)
+      } else {
+        this.$buefy.toast.open({
+          type: 'is-info',
+          message: 'Cette catégorie existe déjà'
+        })
+      }
     }
 
     removeCategory() {
       if (this.categoryIndex === null) return
 
       let competitionCategories = this.internal_competition && this.internal_competition.categories
+
+      if (!competitionCategories) return
 
       if (this.categoryIndex === 0 && competitionCategories.length === 1) {
         competitionCategories = []

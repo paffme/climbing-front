@@ -71,14 +71,6 @@ module.exports = {
     '@nuxtjs/dotenv',
   ],
   /*
-  ** Axios module configuration
-  ** See https://axios.nuxtjs.org/options
-  */
-  axios: {
-    baseURL: 'https://paffme.hdaroit.fr/api',
-    https: true,
-  },
-  /*
   ** Build configuration
   */
   build: {

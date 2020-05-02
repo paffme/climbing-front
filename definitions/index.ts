@@ -19,15 +19,15 @@ export enum RoleName {
 }
 
 export enum RankingType {
-  CIRCUIT,
-  UNLIMITED_CONTEST,
-  LIMITED_CONTEST
+  CIRCUIT = 'Circuit',
+  UNLIMITED_CONTEST = 'Illimité',
+  LIMITED_CONTEST = 'Limité'
 }
 
 export enum TypeBouldering {
-  QUALIFIER,
-  SEMI_FINAL,
-  FINAL
+  QUALIFIER = 'Qualification',
+  SEMI_FINAL = 'Demi-final',
+  FINAL = 'Final'
 }
 
 export enum Sex {
@@ -48,14 +48,19 @@ export type CompetitionCategories = {
 
 export type Competition = {
   id?: number | null
-  name: string
-  type: TypeCompetition
-  startDate: Date
-  endDate: Date | string
-  address: string
-  city: string
-  postalCode: string
-  categories: CompetitionCategories[]
+  cancelled?: boolean | null
+  name: string | null
+  description: string | null
+  open: boolean | null
+  agenda: string | null
+  welcomingDate: Date | null
+  type: TypeCompetition | null
+  startDate: Date | null
+  endDate: Date | string | null
+  address: string | null
+  city: string | null
+  postalCode: string | null
+  categories: CompetitionCategories[] | null
 }
 
 export type ApiCompetition = Competition & {
@@ -63,8 +68,16 @@ export type ApiCompetition = Competition & {
   updatedAt: Date,
 }
 
-export type FormSubscription = { error: boolean, success: boolean, message: string, passwordIsValid?: boolean, isLoading: boolean }
-export type FormBoulderingRound = {error: boolean, success: boolean, isLoading: boolean, input: BoulderingRoundInput}
+export type Form = {
+  error: boolean,
+  success: boolean,
+  isLoading: boolean
+}
+export type FormCreateCompetition = Form & {
+  competition: Competition
+}
+export type FormSubscription = Form & { message: string, passwordIsValid?: boolean }
+export type FormBoulderingRound = Form & { input: BoulderingRoundInput}
 export type BoulderingRoundInput = {
   category?: CategoryName,
   sex?: Sex,
@@ -72,8 +85,8 @@ export type BoulderingRoundInput = {
   name?: string,
   quota?: number,
   boulders?: number,
-  rankingType?: 'CIRCUIT',
-  type?: 'QUALIFIER',
+  rankingType?: RankingType,
+  type?: TypeBouldering,
   groups?: number
 }
 export type SubscriptionCredentials = {
