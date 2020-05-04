@@ -17,6 +17,12 @@ $ yarn start
 
 # generate static project
 $ yarn generate
+
+# run unitary tests
+$ yarn test
+
+# run tests cypress (end-to-end)
+$ yarn cypress:run
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
