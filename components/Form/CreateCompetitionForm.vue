@@ -175,13 +175,15 @@
     }
 
     removeCategory() {
+      console.log('this.categoryIndex', this.categoryIndex)
       if (this.categoryIndex === null) return
 
       let competitionCategories = this.Form.competition?.categories
+      console.log('competitionCategories', competitionCategories)
       if (!competitionCategories) return
 
       if (this.categoryIndex === 0 && competitionCategories.length === 1) {
-        competitionCategories = []
+        this.Form.competition.categories = []
         return
       }
       competitionCategories.splice(this.categoryIndex, 1)

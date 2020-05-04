@@ -15,20 +15,7 @@
             <b-notification :type="form.error ? 'is-danger' : 'is-success'" :closable=false :active.sync="form.success || form.error">
               {{ form.message }}
             </b-notification>
-            <form v-on:submit.prevent="connectUser(credential.email, credential.password)">
-              <b-field label="Email" required>
-                <b-input v-model="credential.email" type="text"></b-input>
-              </b-field>
-              <b-field label="Mot de passe">
-                <b-input v-model="credential.password" password-reveal type="password" required></b-input>
-              </b-field>
-              <nuxt-link to='/subscriptions'>
-                <span id="subscriptions" class="has-text-info form_link">Je n'ai pas encore de compte</span>
-              </nuxt-link>
-              <p class="control is-pulled-right">
-                <b-button class="button" native-type="submit" type="is-primary">Se connecter</b-button>
-              </p>
-            </form>
+            <LoginForm v-on:emitForm="connectUser"></LoginForm>
           </div>
         </div>
       </div>
@@ -39,22 +26,19 @@
 <script lang="ts">
   import { Vue, Component } from "vue-property-decorator";
   import { authUser } from '~/store'
-  import { TokenCredentials, UserCredentials } from "~/definitions";
-  import { AxiosResponse } from "~/node_modules/axios";
+  import LoginForm from "~/components/Form/LoginForm.vue";
+  import { FormEvent, LoginFormEvent } from "~/definitions/FormEvent";
 
   @Component({
     layout: 'blank',
+    components: {LoginForm},
     middleware: 'isAuth'
   })
   export default class Login extends Vue {
-    form = {
+    form: FormEvent = {
       error: false,
       success: false,
-      message: ''
-    }
-    credential = {
-      email: 'admin@test.com',
-      password: 'admin@test.com'
+      message: null
     }
     fromSubscription = false // Utiliser pour afficher message perso si l'utilisateur provient de la page d'inscription
 
@@ -62,12 +46,12 @@
       this.fromSubscription = !!this.$route.query.fromSubscription
       this.form.message = this.fromSubscription ? 'Vous pouvez désormais vous connecter' : ''
     }
-    async connectUser(email: string, password: string) {
-      this.form.success = false
-      this.form.error = false
-      this.form.message = ''
+    async connectUser(loginFormEvent: LoginFormEvent) {
+      this.form.success = loginFormEvent.success
+      this.form.error = loginFormEvent.error
+      this.form.message = loginFormEvent.message
       try {
-        const tokenCredentials = await authUser.fetchToken({email, password})
+        const tokenCredentials = await authUser.fetchToken({email: loginFormEvent.data.email, password: loginFormEvent.data.password})
         authUser.setTokenCredentials(tokenCredentials.data)
         const userCredential = await authUser.fetchUser(tokenCredentials.data.userId)
         authUser.setUserCredentials(userCredential.data)

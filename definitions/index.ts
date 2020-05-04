@@ -56,7 +56,7 @@ export type Competition = {
   welcomingDate: Date | null
   type: TypeCompetition | null
   startDate: Date | null
-  endDate: Date | string | null
+  endDate: Date | null
   address: string | null
   city: string | null
   postalCode: string | null
@@ -73,6 +73,7 @@ export type Form = {
   success: boolean,
   isLoading: boolean
 }
+
 export type FormCreateCompetition = Form & {
   competition: Competition
 }

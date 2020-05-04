@@ -100,15 +100,14 @@
     components: {FormCompetitionCategories}
   })
   export default class EditCompetitionForm extends Vue {
-    // @PropSync('clean-competition', { type: Object }) internal_competition!: Competition
-    @Prop(Object) readonly internal_competition!: Competition
+    @Prop({default: Object}) readonly internal_competition!: Competition
     categoryIndex: number | null = null
     selectedOptions = []
     typeCompetiton = TypeCompetition
     isLoading = false
 
     async updateCompetition(competitionData: Competition) {
-      competitionData.id = this.internal_competition.id
+      competitionData.id = this.internal_competition?.id
       console.log('competitionData', competitionData)
       try {
         await ApiHelper.UpdateCompetition(competitionData)
