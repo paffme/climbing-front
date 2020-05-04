@@ -17,7 +17,7 @@
         <div class="custom_section page_content">
           <nav class="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li class="is-primary"><nuxt-link to="/competitions">Compétitions</nuxt-link></li>
+              <li class="is-primary"><nuxt-link to="/">Compétitions</nuxt-link></li>
               <li class="is-active"><a href="#" aria-current="page">{{ competition.name }}</a></li>
             </ul>
           </nav>
@@ -25,6 +25,20 @@
           <div class="columns">
             <div class="column is-6">
               <div class="content">
+                <div class="content">
+                  <b-button type="is-primary" tag="nuxt-link" :to="'edit/' + competition.id + '?role=' + roleNameQueryParams.pdj">
+                    ETQ que Jury-President
+                  </b-button>
+
+                  <b-button type="is-warning" tag="nuxt-link" :to="'3'">
+                    ETQ que Jury-President
+                  </b-button>
+                </div>
+                <b-notification
+                  :closable="false"
+                type="is-primary">
+                  Vous êtes organisateurs de cette compétition
+                </b-notification>
 
                 <b-notification
                   v-if="competition.cancelled"
@@ -92,7 +106,7 @@
 <script lang="ts">
   import { Vue, Component } from "vue-property-decorator";
   import GoBackBtn from "~/components/GoBackBtn.vue";
-  import { Competition, CompetitionsRegistrations } from "~/definitions";
+  import { Competition, CompetitionsRegistrations, RoleName, RoleNameQueryParams } from "~/definitions";
   import { ApiHelper } from "~/utils/api_helper/apiHelper";
   import moment from 'moment'
   import UserRegisterToCompetition from "~/components/Form/UserRegisterToCompetition.vue";
@@ -101,8 +115,13 @@
   @Component({
     middleware: 'isAuth',
     components: { GoBackBtn },
+    data() {
+      return {
+        roleNameQueryParams: RoleNameQueryParams
+      }
+    },
     filters: {
-      formatDate: (dirtyDate: string): string => {
+      formatDate: (dirtyDate: Date): string => {
         moment.locale('fr')
         return moment(dirtyDate).format('LLLL')
       },
@@ -132,6 +151,7 @@
         const result = await ApiHelper.GetCompetition(competitionId)
         this.competition = result.data
         this.isAlreadyRegister = await this.checkIfUserIsRegisterToCompetition(competitionId)
+        this.checkUserRole(competitionId)
         this.isLoading = false
       } catch(err) {
         console.log(err)
@@ -175,6 +195,21 @@
         return false
       }
     }
+
+    // WIP
+    checkUserRole(competitionId: number) {
+      if (!authUser.Authenticated) {
+        console.log('ERROR - Utilisateur non authentifié')
+        return
+      }
+      const userId = authUser.Credentials?.id
+
+      if(!userId) {
+        console.log('ERROR - Utilisateur possédant un token mais pas d\'id ')
+        return
+      }
+    }
+
   }
 </script>
 

@@ -56,25 +56,34 @@ import { Sex } from "~/definitions";
 
   @Component({
     middleware: 'isAuth',
+    validate({ params, query }: any) {
+      const competitionId = parseInt(params.competitionId, 10)
+      if (!competitionId) throw new Error('ID de compétition non valide')
+
+      const roleQuery = query.role
+      if (!roleQuery) throw new Error("Aucun rôle n'est attribué")
+      return true
+    },
     components: { UserGestion, EditCompetitionForm, GoBackBtn, RoundCompetitionForm }
   })
   export default class EditOneCompetition extends Vue {
     idCompetition?: number
     internal_competition: ApiCompetition | null = null
+    role: string | null = null
 
     async mounted() {
       this.idCompetition = parseInt(this.$route.params['competitionId'], 10) || undefined
       this.internal_competition = this.idCompetition ? await this.getCompetition(this.idCompetition) : null
     }
 
-    async getCompetition(idCompetition: number): Promise<ApiCompetition> {
-      const result = await ApiHelper.GetCompetition(idCompetition)
-      return {
-        ...result.data,
-        startDate: result.data?.startDate ? new Date(result.data?.startDate) : null,
-        endDate: result.data?.endDate ? new Date(result.data.endDate) : null,
-        welcomingDate: result.data?.welcomingDate ? new Date(result.data.welcomingDate) : null,
-      }
+    async getCompetition(idCompetition: number): Promise<ApiCompetition | null> {
+        const result = await ApiHelper.GetCompetition(idCompetition)
+        return {
+          ...result.data,
+          startDate: result.data?.startDate ? new Date(result.data?.startDate) : null,
+          endDate: result.data?.endDate ? new Date(result.data.endDate) : null,
+          welcomingDate: result.data?.welcomingDate ? new Date(result.data.welcomingDate) : null,
+        }
     }
   }
 </script>

@@ -35,6 +35,9 @@
                   <b-input v-model="credentials.lastName"></b-input>
                 </b-field>
               </b-field>
+              <b-field label="club">
+                <b-input v-model="credentials.club"></b-input>
+              </b-field>
               <b-field label="Date de naissance">
                 <b-datepicker
                   v-model="credentials.birthDay"
@@ -46,6 +49,7 @@
               <b-field label="Mot de passe">
                 <b-input v-model="credentials.password" type="password" password-reveal required></b-input>
               </b-field>
+
               <b-field
                 label="Confirmer le mot de passe"
                 :message="form.passwordIsValid ? '' : form.message">
@@ -93,6 +97,7 @@
       firstName: 'Laurent',
       lastName: 'Gbagbo',
       sex: Sex.Male,
+      club: 'FFME',
       birthDay: new Date('01/29/1992'),
       dateBirth: 0,
       password: 'admin@test.com',

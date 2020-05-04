@@ -49,7 +49,7 @@
 
     disconnect() {
       authUser.disconnectUser()
-      this.$router.push('/login')
+      this.$router.push({name: 'login'})
     }
 
     mounted() {

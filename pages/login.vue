@@ -57,7 +57,7 @@
         authUser.setUserCredentials(userCredential.data)
         this.form.success = true
         this.form.message = "Vous allez être redirigé vers la page d\'accueil"
-        this.$router.push('/')
+        await this.$router.push({name: 'index'})
       } catch(error) {
         console.log('err', error)
         this.form.error = true

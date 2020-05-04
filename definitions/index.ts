@@ -9,6 +9,11 @@ export enum CategoryName {
   Veteran = 'veteran',
 }
 
+export enum RoleNameQueryParams {
+  pdj = 'pdj',
+  organisateur = 'organisateur',
+  juge = 'juge'
+}
 export enum RoleName {
   Juges = 'Juges',
   President = 'Président',

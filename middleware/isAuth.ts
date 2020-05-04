@@ -5,12 +5,11 @@ const unauthorizedRoute = ['login', 'subscriptions']
 const isAuth: Middleware = ({route, store, redirect}) => {
   if (!route.name) return
 
-  const isUnauthorizedRouteWhenConnected = unauthorizedRoute.includes(route.name)
+  const authorizedRouteWhenConnected = unauthorizedRoute.includes(route.name)
 
-  if (!isUnauthorizedRouteWhenConnected && !store.getters['authUser/Authenticated']) {
+  if (!authorizedRouteWhenConnected && !store.getters['authUser/Authenticated']) {
     return redirect('/login')
   }
-
   const credential = store.getters['authUser/Token']
   if (credential && credential.token) ApiHelper.SetToken(credential.token)
 }

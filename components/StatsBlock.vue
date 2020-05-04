@@ -10,7 +10,7 @@
 
   @Component
   export default class StatsBlock extends Vue {
-    @Prop(String) readonly number?: number
+    @Prop(Number) readonly number?: number
     @Prop(String) readonly description?: string
     @Prop(String) readonly type?: string
   }

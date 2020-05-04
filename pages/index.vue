@@ -15,10 +15,10 @@
       <div class="custom_section page_stats">
         <div class="tile is-ancestor">
           <div class="tile is-4 is-parent">
-            <StatsBlock number="0" description="Compétitions en cours" type="is-primary"></StatsBlock>
+            <StatsBlock :number="0" description="Compétitions en cours" type="is-primary"></StatsBlock>
           </div>
           <div class="tile is-4 is-parent">
-            <StatsBlock number="1320" description="Grimpeur depuis 2020" type="is-warning"></StatsBlock>
+            <StatsBlock :number="1320" description="Grimpeur depuis 2020" type="is-warning"></StatsBlock>
           </div>
           <div class="tile is-4 is-parent">
             <StatsBlock :number="competitions.length" description="Compétitions au total" type="is-danger"></StatsBlock>
