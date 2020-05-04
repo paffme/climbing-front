@@ -1,1 +1,5 @@
-{}
+{
+  "projectId": "cvq2xf",
+  "baseUrl": "http://localhost:8002/",
+  "supportFile": "cypress/support/index.ts"
+}

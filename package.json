@@ -11,6 +11,7 @@
     "generate": "nuxt generate",
     "test": "jest",
     "cypress:open": "cypress open",
+    "cypress:run": "cypress run --record --key 5360d000-8341-4540-930f-633fb0979519",
     "lint": "eslint --ext .js,.vue,.ts --ignore-path .gitignore .",
     "lintfix": "eslint --fix --ext .js,.vue,.ts --ignore-path .gitignore ."
   },
@@ -21,6 +22,7 @@
     "@types/lodash": "^4.14.150",
     "axios": "latest",
     "cross-env": "^5.2.0",
+    "eslint-plugin-cypress": "^2.10.3",
     "express": "^4.16.4",
     "http-link-header": "^1.0.2",
     "jest-jasmine2": "latest",
