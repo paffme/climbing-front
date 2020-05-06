@@ -78,8 +78,12 @@
     competitions?: Competition[] = []
 
     async created() {
-      const response = await ApiHelper.GetCompetitions()
-      this.competitions = response.data
+      try {
+        const response = await ApiHelper.GetCompetitions()
+        this.competitions = response.data
+      } catch(e) {
+        this.competitions = []
+      }
     }
   }
 </script>

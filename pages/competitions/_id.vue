@@ -91,6 +91,38 @@
               </GmapMap>
             </div>
           </div>
+          <hr>
+          <div class="columns">
+            <div class="column is-12">
+              <div class="content">
+                <h4 class="title">Classement de la compétition</h4>
+                <div class="content">
+                  <div class="subtitle">Genre</div>
+                  <b-field position="is-centered">
+                    <template v-for="sex in sexes">
+                      <b-radio-button
+                        v-model="filter.sex"
+                        :native-value="sex">
+                        <b-icon :icon="sex === sexes.Male ? 'gender-male' : 'gender-female'"></b-icon>
+                        <span>{{ sex | capitalize}}</span>
+                      </b-radio-button>
+                    </template>
+                  </b-field>
+                  <div class="subtitle">Catégorie</div>
+                  <b-field position="is-centered">
+                    <template v-for="category in categories">
+                      <b-radio-button
+                        v-model="filter.categorie"
+                        :native-value="category">
+                        <span>{{ category | capitalize }}</span>
+                      </b-radio-button>
+                    </template>
+                  </b-field>
+                  <RankOneCompetition :competitionId='competition && competition.id' :sex="filter.sex" :categorie="filter.categorie"></RankOneCompetition>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </template>
@@ -104,20 +136,23 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component } from "vue-property-decorator";
+  import moment from "moment";
+  import { Component, Vue } from "vue-property-decorator";
   import GoBackBtn from "~/components/GoBackBtn.vue";
-  import { Competition, CompetitionsRegistrations, RoleName, RoleNameQueryParams } from "~/definitions";
+  import { CategoryName, Competition, CompetitionsRegistrations, RoleNameQueryParams, Sex } from "~/definitions";
   import { ApiHelper } from "~/utils/api_helper/apiHelper";
-  import moment from 'moment'
   import UserRegisterToCompetition from "~/components/Form/UserRegisterToCompetition.vue";
   import { authUser } from "~/utils/store-accessor";
+  import RankOneCompetition from "~/components/Table/RankOneCompetition.vue";
 
   @Component({
     middleware: 'isAuth',
-    components: { GoBackBtn },
+    components: { GoBackBtn, RankOneCompetition },
     data() {
       return {
-        roleNameQueryParams: RoleNameQueryParams
+        roleNameQueryParams: RoleNameQueryParams,
+        categories: CategoryName,
+        sexes: Sex,
       }
     },
     filters: {
@@ -128,7 +163,7 @@
       capitalize: (value: string) => {
         if (!value) return ''
         value = value.toString()
-        return value.toUpperCase()
+        return value[0].toUpperCase() + value.slice(1)
       }
     }
   })
@@ -136,6 +171,10 @@
     competition: Competition | null = null
     isAlreadyRegister: boolean = false
     isLoading = true
+    filter = {
+      sex: Sex.Male,
+      categorie: CategoryName.Benjamin
+    }
     async created() {
       const competitionId = this.$route.params.id ? parseInt(this.$route.params.id) : undefined
 
@@ -174,10 +213,6 @@
         customClass: 'custom-class custom-class-2',
         trapFocus: true
       })
-    }
-
-    async mounted() {
-
     }
 
     async checkIfUserIsRegisterToCompetition(competitionId: number): Promise<boolean> {
