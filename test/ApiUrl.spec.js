@@ -61,5 +61,9 @@ describe('ApiUrl Helper', () => {
     test('AddCompetitor - Should return a correct URL', () => {
       expect(API_URL.addCompetitor(2, 1)).toEqual('/competitions/2/registrations/1')
     })
+
+    test('GetUserCompetitionRoles - Should return a correct URL', () => {
+      expect(API_URL.getUserCompetitionRoles(23, 2)).toEqual('/users/2/competitions-roles/23')
+    })
   })
 })

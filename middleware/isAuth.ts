@@ -1,5 +1,5 @@
 import { Middleware } from '@nuxt/types'
-import { ApiHelper } from "~/utils/api_helper/apiHelper";
+import { AxiosHelper } from "~/utils/axiosHelper";
 
 const unauthorizedRoute = ['login', 'subscriptions']
 const isAuth: Middleware = ({route, store, redirect}) => {
@@ -11,7 +11,7 @@ const isAuth: Middleware = ({route, store, redirect}) => {
     return redirect('/login')
   }
   const credential = store.getters['authUser/Token']
-  if (credential && credential.token) ApiHelper.SetToken(credential.token)
+  if (credential && credential.token) AxiosHelper.SetHeaderAuthorizationToken(credential.token)
 }
 
 export default isAuth

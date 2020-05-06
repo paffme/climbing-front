@@ -166,6 +166,15 @@ export type APIRankingResponse = {
   }
 }
 
+export type APIUserCompetitionRoles = {
+  organizer: boolean,
+  juryPresident: boolean,
+  judge: boolean,
+  chiefRouteSetter: boolean,
+  routeSetter: boolean,
+  technicalDelegate: boolean
+}
+
 export type Ranking = {
   ranking: 0,
   climber: {

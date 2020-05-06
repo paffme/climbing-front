@@ -1,8 +1,13 @@
 const ROUTE_NAME = 'competitions'
+enum RouteName {
+  competitions = 'competitions',
+  users = 'users'
+}
 export default {
   registerOrRemoveUserInCompetition: (competitionId: number, userId: number): string => `/${ROUTE_NAME}/${competitionId}/registrations/${userId}`,
   getRegistrations: (competitionId: number): string => `/${ROUTE_NAME}/${competitionId}/registrations`,
   addCompetitor: (competitionId: number, userId: number): string => `/${ROUTE_NAME}/${competitionId}/registrations/${userId}`,
+  getUserCompetitionRoles: (competitionId: number, userId: number): string => `/${RouteName.users}/${userId}/competitions-roles/${competitionId}`,
   getJuryPresidents: (competitionId: number): string => `/${ROUTE_NAME}/${competitionId}/jury-presidents`,
   addOrRemoveJuryPresident: (competitionId: number, userId: number): string => `/${ROUTE_NAME}/${competitionId}/jury-presidents/${userId}`,
   getJudges: (competitionId: number): string => `/${ROUTE_NAME}/${competitionId}/judges`,

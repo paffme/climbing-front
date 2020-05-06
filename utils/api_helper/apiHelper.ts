@@ -10,7 +10,7 @@ import {
   AuthCredentials,
   TokenCredentials,
   APIRankingResponse,
-  BoulderingRoundInput
+  BoulderingRoundInput, APIUserCompetitionRoles
 } from "~/definitions";
 import axios from 'axios'
 import { AxiosResponse } from "~/node_modules/axios";
@@ -50,8 +50,8 @@ export const ApiHelper = {
   SubscribeUser: subscribeUser,
   GetUser: getUser,
   GetToken: getToken,
-  SetToken: setToken,
-  GetCompetitionRankings: getCompetitionRankings
+  GetCompetitionRankings: getCompetitionRankings,
+  GetUserCompetitionRoles: getUserCompetitionRoles,
 }
 
 async function addUserInCompetition(competitionId: number, userId: number): Promise<void> {
@@ -181,8 +181,6 @@ async function getCompetitionRankings(competitionId: number): Promise<AxiosRespo
   return await axios.get(API_URL.getCompetitionRankings(competitionId))
 }
 
-function setToken(token: string): void {
-  axios.defaults.headers = {
-    'Authorization': `Bearer ${token}`
-  }
+async function getUserCompetitionRoles(competitionId: number, userId: number): Promise<AxiosResponse<APIUserCompetitionRoles>> {
+  return await axios.get(API_URL.getUserCompetitionRoles(competitionId, userId))
 }

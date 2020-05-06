@@ -122,10 +122,6 @@
 
       credentials.birthYear = new Date().getFullYear() - credentials.birthDay.getFullYear()
 
-      console.log('1', credentials.birthDay && credentials.birthDay.getFullYear())
-      console.log('2', new Date().getFullYear())
-      console.log('3', credentials.birthYear)
-
       try {
         await authUser.subscribeUser(credentials)
         this.form.isLoading = false
