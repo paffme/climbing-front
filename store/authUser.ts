@@ -16,7 +16,7 @@ import {
 } from "~/utils/cookieHelper";
 import { ApiHelper } from "~/utils/api_helper/apiHelper";
 import { AxiosResponse } from "~/node_modules/axios";
-import axios from "axios";
+import { AxiosHelper } from "~/utils/axiosHelper";
 
 @Module({
   name: "authUser",
@@ -26,7 +26,7 @@ import axios from "axios";
 export default class AuthUser extends VuexModule {
   @Mutation
   setTokenCredentials(newTokenCredential: TokenCredentials) {
-    ApiHelper.SetToken(newTokenCredential.token)
+    AxiosHelper.SetHeaderAuthorizationToken(newTokenCredential.token)
     createCookie('token', newTokenCredential.token)
   }
 

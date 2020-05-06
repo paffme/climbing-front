@@ -1,4 +1,3 @@
-import { Sex } from "~/definitions";
 <template>
   <div class="columns">
     <div class="column">
@@ -53,16 +52,21 @@ import { Sex } from "~/definitions";
   import { ApiCompetition } from "~/definitions";
   import { ApiHelper } from "~/utils/api_helper/apiHelper";
   import RoundCompetitionForm from "~/components/Form/RoundCompetitionForm.vue";
+  import { authUser } from "~/utils/store-accessor";
 
   @Component({
     middleware: 'isAuth',
-    validate({ params, query }: any) {
+    validate({ params }: any) {
       const competitionId = parseInt(params.competitionId, 10)
       if (!competitionId) throw new Error('ID de compétition non valide')
 
-      const roleQuery = query.role
-      if (!roleQuery) throw new Error("Aucun rôle n'est attribué")
       return true
+    },
+    async fetch() {
+      const userId = authUser.Credentials?.id
+      const competitionId = parseInt(this.$route.params.competitionId, 10)
+      if (!userId) throw new Error('Vous devez être connecté')
+      const roles = await ApiHelper.GetUserCompetitionRoles(competitionId, userId)
     },
     components: { UserGestion, EditCompetitionForm, GoBackBtn, RoundCompetitionForm }
   })

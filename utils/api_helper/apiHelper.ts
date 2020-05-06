@@ -10,7 +10,9 @@ import {
   AuthCredentials,
   TokenCredentials,
   APIRankingResponse,
-  BoulderingRoundInput, DTOSubscriptionCredentials
+  BoulderingRoundInput,
+  APIUserCompetitionRoles,
+  DTOSubscriptionCredentials
 } from "~/definitions";
 import axios from 'axios'
 import { AxiosResponse } from "~/node_modules/axios";
@@ -50,6 +52,7 @@ export const ApiHelper = {
   SubscribeUser: subscribeUser,
   GetUser: getUser,
   GetToken: getToken,
+  GetUserCompetitionRoles: getUserCompetitionRoles,
   GetUserCount: getUserCount,
   SetToken: setToken,
   GetCompetitionRankings: getCompetitionRankings
@@ -184,6 +187,10 @@ async function getCompetitionRankings(competitionId: number): Promise<AxiosRespo
 
 async function getUserCount(): Promise<AxiosResponse<{count: number}>> {
   return await axios.get(API_URL.getUserCount())
+}
+
+async function getUserCompetitionRoles(competitionId: number, userId: number): Promise<AxiosResponse<APIUserCompetitionRoles>> {
+  return await axios.get(API_URL.getUserCompetitionRoles(competitionId, userId))
 }
 
 function setToken(token: string): void {

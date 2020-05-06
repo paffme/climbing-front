@@ -5,13 +5,20 @@
         <div class="page_header">
           <GoBackBtn></GoBackBtn>
           <h1 class="title">{{ competition.name }}</h1>
-          <b-button type="is-info"
-                    icon-right="tools"
-                    tag="router-link"
-                    :to="`/competitions/edit/${competition.id}`"
-          >
-            Editer cette compétition
-          </b-button>
+          <template v-if="userHasRole">
+            <b-button
+              type="is-info"
+              icon-right="tools"
+              tag="router-link"
+              :to="`/competitions/edit/${competition.id}`"
+            >
+              Editer cette compétition
+            </b-button>
+          </template>
+          <template v-else-if="!userHasRole">
+            <b-button type="is-primary" v-on:click="openRegisterModal" :loading="isLoading" :disabled="isAlreadyRegister">
+              {{ isAlreadyRegister ? 'Vous êtes déjà inscrit': 'Je souhaite participer !'}}</b-button>
+          </template>
         </div>
 
         <div class="custom_section page_content">
@@ -25,21 +32,6 @@
           <div class="columns">
             <div class="column is-6">
               <div class="content">
-                <div class="content">
-                  <b-button type="is-primary" tag="nuxt-link" :to="'edit/' + competition.id + '?role=' + roleNameQueryParams.pdj">
-                    ETQ que Jury-President
-                  </b-button>
-
-                  <b-button type="is-warning" tag="nuxt-link" :to="'3'">
-                    ETQ que Jury-President
-                  </b-button>
-                </div>
-                <b-notification
-                  :closable="false"
-                type="is-primary">
-                  Vous êtes organisateurs de cette compétition
-                </b-notification>
-
                 <b-notification
                   v-if="competition.cancelled"
                   type="is-danger"
@@ -175,6 +167,8 @@
       sex: Sex.Male,
       categorie: CategoryName.Benjamin
     }
+    userHasRole: boolean = false
+
     async created() {
       const competitionId = this.$route.params.id ? parseInt(this.$route.params.id) : undefined
 
@@ -232,7 +226,7 @@
     }
 
     // WIP
-    checkUserRole(competitionId: number) {
+    async checkUserRole(competitionId: number) {
       if (!authUser.Authenticated) {
         console.log('ERROR - Utilisateur non authentifié')
         return
@@ -242,6 +236,21 @@
       if(!userId) {
         console.log('ERROR - Utilisateur possédant un token mais pas d\'id ')
         return
+      }
+
+      try {
+        const response = await ApiHelper.GetUserCompetitionRoles(competitionId, userId)
+        console.log('roles', response.data)
+        for (let [key, value] of Object.entries(response.data)) {
+          if (value) {
+            this.userHasRole = true
+          }
+        }
+
+        console.log('this.userHasRole', this.userHasRole)
+
+      } catch(err) {
+        console.log('ERROR - Imposssible de récupérer les roles utilisateurs', err)
       }
     }
 

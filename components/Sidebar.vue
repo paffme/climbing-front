@@ -45,6 +45,8 @@
 <script lang="ts">
   import { Vue, Component } from "vue-property-decorator";
   import { authUser } from '~/store'
+  import { ApiHelper } from "~/utils/api_helper/apiHelper";
+  import { AxiosHelper } from "~/utils/axiosHelper";
 
   @Component
   export default class Sidebar extends Vue {
@@ -68,6 +70,7 @@
 
     disconnectUser() {
       authUser.disconnectUser()
+      AxiosHelper.RemoveHeaderAuthorizationToken()
       this.$router.push('/login')
     }
   }
