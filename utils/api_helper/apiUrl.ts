@@ -22,7 +22,7 @@ export default {
   addOrRemoveOrganizers: (competitionId: number, userId: number): string => `​/${ROUTE_NAME}​/${competitionId}​/organizers/${userId}`,
   addRound: (competitionId: number) => `/${ROUTE_NAME}/${competitionId}/bouldering-rounds`,
   addBoulderingResult: (competitionId: number, roundId: number, boulderId: number) => `/${ROUTE_NAME}/${competitionId}/bouldering-rounds/${roundId}/boulders/${boulderId}/results`,
-  createOrGetCompetitions: () => `/${ROUTE_NAME}`,
+  createOrGetCompetitions: (query?: string) => `/${ROUTE_NAME}${query ? '?q=' + query : ''}`,
   updateOrGetCompetition: (competitionId: number) => `/${ROUTE_NAME}/${competitionId}`,
   getCompetitionRankings: (competitionId: number) => `/${ROUTE_NAME}/${competitionId}/rankings`,
   getUserCount: () => `/users/count`

@@ -20,7 +20,7 @@
   import { ApiHelper } from "~/utils/api_helper/apiHelper";
 
   @Component({
-    components: {TabUserSelector}
+    components: { TabUserSelector }
   })
   export default class UserGestion extends Vue {
     activeTab = 0

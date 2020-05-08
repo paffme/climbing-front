@@ -152,8 +152,8 @@ async function createCompetition(body: Competition): Promise<AxiosResponse<Compe
   return axios.post(API_URL.createOrGetCompetitions(), body)
 }
 
-async function getCompetitions(): Promise<AxiosResponse<Competition[]>> {
-  return axios.get(API_URL.createOrGetCompetitions())
+async function getCompetitions(query?: string): Promise<AxiosResponse<Competition[]>> {
+  return axios.get(API_URL.createOrGetCompetitions(query))
 }
 
 async function getCompetition(idCompetition: number): Promise<AxiosResponse<ApiCompetition>> {

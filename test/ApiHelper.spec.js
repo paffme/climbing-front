@@ -313,6 +313,16 @@ describe('ApiHelper', () => {
         expect(spy).toHaveBeenCalled();
         expect(result).toEqual('success')
       })
+
+      test('Should call with query args', async () => {
+        const spy = jest.spyOn(API_URL, 'createOrGetCompetitions');
+        axios.get.mockResolvedValue('success');
+        const fakeQuery = '{"startDate":{"$gte":"2020-05-07T22:00:00.000Z"}}'
+
+        const result = await ApiHelper.GetCompetitions(fakeQuery)
+        expect(spy).toHaveBeenCalledWith(fakeQuery);
+        expect(result).toEqual('success')
+      })
     })
 
     describe('GetUserCount', () => {
