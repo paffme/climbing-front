@@ -31,8 +31,8 @@
           <div class="column is-8">
             <b-notification :closable="false">
               <div class="is-flex competition_title">
-                <span class="subtitle">Voir les compétitions</span>
-                <span>Autres compétitions</span>
+                <span class="subtitle">Compétitions à venir</span>
+                <nuxt-link to="competitions"><span>Autres compétitions</span></nuxt-link>
               </div>
               <Rank :competitions.sync="competitions"></Rank>
             </b-notification>
@@ -49,6 +49,7 @@
   import StatsBlock from "~/components/StatsBlock.vue";
   import { ApiHelper } from "~/utils/api_helper/apiHelper";
   import { Competition } from "~/definitions";
+  import { futureCompetitions } from "~/utils/filterHelper";
 
   @Component({
     middleware: 'isAuth',
@@ -79,7 +80,7 @@
 
     async created() {
       try {
-        const response = await ApiHelper.GetCompetitions()
+        const response = await ApiHelper.GetCompetitions(futureCompetitions())
         this.competitions = response.data
       } catch(e) {
         this.competitions = []

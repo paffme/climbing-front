@@ -307,13 +307,16 @@
     async created() {
       try {
         const rankings = await ApiHelper.GetCompetitionRankings(this.competitionId)
-        this.datas = rankings.data
+        // this.datas = rankings.data
       } catch(err) {
         this.datas = []
       }
     }
 
     refreshRankData(sex: Sex, category: CategoryName) {
+      console.log('refreshData - sex :', sex)
+      console.log('refreshData - category :', category)
+      console.log('refreshData - this.datas :', this.datas)
       this.data = this.datas?.[category]?.[sex]
       console.log('this.data', this.data)
     }

@@ -54,6 +54,10 @@ describe('ApiUrl Helper', () => {
       expect(API_URL.createOrGetCompetitions()).toEqual('/competitions')
     })
 
+    test('createOrGetCompetitions - Should return a correct URL With Query', () => {
+      expect(API_URL.createOrGetCompetitions('{"startDate":{"$gte":"2020-05-07T22:00:00.000Z"}}')).toEqual('/competitions?q={"startDate":{"$gte":"2020-05-07T22:00:00.000Z"}}')
+    })
+
     test('GetCompetitionRankings - Should return a correct URL', () => {
       expect(API_URL.getCompetitionRankings(2)).toEqual('/competitions/2/rankings')
     })
