@@ -19,5 +19,6 @@ export default {
   addBoulderingResult: (competitionId: number, roundId: number, boulderId: number) => `/${ROUTE_NAME}/${competitionId}/bouldering-rounds/${roundId}/boulders/${boulderId}/results`,
   createOrGetCompetitions: () => `/${ROUTE_NAME}`,
   updateOrGetCompetition: (competitionId: number) => `/${ROUTE_NAME}/${competitionId}`,
-  getCompetitionRankings: (competitionId: number) => `/${ROUTE_NAME}/${competitionId}/rankings`
+  getCompetitionRankings: (competitionId: number) => `/${ROUTE_NAME}/${competitionId}/rankings`,
+  getUserCount: () => `/users/count`
 }

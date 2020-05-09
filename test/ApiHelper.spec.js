@@ -314,5 +314,16 @@ describe('ApiHelper', () => {
         expect(result).toEqual('success')
       })
     })
+
+    describe('GetUserCount', () => {
+      test('Should call with right args', async () => {
+        const spy = jest.spyOn(API_URL, 'getUserCount');
+        axios.get.mockResolvedValue('success');
+
+        const result = await ApiHelper.GetUserCount()
+        expect(spy).toHaveBeenCalled();
+        expect(result).toEqual('success')
+      })
+    })
   })
 })

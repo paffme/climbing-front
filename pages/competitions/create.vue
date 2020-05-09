@@ -56,7 +56,7 @@
     components: { GoBackBtn, CreateCompetitionForm },
     middleware: 'isAuth'
   })
-  export default class Competitions extends Vue {
+  export default class CompetitionCreate extends Vue {
   }
 </script>
 

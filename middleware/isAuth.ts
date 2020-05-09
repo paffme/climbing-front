@@ -11,7 +11,7 @@ const isAuth: Middleware = ({route, store, redirect}) => {
     return redirect('/login')
   }
   const credential = store.getters['authUser/Token']
-  if (credential && credential.token) ApiHelper.SetToken(credential.token)
+  if (credential?.token) ApiHelper.SetToken(credential.token)
 }
 
 export default isAuth
