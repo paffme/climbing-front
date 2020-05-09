@@ -3,25 +3,19 @@
     <div class="column is-12">
       <div class="page_header">
         <h1 class="title">Tableau de bord FFME</h1>
-        <b-button type="is-success"
-                  icon-right="license"
-                  tag="router-link"
-                  :to="'/competitions/create'"
-        >
-          Créer une compétition
-        </b-button>
+        <BtnCreateCompetition></BtnCreateCompetition>
       </div>
 
       <div class="custom_section page_stats">
         <div class="tile is-ancestor">
           <div class="tile is-4 is-parent">
-            <StatsBlock :number="0" description="Compétitions en cours" type="is-primary"></StatsBlock>
+            <StatsBlock :number="dashboardStats.futureCompetitions" description="Compétitions a venir" type="is-primary"></StatsBlock>
           </div>
           <div class="tile is-4 is-parent">
-            <StatsBlock :number="1320" description="Grimpeur depuis 2020" type="is-warning"></StatsBlock>
+            <StatsBlock :number="dashboardStats.nbClimber" description="Grimpeur depuis 2020" type="is-warning"></StatsBlock>
           </div>
           <div class="tile is-4 is-parent">
-            <StatsBlock :number="competitions.length" description="Compétitions au total" type="is-danger"></StatsBlock>
+            <StatsBlock :number="dashboardStats.nbCompetitions" description="Compétitions au total" type="is-danger"></StatsBlock>
           </div>
         </div>
       </div>
@@ -49,10 +43,11 @@
   import StatsBlock from "~/components/StatsBlock.vue";
   import { ApiHelper } from "~/utils/api_helper/apiHelper";
   import { Competition } from "~/definitions";
+  import { authUser } from "~/utils/store-accessor";
+  import BtnCreateCompetition from "~/components/Button/BtnCreateCompetition.vue";
 
   @Component({
-    middleware: 'isAuth',
-    components: { Rank, StatsBlock }
+    components: { Rank, StatsBlock, BtnCreateCompetition }
   })
   export default class Competitions extends Vue {
     data = [
@@ -76,14 +71,26 @@
       }
     ]
     competitions?: Competition[] = []
+    dashboardStats = {
+      futureCompetitions: 0,
+      nbClimber: 1320,
+      nbCompetitions: 0
+    }
 
     async created() {
       try {
         const response = await ApiHelper.GetCompetitions()
+        this.dashboardStats.nbClimber = await this.fetchNbClimber()
+        this.dashboardStats.nbCompetitions = Array.isArray(response.data) ? response.data.length : 0
         this.competitions = response.data
       } catch(e) {
         this.competitions = []
       }
+    }
+
+    async fetchNbClimber(): Promise<number> {
+      const response = await ApiHelper.GetUserCount()
+      return response.data.count
     }
   }
 </script>

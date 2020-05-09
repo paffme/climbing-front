@@ -76,8 +76,7 @@
                 </ul>
 
                 <div class="is-pulled-right" v-if="!competition.cancelled">
-                  <b-button type="is-primary" v-on:click="openRegisterModal" :loading="isLoading" :disabled="isAlreadyRegister">
-                    {{ isAlreadyRegister ? 'Vous êtes déjà inscrit': 'Je souhaite participer !'}}</b-button>
+                  <BtnRegisterCompetition :competition-id="competition.id"></BtnRegisterCompetition>
                 </div>
               </div>
             </div>
@@ -144,10 +143,10 @@
   import UserRegisterToCompetition from "~/components/Form/UserRegisterToCompetition.vue";
   import { authUser } from "~/utils/store-accessor";
   import RankOneCompetition from "~/components/Table/RankOneCompetition.vue";
+  import BtnRegisterCompetition from "~/components/Button/BtnRegisterCompetition.vue";
 
   @Component({
-    middleware: 'isAuth',
-    components: { GoBackBtn, RankOneCompetition },
+    components: { GoBackBtn, RankOneCompetition, BtnRegisterCompetition },
     data() {
       return {
         roleNameQueryParams: RoleNameQueryParams,
@@ -195,24 +194,6 @@
       } catch(err) {
         console.log(err)
       }
-    }
-
-    openRegisterModal() {
-      this.$buefy.modal.open({
-        parent: this,
-        props: {
-          competitionId: this.competition && this.competition.id
-        },
-        events: {
-          hasRegister: () => {
-            this.isAlreadyRegister = true
-          }
-        },
-        component: UserRegisterToCompetition,
-        hasModalCard: true,
-        customClass: 'custom-class custom-class-2',
-        trapFocus: true
-      })
     }
 
     async checkIfUserIsRegisterToCompetition(competitionId: number): Promise<boolean> {

@@ -4,7 +4,9 @@
       <div id="login">
         <div class="card">
           <div class="card-header">
-            <img src="../assets/ffme_logo.png" alt="" width="140">
+            <nuxt-link to="/">
+              <img src="../assets/ffme_logo.png" alt="" width="140">
+            </nuxt-link>
           </div>
           <div class="card-content">
             <template v-if="fromSubscription">
