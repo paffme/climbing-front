@@ -50,6 +50,7 @@ export const ApiHelper = {
   SubscribeUser: subscribeUser,
   GetUser: getUser,
   GetToken: getToken,
+  GetUserCount: getUserCount,
   SetToken: setToken,
   GetCompetitionRankings: getCompetitionRankings
 }
@@ -179,6 +180,10 @@ async function getToken(credentials: AuthCredentials): Promise<AxiosResponse<Tok
 
 async function getCompetitionRankings(competitionId: number): Promise<AxiosResponse<APIRankingResponse>> {
   return await axios.get(API_URL.getCompetitionRankings(competitionId))
+}
+
+async function getUserCount(): Promise<AxiosResponse<{count: number}>> {
+  return await axios.get(API_URL.getUserCount())
 }
 
 function setToken(token: string): void {

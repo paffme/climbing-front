@@ -61,5 +61,9 @@ describe('ApiUrl Helper', () => {
     test('AddCompetitor - Should return a correct URL', () => {
       expect(API_URL.addCompetitor(2, 1)).toEqual('/competitions/2/registrations/1')
     })
+
+    test('GetUserCount - Should return a correct URL', () => {
+      expect(API_URL.getUserCount()).toEqual('/users/count')
+    })
   })
 })
