@@ -3,7 +3,10 @@
     <b-table
       :data="internal_competitions ? internal_competitions : []"
       :hovered="true"
+      paginated
+      :backend-pagination="true"
       default-sort="id"
+      v-on:page-change="pageChange"
       aria-next-label="Next page"
       aria-previous-label="Previous page"
       aria-page-label="Page"
@@ -87,6 +90,11 @@
         label: "Ville"
       }
     ];
+
+    pageChange(params: number) {
+      console.log('coucou', params)
+      this.$emit('page-change', params)
+    }
   }
 </script>
 
