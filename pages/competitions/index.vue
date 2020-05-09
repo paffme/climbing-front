@@ -19,7 +19,8 @@
 
     async created() {
       try {
-        const response = await ApiHelper.GetCompetitions()
+        const response = await ApiHelper.GetCompetitionsPagination(1, 3)
+        console.log('response', response.headers)
         this.competitions = response.data
       } catch(e) {
         this.competitions = []

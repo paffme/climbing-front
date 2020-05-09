@@ -69,5 +69,7 @@ describe('ApiUrl Helper', () => {
     test('GetUserCompetitionRoles - Should return a correct URL', () => {
       expect(API_URL.getUserCompetitionRoles(23, 2)).toEqual('/users/2/competitions-roles/23')
     })
+
+    test('getCompetitionsPagination - Should return a correct URL', () => expect(API_URL.getCompetitionsPagination(1, 3)).toEqual('/competitions?page=1&perPage=3'))
   })
 })
