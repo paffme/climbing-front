@@ -23,6 +23,7 @@ export default {
   addRound: (competitionId: number) => `/${ROUTE_NAME}/${competitionId}/bouldering-rounds`,
   addBoulderingResult: (competitionId: number, roundId: number, boulderId: number) => `/${ROUTE_NAME}/${competitionId}/bouldering-rounds/${roundId}/boulders/${boulderId}/results`,
   createOrGetCompetitions: (query?: string) => `/${ROUTE_NAME}${query ? '?q=' + query : ''}`,
+  getCompetitionsPagination: (page: number, perPage: number) => `/${ROUTE_NAME}?page=${page}&perPage=${perPage}`,
   updateOrGetCompetition: (competitionId: number) => `/${ROUTE_NAME}/${competitionId}`,
   getCompetitionRankings: (competitionId: number) => `/${ROUTE_NAME}/${competitionId}/rankings`,
   getUserCount: () => `/users/count`

@@ -55,7 +55,8 @@ export const ApiHelper = {
   GetUserCompetitionRoles: getUserCompetitionRoles,
   GetUserCount: getUserCount,
   SetToken: setToken,
-  GetCompetitionRankings: getCompetitionRankings
+  GetCompetitionRankings: getCompetitionRankings,
+  GetCompetitionsPagination: getCompetitionsPagination
 }
 
 async function addUserInCompetition(competitionId: number, userId: number): Promise<void> {
@@ -197,4 +198,8 @@ function setToken(token: string): void {
   axios.defaults.headers = {
     'Authorization': `Bearer ${token}`
   }
+}
+
+async function getCompetitionsPagination(page: number, perPage: number): Promise<AxiosResponse<Competition[]>> {
+  return await axios.get(API_URL.getCompetitionsPagination(page, perPage))
 }

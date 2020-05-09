@@ -346,5 +346,16 @@ describe('ApiHelper', () => {
         expect(result).toEqual('success')
       })
     })
+
+    describe('getUserCompetitionRoles', () => {
+      test('Should call with right args', async () => {
+        const spy = jest.spyOn(API_URL, 'getCompetitionsPagination');
+        axios.get.mockResolvedValue('success');
+
+        const result = await ApiHelper.GetCompetitionsPagination(3, 4)
+        expect(spy).toBeCalledWith(3, 4);
+        expect(result).toEqual('success')
+      })
+    })
   })
 })

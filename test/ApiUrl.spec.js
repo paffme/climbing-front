@@ -73,5 +73,7 @@ describe('ApiUrl Helper', () => {
     test('GetUserCount - Should return a correct URL', () => {
       expect(API_URL.getUserCount()).toEqual('/users/count')
     })
+
+    test('getCompetitionsPagination - Should return a correct URL', () => expect(API_URL.getCompetitionsPagination(1, 3)).toEqual('/competitions?page=1&perPage=3'))
   })
 })
