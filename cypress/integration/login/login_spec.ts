@@ -1,13 +1,33 @@
-import "../../support"
+import '../../support'
 
 
-describe('My First Test', () => {
-  it('Login to the application', () => {
-    cy.login("admin@test.com", "admin@test.com")
-    console.log("WESH");
-    console.log(document.cookie);
-    console.log("WESH ALORS");
+describe('Test for Login page features', () => {
+  const email: string = 'admin@test.com'
+  const password: string = 'admin@test.com'
+
+  it('Must login to the application', () => {
+    cy.login(email, password)
 
     cy.url().should('equal', Cypress.config().baseUrl)
+    cy.getCookie('credentials')
+      .then((cookie) => {
+        expect(cookie).to.have.property('value')
+          .to.contain('\"email\":\"admin@test.com\"')
+      })
+  })
+
+  it('Must not login', () => {
+    cy.login(email, "this_is_a_bad_password")
+
+    cy.url().should('equal', Cypress.config().baseUrl + 'login')
+    cy.get('.media-content')
+      .contains('Identifiant / Mot de passe incorrecte')
+  })
+
+  it('Must reroute to subscriptions page', () => {
+    cy.get('#subscriptions').click()
+
+    cy.url().should('equal',
+      Cypress.config().baseUrl + 'subscriptions')
   })
 })
