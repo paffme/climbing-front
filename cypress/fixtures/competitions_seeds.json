@@ -1,0 +1,41 @@
+[
+  {
+    "name": "test_comp_bould_open",
+    "type": "bouldering",
+    "description": "description",
+    "agenda": "agenda",
+    "open": true,
+    "welcomingDate": "2020-05-10T22:42:44.293Z",
+    "startDate": "2030-05-10T19:00:00.000Z",
+    "endDate": "2030-05-10T23:00:00.000Z",
+    "address": "1 Avenue des Champs-Élysées",
+    "city": "Paris",
+    "postalCode": "75008",
+    "categories": [
+      {
+        "sex": "female",
+        "name": "veteran"
+      }
+    ]
+  },
+  {
+    "name": "test_comp_bould_close",
+    "type": "bouldering",
+    "description": "description",
+    "agenda": "agenda",
+    "open": false,
+    "welcomingDate": "2020-05-10T22:42:44.293Z",
+    "startDate": "2031-05-10T19:00:00.000Z",
+    "endDate": "2031-05-10T23:00:00.000Z",
+    "address": "1 Avenue des Champs-Élysées",
+    "city": "Paris",
+    "postalCode": "75008",
+    "categories": [
+      {
+        "sex": "male",
+        "name": "poussin"
+      }
+    ]
+  }
+]
+
