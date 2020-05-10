@@ -25,8 +25,8 @@
           <div class="column is-8">
             <b-notification :closable="false">
               <div class="is-flex competition_title">
-                <span class="subtitle">Voir les compétitions</span>
-                <span>Autres compétitions</span>
+                <span class="subtitle">Compétitions à venir</span>
+                <nuxt-link to="competitions"><span>Autres compétitions</span></nuxt-link>
               </div>
               <Rank :competitions.sync="competitions"></Rank>
             </b-notification>
@@ -45,6 +45,7 @@
   import { Competition } from "~/definitions";
   import { authUser } from "~/utils/store-accessor";
   import BtnCreateCompetition from "~/components/BtnCreateCompetition.vue";
+  import { futureCompetitions } from "~/utils/filterHelper";
 
   @Component({
     components: { Rank, StatsBlock, BtnCreateCompetition }
@@ -79,9 +80,10 @@
 
     async created() {
       try {
-        const response = await ApiHelper.GetCompetitions()
+        const response = await ApiHelper.GetCompetitions(futureCompetitions())
         this.dashboardStats.nbClimber = await this.fetchNbClimber()
-        this.dashboardStats.nbCompetitions = Array.isArray(response.data) ? response.data.length : 0
+        this.dashboardStats.futureCompetitions = Array.isArray(response.data) ? response.data.length : 0
+        this.dashboardStats.nbCompetitions = await this.fetchNbCompetitions()
         this.competitions = response.data
       } catch(e) {
         this.competitions = []
@@ -90,6 +92,11 @@
 
     async fetchNbClimber(): Promise<number> {
       const response = await ApiHelper.GetUserCount()
+      return response.data.count
+    }
+
+    async fetchNbCompetitions(): Promise<number> {
+      const response = await ApiHelper.GetCompetitionsCount()
       return response.data.count
     }
   }

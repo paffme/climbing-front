@@ -313,6 +313,16 @@ describe('ApiHelper', () => {
         expect(spy).toHaveBeenCalled();
         expect(result).toEqual('success')
       })
+
+      test('Should call with query args', async () => {
+        const spy = jest.spyOn(API_URL, 'createOrGetCompetitions');
+        axios.get.mockResolvedValue('success');
+        const fakeQuery = '{"startDate":{"$gte":"2020-05-07T22:00:00.000Z"}}'
+
+        const result = await ApiHelper.GetCompetitions(fakeQuery)
+        expect(spy).toHaveBeenCalledWith(fakeQuery);
+        expect(result).toEqual('success')
+      })
     })
 
     describe('GetUserCount', () => {
@@ -322,6 +332,39 @@ describe('ApiHelper', () => {
 
         const result = await ApiHelper.GetUserCount()
         expect(spy).toHaveBeenCalled();
+        expect(result).toEqual('success')
+      })
+    })
+
+    describe('GetCompetitionsCount', () => {
+      test('Should call with right args', async () => {
+        const spy = jest.spyOn(API_URL, 'getCompetitionsCount');
+        axios.get.mockResolvedValue('success');
+
+        const result = await ApiHelper.GetCompetitionsCount()
+        expect(spy).toHaveBeenCalled();
+        expect(result).toEqual('success')
+      })
+    })
+
+    describe('getUserCompetitionRoles', () => {
+      test('Should call with right args', async () => {
+        const spy = jest.spyOn(API_URL, 'getUserCompetitionRoles');
+        axios.get.mockResolvedValue('success');
+
+        const result = await ApiHelper.GetUserCompetitionRoles(3, 4)
+        expect(spy).toBeCalledWith(3, 4);
+        expect(result).toEqual('success')
+      })
+    })
+
+    describe('getUserCompetitionRoles', () => {
+      test('Should call with right args', async () => {
+        const spy = jest.spyOn(API_URL, 'getCompetitionsPagination');
+        axios.get.mockResolvedValue('success');
+
+        const result = await ApiHelper.GetCompetitionsPagination(3, 4)
+        expect(spy).toBeCalledWith(3, 4);
         expect(result).toEqual('success')
       })
     })

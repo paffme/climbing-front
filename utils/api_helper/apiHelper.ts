@@ -10,7 +10,9 @@ import {
   AuthCredentials,
   TokenCredentials,
   APIRankingResponse,
-  BoulderingRoundInput, DTOSubscriptionCredentials
+  BoulderingRoundInput,
+  APIUserCompetitionRoles,
+  DTOSubscriptionCredentials
 } from "~/definitions";
 import axios from 'axios'
 import { AxiosResponse } from "~/node_modules/axios";
@@ -50,9 +52,11 @@ export const ApiHelper = {
   SubscribeUser: subscribeUser,
   GetUser: getUser,
   GetToken: getToken,
+  GetUserCompetitionRoles: getUserCompetitionRoles,
   GetUserCount: getUserCount,
-  SetToken: setToken,
-  GetCompetitionRankings: getCompetitionRankings
+  GetCompetitionsCount: getCompetitionsCount,
+  GetCompetitionRankings: getCompetitionRankings,
+  GetCompetitionsPagination: getCompetitionsPagination
 }
 
 async function addUserInCompetition(competitionId: number, userId: number): Promise<void> {
@@ -149,8 +153,8 @@ async function createCompetition(body: Competition): Promise<AxiosResponse<Compe
   return axios.post(API_URL.createOrGetCompetitions(), body)
 }
 
-async function getCompetitions(): Promise<AxiosResponse<Competition[]>> {
-  return axios.get(API_URL.createOrGetCompetitions())
+async function getCompetitions(query?: string): Promise<AxiosResponse<Competition[]>> {
+  return axios.get(API_URL.createOrGetCompetitions(query))
 }
 
 async function getCompetition(idCompetition: number): Promise<AxiosResponse<ApiCompetition>> {
@@ -186,8 +190,14 @@ async function getUserCount(): Promise<AxiosResponse<{count: number}>> {
   return await axios.get(API_URL.getUserCount())
 }
 
-function setToken(token: string): void {
-  axios.defaults.headers = {
-    'Authorization': `Bearer ${token}`
-  }
+async function getCompetitionsCount(): Promise<AxiosResponse<{count: number}>> {
+  return await axios.get(API_URL.getCompetitionsCount())
+}
+
+async function getUserCompetitionRoles(competitionId: number, userId: number): Promise<AxiosResponse<APIUserCompetitionRoles>> {
+  return await axios.get(API_URL.getUserCompetitionRoles(competitionId, userId))
+}
+
+async function getCompetitionsPagination(page: number, perPage: number): Promise<AxiosResponse<Competition[]>> {
+  return await axios.get(API_URL.getCompetitionsPagination(page, perPage))
 }

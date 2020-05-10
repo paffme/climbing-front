@@ -54,6 +54,10 @@ describe('ApiUrl Helper', () => {
       expect(API_URL.createOrGetCompetitions()).toEqual('/competitions')
     })
 
+    test('createOrGetCompetitions - Should return a correct URL With Query', () => {
+      expect(API_URL.createOrGetCompetitions('{"startDate":{"$gte":"2020-05-07T22:00:00.000Z"}}')).toEqual('/competitions?q={"startDate":{"$gte":"2020-05-07T22:00:00.000Z"}}')
+    })
+
     test('GetCompetitionRankings - Should return a correct URL', () => {
       expect(API_URL.getCompetitionRankings(2)).toEqual('/competitions/2/rankings')
     })
@@ -62,8 +66,18 @@ describe('ApiUrl Helper', () => {
       expect(API_URL.addCompetitor(2, 1)).toEqual('/competitions/2/registrations/1')
     })
 
+    test('GetUserCompetitionRoles - Should return a correct URL', () => {
+      expect(API_URL.getUserCompetitionRoles(23, 2)).toEqual('/users/2/competitions-roles/23')
+    })
+
     test('GetUserCount - Should return a correct URL', () => {
       expect(API_URL.getUserCount()).toEqual('/users/count')
     })
+
+    test('GetCompetitionsCount - Should return a correct URL', () => {
+      expect(API_URL.getCompetitionsCount()).toEqual('/competitions/count')
+    })
+
+    test('getCompetitionsPagination - Should return a correct URL', () => expect(API_URL.getCompetitionsPagination(1, 3)).toEqual('/competitions?page=1&perPage=3'))
   })
 })

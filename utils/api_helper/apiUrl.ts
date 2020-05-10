@@ -1,8 +1,13 @@
 const ROUTE_NAME = 'competitions'
+enum RouteName {
+  competitions = 'competitions',
+  users = 'users'
+}
 export default {
   registerOrRemoveUserInCompetition: (competitionId: number, userId: number): string => `/${ROUTE_NAME}/${competitionId}/registrations/${userId}`,
   getRegistrations: (competitionId: number): string => `/${ROUTE_NAME}/${competitionId}/registrations`,
   addCompetitor: (competitionId: number, userId: number): string => `/${ROUTE_NAME}/${competitionId}/registrations/${userId}`,
+  getUserCompetitionRoles: (competitionId: number, userId: number): string => `/${RouteName.users}/${userId}/competitions-roles/${competitionId}`,
   getJuryPresidents: (competitionId: number): string => `/${ROUTE_NAME}/${competitionId}/jury-presidents`,
   addOrRemoveJuryPresident: (competitionId: number, userId: number): string => `/${ROUTE_NAME}/${competitionId}/jury-presidents/${userId}`,
   getJudges: (competitionId: number): string => `/${ROUTE_NAME}/${competitionId}/judges`,
@@ -17,8 +22,10 @@ export default {
   addOrRemoveOrganizers: (competitionId: number, userId: number): string => `​/${ROUTE_NAME}​/${competitionId}​/organizers/${userId}`,
   addRound: (competitionId: number) => `/${ROUTE_NAME}/${competitionId}/bouldering-rounds`,
   addBoulderingResult: (competitionId: number, roundId: number, boulderId: number) => `/${ROUTE_NAME}/${competitionId}/bouldering-rounds/${roundId}/boulders/${boulderId}/results`,
-  createOrGetCompetitions: () => `/${ROUTE_NAME}`,
+  createOrGetCompetitions: (query?: string) => `/${ROUTE_NAME}${query ? '?q=' + query : ''}`,
+  getCompetitionsPagination: (page: number, perPage: number) => `/${ROUTE_NAME}?page=${page}&perPage=${perPage}`,
   updateOrGetCompetition: (competitionId: number) => `/${ROUTE_NAME}/${competitionId}`,
   getCompetitionRankings: (competitionId: number) => `/${ROUTE_NAME}/${competitionId}/rankings`,
-  getUserCount: () => `/users/count`
+  getUserCount: () => `/users/count`,
+  getCompetitionsCount: () => `/${ROUTE_NAME}/count`
 }
