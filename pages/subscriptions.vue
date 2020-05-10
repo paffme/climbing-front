@@ -15,45 +15,52 @@
               <b-field required>
                 <b-radio v-model="credentials.sex"
                          name="name"
-                         :native-value="Sex.Male">
+                         :native-value="Sex.Male"
+                         class="b-radio-male">
                   Homme
                 </b-radio>
                 <b-radio v-model="credentials.sex"
                          name="name"
-                         :native-value="Sex.Female">
+                         :native-value="Sex.Female"
+                         class="b-radio-female">
                   Femme
                 </b-radio>
               </b-field>
               <b-field label="Email" required>
-                <b-input v-model="credentials.email"></b-input>
+                <b-input v-model="credentials.email" class="email"></b-input>
               </b-field>
               <b-field grouped group-multiline>
                 <b-field label="Prénom" required>
-                  <b-input v-model="credentials.firstName"></b-input>
+                  <b-input v-model="credentials.firstName" class="first-name"></b-input>
                 </b-field>
                 <b-field label="Nom" required>
-                  <b-input v-model="credentials.lastName"></b-input>
+                  <b-input v-model="credentials.lastName" class="last-name"></b-input>
                 </b-field>
               </b-field>
               <b-field label="club">
-                <b-input v-model="credentials.club"></b-input>
+                <b-input v-model="credentials.club" class="club"></b-input>
               </b-field>
               <b-field label="Date de naissance">
                 <b-datepicker
                   v-model="credentials.birthDay"
                   placeholder="Cliquer pour selectionner"
                   icon="calendar-today"
-                  trap-focus>
+                  trap-focus
+                  :max-date="credentials.maxDate"
+                  :min-date="credentials.minDate"
+                  class="birth-date">
                 </b-datepicker>
               </b-field>
               <b-field label="Mot de passe">
-                <b-input v-model="credentials.password" type="password" password-reveal required></b-input>
+                <b-input v-model="credentials.password" type="password" password-reveal required class="password">
+                </b-input>
               </b-field>
 
               <b-field
                 label="Confirmer le mot de passe"
                 :message="form.passwordIsValid ? '' : form.message">
-                <b-input v-model="credentials.passwordConfirmation" type="password" required></b-input>
+                <b-input v-model="credentials.passwordConfirmation" type="password" required class="conf-password">
+                </b-input>
               </b-field>
               <nuxt-link to='/login'>
                 <span id="subscriptions" class="has-text-info form_link">J'ai déjà un compte</span>
@@ -79,7 +86,7 @@
     middleware: 'isAuth',
     data() {
       return {
-        Sex
+        Sex,
       }
     }
   })
@@ -98,7 +105,9 @@
       lastName: 'Gbagbo',
       sex: Sex.Male,
       club: 'FFME',
-      birthDay: new Date('01/29/1992'),
+      maxDate: new Date(),
+      minDate: new Date('1/1/1900'),
+      birthDay: new Date(),
       dateBirth: 0,
       password: 'admin@test.com',
       passwordConfirmation: 'admin@test.com'
