@@ -1,7 +1,21 @@
 <template>
   <div>
     <h1 class="title">Toutes les compétitions</h1>
-    <Rank :competitions.sync="competitions" v-on:page-change="pageChange"></Rank>
+    <div class="is-pulled-right">
+      <b-field grouped group-multiline label="Nombre de compétition par page" custom-class="little-margin">
+        <b-select v-model="perPage" >
+          <option :value="1">1</option>
+          <option :value="5">5</option>
+          <option :value="10">10</option>
+          <option :value="20">20</option>
+          <option :value="50">50</option>
+        </b-select>
+      </b-field>
+    </div>
+      <b-tag rounded type="is-success">
+        Compétition actuelle : <bold>{{ totalCompetition }}</bold>
+      </b-tag>
+    <Rank :competitions.sync="competitions" v-on:page-change="pageChange" :total-competition="totalCompetition" :per-page="perPage"></Rank>
   </div>
 </template>
 
@@ -17,26 +31,41 @@
     components: { Rank }
   })
   export default class IndexCompetitions extends Vue {
-    competitions?: Competition[] = []
+    competitions?: Competition[] | null = null
+    totalCompetition = 0
+    perPage = 5
+    page = 1
 
     async created() {
       try {
-        const response = await ApiHelper.GetCompetitionsPagination(1, 3)
-        console.log('response', response.headers.link)
-        const link = LinkHeader.parse(response.headers.link)
-        console.log('link', link)
-        this.competitions = response.data
+        await this.loadData()
       } catch(e) {
+        console.log(e)
         this.competitions = []
       }
     }
 
-    pageChange(elem: any) {
-      console.log('pageChange', elem)
+    async loadData() {
+      const response = await ApiHelper.GetCompetitionsPagination(this.page, this.perPage)
+      const totalCompetition = await ApiHelper.GetCompetitionsCount()
+      let link = null
+      console.log('response', response)
+      console.log('totalCompetition', totalCompetition.data.count)
+      this.totalCompetition = totalCompetition.data.count
+      if( (response.headers.link)) link = LinkHeader.parse(response.headers.link)
+      this.competitions = response.data
+    }
+
+    async pageChange(pageNumber: number) {
+      console.log('page nb', pageNumber)
+      this.page = pageNumber
+      await this.loadData()
     }
   }
 </script>
 
 <style scoped>
-
+.little-margin {
+  margin-right: 20px;
+}
 </style>

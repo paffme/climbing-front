@@ -5,7 +5,6 @@ export const AxiosHelper = {
   RemoveHeaderAuthorizationToken: removeHeaderAuthorizationToken,
 }
 function setHeaderAuthorizationToken(token: string): void {
-  console.log('setHeaderAuthorizationToken', token)
   axios.defaults.headers = {
     'Authorization': `Bearer ${token}`
   }

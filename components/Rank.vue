@@ -4,9 +4,11 @@
       :data="internal_competitions ? internal_competitions : []"
       :hovered="true"
       paginated
-      :backend-pagination="true"
+      backend-pagination
+      :total="totalCompetition"
+      :per-page="perPage"
       default-sort="id"
-      v-on:page-change="pageChange"
+      @page-change="pageChange"
       aria-next-label="Next page"
       aria-previous-label="Previous page"
       aria-page-label="Page"
@@ -66,7 +68,9 @@
 
   @Component
   export default class Rank extends Vue {
-    @PropSync('competitions', {type: Array}) internal_competitions?: Competition
+    @PropSync('competitions', {type: Array}) internal_competitions!: Competition[]
+    @Prop(Number) totalCompetition!: number
+    @Prop(Number) perPage!: number
     columns = [
       {
         field: "name",
@@ -92,7 +96,6 @@
     ];
 
     pageChange(params: number) {
-      console.log('coucou', params)
       this.$emit('page-change', params)
     }
   }
