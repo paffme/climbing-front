@@ -26,5 +26,6 @@ export default {
   getCompetitionsPagination: (page: number, perPage: number) => `/${ROUTE_NAME}?page=${page}&perPage=${perPage}`,
   updateOrGetCompetition: (competitionId: number) => `/${ROUTE_NAME}/${competitionId}`,
   getCompetitionRankings: (competitionId: number) => `/${ROUTE_NAME}/${competitionId}/rankings`,
-  getUserCount: () => `/users/count`
+  getUserCount: () => `/users/count`,
+  getCompetitionsCount: () => `/${ROUTE_NAME}/count`
 }

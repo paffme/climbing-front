@@ -336,6 +336,17 @@ describe('ApiHelper', () => {
       })
     })
 
+    describe('GetCompetitionsCount', () => {
+      test('Should call with right args', async () => {
+        const spy = jest.spyOn(API_URL, 'getCompetitionsCount');
+        axios.get.mockResolvedValue('success');
+
+        const result = await ApiHelper.GetCompetitionsCount()
+        expect(spy).toHaveBeenCalled();
+        expect(result).toEqual('success')
+      })
+    })
+
     describe('getUserCompetitionRoles', () => {
       test('Should call with right args', async () => {
         const spy = jest.spyOn(API_URL, 'getUserCompetitionRoles');

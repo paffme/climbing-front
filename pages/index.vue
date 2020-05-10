@@ -82,7 +82,8 @@
       try {
         const response = await ApiHelper.GetCompetitions(futureCompetitions())
         this.dashboardStats.nbClimber = await this.fetchNbClimber()
-        this.dashboardStats.nbCompetitions = Array.isArray(response.data) ? response.data.length : 0
+        this.dashboardStats.futureCompetitions = Array.isArray(response.data) ? response.data.length : 0
+        this.dashboardStats.nbCompetitions = await this.fetchNbCompetitions()
         this.competitions = response.data
       } catch(e) {
         this.competitions = []
@@ -91,6 +92,11 @@
 
     async fetchNbClimber(): Promise<number> {
       const response = await ApiHelper.GetUserCount()
+      return response.data.count
+    }
+
+    async fetchNbCompetitions(): Promise<number> {
+      const response = await ApiHelper.GetCompetitionsCount()
       return response.data.count
     }
   }

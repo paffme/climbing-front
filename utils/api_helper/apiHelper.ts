@@ -54,6 +54,7 @@ export const ApiHelper = {
   GetToken: getToken,
   GetUserCompetitionRoles: getUserCompetitionRoles,
   GetUserCount: getUserCount,
+  GetCompetitionsCount: getCompetitionsCount,
   SetToken: setToken,
   GetCompetitionRankings: getCompetitionRankings,
   GetCompetitionsPagination: getCompetitionsPagination
@@ -188,6 +189,10 @@ async function getCompetitionRankings(competitionId: number): Promise<AxiosRespo
 
 async function getUserCount(): Promise<AxiosResponse<{count: number}>> {
   return await axios.get(API_URL.getUserCount())
+}
+
+async function getCompetitionsCount(): Promise<AxiosResponse<{count: number}>> {
+  return await axios.get(API_URL.getCompetitionsCount())
 }
 
 async function getUserCompetitionRoles(competitionId: number, userId: number): Promise<AxiosResponse<APIUserCompetitionRoles>> {
