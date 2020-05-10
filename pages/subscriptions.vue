@@ -46,8 +46,8 @@
                   placeholder="Cliquer pour selectionner"
                   icon="calendar-today"
                   trap-focus
-                  :max-date="credentials.maxDate"
-                  :min-date="credentials.minDate"
+                  :max-date="maxDate"
+                  :min-date="minDate"
                   class="birth-date">
                 </b-datepicker>
               </b-field>
@@ -105,13 +105,13 @@
       lastName: 'Gbagbo',
       sex: Sex.Male,
       club: 'FFME',
-      maxDate: new Date(),
-      minDate: new Date('1/1/1900'),
       birthDay: new Date(),
       dateBirth: 0,
       password: 'admin@test.com',
       passwordConfirmation: 'admin@test.com'
     }
+    maxDate: Date = new Date()
+    minDate: Date = new Date('1/1/1900')
 
     async subscribeUser(credentials: SubscriptionCredentials): Promise<void> {
       this.form.isLoading = true;

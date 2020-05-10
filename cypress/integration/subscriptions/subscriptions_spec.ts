@@ -53,7 +53,8 @@ describe('Test for Subscriptions page features', () => {
     completeSub(sex, email, firstName, lastName, club, birthDay, password)
     cy.get('.button').click()
 
-    cy.url().should('equal', Cypress.config().baseUrl + 'login')
+    cy.url().should('equal',
+      Cypress.config().baseUrl + 'login?fromSubscription=true')
   })
 
   it('Must not create a new user when input missing', () => {
