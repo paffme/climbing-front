@@ -1,5 +1,12 @@
 import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators";
-import { APIUser, AuthCredentials, SubscriptionCredentials, TokenCredentials, UserCredentials } from "~/definitions";
+import {
+  APIUser,
+  AuthCredentials,
+  DTOSubscriptionCredentials,
+  SubscriptionCredentials,
+  TokenCredentials,
+  UserCredentials
+} from "~/definitions";
 import {
   createCookie,
   createCookieFromObject,
@@ -55,7 +62,7 @@ export default class AuthUser extends VuexModule {
   }
 
   @Action({rawError: true})
-  async subscribeUser(credentials: SubscriptionCredentials): Promise<AxiosResponse<void>> {
+  async subscribeUser(credentials: DTOSubscriptionCredentials): Promise<AxiosResponse<void>> {
     return await ApiHelper.SubscribeUser(credentials)
   }
 }
