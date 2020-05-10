@@ -28,7 +28,12 @@
             </b-menu-item>
           </template>
           <b-menu-list label="Actions">
-            <b-menu-item icon="logout" label="Se déconnecter" v-on:click="disconnectUser"></b-menu-item>
+            <template v-if="oauth && oauth.Authenticated">
+              <b-menu-item icon="logout" label="Se déconnecter" v-on:click="disconnectUser"></b-menu-item>
+            </template>
+            <template v-else>
+              <b-menu-item icon="login" label="Se connecter" v-on:click="$router.push('/login')"></b-menu-item>
+            </template>
           </b-menu-list>
         </b-menu-list>
       </b-menu>
@@ -47,6 +52,7 @@
   import { authUser } from '~/store'
   import { ApiHelper } from "~/utils/api_helper/apiHelper";
   import { AxiosHelper } from "~/utils/axiosHelper";
+  import AuthUser from "~/store/authUser";
 
   @Component
   export default class Sidebar extends Vue {
@@ -62,12 +68,17 @@
         to: { name: "user-id" }
       }
     ];
+    oauth: AuthUser | null = null
     open = true;
     overlay = false;
     fullheight = true;
     fullwidth = false;
     mobile = "reduce";
 
+    mounted() {
+      console.log('moounted', authUser.Authenticated)
+      this.oauth = authUser
+    }
     disconnectUser() {
       authUser.disconnectUser()
       AxiosHelper.RemoveHeaderAuthorizationToken()

@@ -84,6 +84,7 @@
         this.dashboardStats.nbClimber = await this.fetchNbClimber()
         this.dashboardStats.futureCompetitions = Array.isArray(response.data) ? response.data.length : 0
         this.dashboardStats.nbCompetitions = await this.fetchNbCompetitions()
+        this.dashboardStats.nbCompetitions = Array.isArray(response.data) ? response.data.length : 0
         this.competitions = response.data
       } catch(e) {
         this.competitions = []
