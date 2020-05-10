@@ -97,13 +97,25 @@ export type BoulderingRoundInput = {
 }
 export type SubscriptionCredentials = {
   email: string,
-  name: string,
+  firstName: string,
   lastName: string,
-  sex: string,
+  sex: Sex,
+  club: string,
+  dateBirth: number,
   password: string,
   passwordConfirmation: string
   birthDay: Date
   birthYear?: number
+}
+
+export type DTOSubscriptionCredentials = {
+  email: string,
+  password: string,
+  lastName: string,
+  firstName: string,
+  sex: Sex,
+  club: string
+  birthYear: number
 }
 
 export type APIUser = {

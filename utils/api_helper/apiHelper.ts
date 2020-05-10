@@ -10,7 +10,7 @@ import {
   AuthCredentials,
   TokenCredentials,
   APIRankingResponse,
-  BoulderingRoundInput
+  BoulderingRoundInput, DTOSubscriptionCredentials
 } from "~/definitions";
 import axios from 'axios'
 import { AxiosResponse } from "~/node_modules/axios";
@@ -166,7 +166,7 @@ async function addCompetitor(competitionId: number, userId: number): Promise<Axi
   return axios.put(API_URL.addCompetitor(competitionId, userId))
 }
 
-async function subscribeUser(credentials: SubscriptionCredentials): Promise<AxiosResponse<void>> {
+async function subscribeUser(credentials: DTOSubscriptionCredentials): Promise<AxiosResponse<void>> {
   return await axios.post(`/users`, credentials)
 }
 

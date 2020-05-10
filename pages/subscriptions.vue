@@ -72,7 +72,7 @@
 <script lang="ts">
   import { Vue, Component } from "vue-property-decorator";
   import { authUser } from '~/store'
-  import { FormSubscription, Sex, SubscriptionCredentials } from "~/definitions";
+  import { DTOSubscriptionCredentials, FormSubscription, Sex, SubscriptionCredentials } from "~/definitions";
 
   @Component({
     layout: 'blank',
@@ -92,7 +92,7 @@
       message: '',
       passwordIsValid: true
     }
-    credentials = {
+    credentials: SubscriptionCredentials = {
       email: 'admin@test.com',
       firstName: 'Laurent',
       lastName: 'Gbagbo',
@@ -120,14 +120,8 @@
         return
       }
 
-      credentials.birthYear = new Date().getFullYear() - credentials.birthDay.getFullYear()
-
-      console.log('1', credentials.birthDay && credentials.birthDay.getFullYear())
-      console.log('2', new Date().getFullYear())
-      console.log('3', credentials.birthYear)
-
       try {
-        await authUser.subscribeUser(credentials)
+        await authUser.subscribeUser(this.DtoSubscribeUser(credentials))
         this.form.isLoading = false
         this.$router.push('login?fromSubscription=true')
       } catch(err) {
@@ -143,6 +137,18 @@
 
     checkPasswordLength(password: string): boolean {
       return password.length > this.MAX_PASSWORD_LENGTH
+    }
+
+    DtoSubscribeUser(credentials: SubscriptionCredentials): DTOSubscriptionCredentials {
+      return {
+        email: credentials.email,
+        password: credentials.password,
+        lastName: credentials.lastName,
+        firstName: credentials.firstName,
+        sex: credentials.sex,
+        club: credentials.club,
+        birthYear: new Date().getFullYear() - credentials.birthDay.getFullYear()
+      }
     }
   }
 </script>
