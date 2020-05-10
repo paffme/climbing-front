@@ -42,41 +42,41 @@ describe('Test for Subscriptions page features', () => {
     cy.visit('/subscriptions')
   })
 
-  // it('Must return to login when i already have an account', () => {
-  //   cy.get('#subscriptions').click()
-  //   cy.url().should('equal', Cypress.config().baseUrl + 'login')
-  // })
+  it('Must return to login when i already have an account', () => {
+    cy.get('#subscriptions').click()
+    cy.url().should('equal', Cypress.config().baseUrl + 'login')
+  })
 
-  // it('Must create a new user', () => {
-  //   clearInput()
-  //
-  //   completeSub(sex, email, firstName, lastName, club, birthDay, password)
-  //   cy.get('.button').click()
-  //
-  //   cy.url().should('equal', Cypress.config().baseUrl + 'login')
-  // })
+  it('Must create a new user', () => {
+    clearInput()
 
-  // it('Must not create a new user when input missing', () => {
-  //   clearInput()
-  //   completeSub(sex, email, firstName, lastName, club, birthDay, password)
-  //
-  //   const listInput: Array<string[]> = [
-  //     [email, '.email'],
-  //     [firstName, '.first-name'],
-  //     [lastName, '.last-name'],
-  //     [club, '.club'],
-  //     [password, '.password'],
-  //     [password, '.conf-password']
-  //   ]
-  //
-  //   listInput.forEach((input) => {
-  //     cy.get(input[1]).type('{selectall}{del}')
-  //     cy.get('.button').click()
-  //     cy.url().should('equal', Cypress.config().baseUrl + 'subscriptions')
-  //
-  //     cy.get(input[1]).type(input[0])
-  //   })
-  // })
+    completeSub(sex, email, firstName, lastName, club, birthDay, password)
+    cy.get('.button').click()
+
+    cy.url().should('equal', Cypress.config().baseUrl + 'login')
+  })
+
+  it('Must not create a new user when input missing', () => {
+    clearInput()
+    completeSub(sex, email, firstName, lastName, club, birthDay, password)
+
+    const listInput: Array<string[]> = [
+      [email, '.email'],
+      [firstName, '.first-name'],
+      [lastName, '.last-name'],
+      [club, '.club'],
+      [password, '.password'],
+      [password, '.conf-password']
+    ]
+
+    listInput.forEach((input) => {
+      cy.get(input[1]).type('{selectall}{del}')
+      cy.get('.button').click()
+      cy.url().should('equal', Cypress.config().baseUrl + 'subscriptions')
+
+      cy.get(input[1]).type(input[0])
+    })
+  })
 
   it('Must not create a new user when pswd validation != pswd', () => {
     //clearInput()
