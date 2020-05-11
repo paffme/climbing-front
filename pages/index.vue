@@ -36,7 +36,7 @@
 
       <div class="custom_section page_contents">
         <div class="columns">
-          <div class="column is-8">
+          <div class="column is-12">
             <b-notification :closable="false">
               <div class="is-flex competition_title">
                 <span class="subtitle">Compétitions à venir</span>
@@ -59,7 +59,7 @@ import Rank from '~/components/Rank.vue'
 import StatsBlock from '~/components/StatsBlock.vue'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { Competition } from '~/definitions'
-import BtnCreateCompetition from '~/components/BtnCreateCompetition.vue'
+import BtnCreateCompetition from '~/components/Button/BtnCreateCompetition.vue'
 import { futureCompetitions } from '~/utils/filterHelper'
 
 @Component({

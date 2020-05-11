@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="AuthUser.Authenticated">
+    <template v-if="isConnected">
       <b-button
         type="is-primary"
         :loading="isLoading"
@@ -35,17 +35,15 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import UserRegisterToCompetition from '~/components/Form/UserRegisterToCompetition.vue'
-import { authUser } from '~/utils/store-accessor'
+import AuthUser from '~/store/authUser'
 
-@Component({
-  data() {
-    return {
-      AuthUser: authUser
-    }
-  }
-})
+@Component
 export default class BtnRegisterCompetition extends Vue {
   @Prop(Number) competitionId!: number
+  isAlreadyRegister = false
+  // @ts-ignore
+  isConnected = AuthUser.getters?.['Authenticated']() || false
+
   openRegisterModal() {
     this.$buefy.modal.open({
       parent: this,

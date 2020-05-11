@@ -28,12 +28,15 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { authUser } from '~/utils/store-accessor'
+import { ApiHelper } from '~/utils/api_helper/apiHelper'
+import AuthUser from '~/store/authUser'
 
 @Component
 export default class UserRegisterToCompetition extends Vue {
   @Prop(Number) readonly competitionId?: number
   isLoading = false
+  // @ts-ignore
+  credentials = AuthUser.getters?.['Credentials']() || false
   async registerUserToACompetition() {
     this.isLoading = true
     if (!this.competitionId) {
@@ -43,12 +46,12 @@ export default class UserRegisterToCompetition extends Vue {
     }
 
     try {
-      if (!authUser.Credentials?.id) {
+      if (!this.credentials?.id) {
         throw new Error(
-          `Should specify the id - ${authUser.Credentials} - was found`
+          `Should specify the id - ${this.credentials} - was found`
         )
       }
-      // await ApiHelper.AddCompetitor(this.competitionId, authUser.Credentials?.id)
+      await ApiHelper.AddCompetitor(this.competitionId, this.credentials.id)
       // @ts-ignore
       this.$parent.close()
       this.$emit('hasRegister')
