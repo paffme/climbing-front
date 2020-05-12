@@ -18,18 +18,10 @@
             </b-button>
           </template>
           <template v-else-if="!userHasRole">
-            <b-button
-              type="is-primary"
-              :loading="isLoading"
-              :disabled="isAlreadyRegister"
-              @click="openRegisterModal"
-            >
-              {{
-                isAlreadyRegister
-                  ? 'Vous êtes déjà inscrit'
-                  : 'Je souhaite participer !'
-              }}
-            </b-button>
+            <BtnRegisterCompetition
+              :competition-id="competition.id"
+              :is-connected="isAutenthicated"
+            />
           </template>
         </div>
 
@@ -125,7 +117,9 @@
                 </ul>
 
                 <div v-if="!competition.cancelled" class="is-pulled-right">
-                  <BtnRegisterCompetition :competition-id="competition.id" />
+                  <BtnRegisterCompetition
+                    :competition-id="competition.id"
+                    :is-connected="isAutenthicated" />
                 </div>
               </div>
             </div>

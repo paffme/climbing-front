@@ -35,14 +35,12 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import UserRegisterToCompetition from '~/components/Form/UserRegisterToCompetition.vue'
-import AuthUser from '~/store/authUser'
 
 @Component
 export default class BtnRegisterCompetition extends Vue {
   @Prop(Number) competitionId!: number
+  @Prop(Boolean) isConnected!: boolean
   isAlreadyRegister = false
-  // @ts-ignore
-  isConnected = AuthUser.getters?.['Authenticated']() || false
 
   openRegisterModal() {
     this.$buefy.modal.open({
@@ -51,7 +49,7 @@ export default class BtnRegisterCompetition extends Vue {
         competitionId: this.competitionId
       },
       events: {
-        hasRegister: () => {
+        registerSuccess: () => {
           this.isAlreadyRegister = true
         }
       },
