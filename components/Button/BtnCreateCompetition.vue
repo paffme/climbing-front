@@ -24,24 +24,20 @@
       </b-tooltip>
     </template>
   </div>
-
 </template>
 
 <script lang="ts">
-  import { Vue, Component } from "vue-property-decorator";
-  import { authUser } from "~/utils/store-accessor";
+import { Vue, Component } from 'vue-property-decorator'
+import { authUser } from '~/utils/store-accessor'
 
-  @Component({
-    data() {
-      return {
-        AuthUser: authUser
-      }
+@Component({
+  data() {
+    return {
+      AuthUser: authUser
     }
-  })
-  export default class BtnCreateCompetition extends Vue {
   }
+})
+export default class BtnCreateCompetition extends Vue {}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

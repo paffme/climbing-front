@@ -1,5 +1,5 @@
 export function futureCompetitions(): string {
-  const now = new Date();
+  const now = new Date()
 
   const today = new Date(
     now.getFullYear(),
@@ -8,12 +8,12 @@ export function futureCompetitions(): string {
     0,
     0,
     0,
-    0,
-  );
+    0
+  )
 
   const query = {
     startDate: {
-      "$gte": JSON.stringify(today)
+      $gte: JSON.stringify(today)
     }
   }
 

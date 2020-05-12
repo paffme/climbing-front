@@ -1,17 +1,17 @@
-import axios from "axios";
+import axios from 'axios'
 
 export const AxiosHelper = {
   SetHeaderAuthorizationToken: setHeaderAuthorizationToken,
-  RemoveHeaderAuthorizationToken: removeHeaderAuthorizationToken,
+  RemoveHeaderAuthorizationToken: removeHeaderAuthorizationToken
 }
 function setHeaderAuthorizationToken(token: string): void {
   axios.defaults.headers = {
-    'Authorization': `Bearer ${token}`
+    Authorization: `Bearer ${token}`
   }
 }
 
 function removeHeaderAuthorizationToken(): void {
   console.log('removeHeaderAuthorizationToken')
-  delete axios.defaults.headers['Authorization']
-  delete axios.defaults.headers['authorization']
+  delete axios.defaults.headers.Authorization
+  delete axios.defaults.headers.authorization
 }

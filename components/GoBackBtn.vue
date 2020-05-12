@@ -1,19 +1,16 @@
 <template>
-  <b-button icon-left="menu-left" v-on:click="goBack"></b-button>
+  <b-button icon-left="menu-left" @click="goBack" />
 </template>
 
 <script lang="ts">
-  import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component } from 'vue-property-decorator'
 
-  @Component
-  export default class GoBackBtn extends Vue {
-
-    goBack() {
-      this.$router.go(-1);
-    }
+@Component
+export default class GoBackBtn extends Vue {
+  goBack() {
+    this.$router.go(-1)
   }
+}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

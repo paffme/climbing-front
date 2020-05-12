@@ -1,19 +1,19 @@
 <template>
   <div>
     <b-table
-      :data="internal_competitions ? internal_competitions : []"
+      :data="internalCompetitions ? internalCompetitions : []"
       :hovered="true"
       paginated
       backend-pagination
       :total="totalCompetition"
       :per-page="perPage"
       default-sort="id"
-      @page-change="pageChange"
       aria-next-label="Next page"
       aria-previous-label="Previous page"
       aria-page-label="Page"
-      aria-current-label="Current page">
-
+      aria-current-label="Current page"
+      @page-change="pageChange"
+    >
       <template slot-scope="props">
         <b-table-column field="name" label="Nom" sortable>
           {{ props.row.name }}
@@ -25,13 +25,13 @@
 
         <b-table-column field="startDate" label="Date début" sortable>
           <span class="tag is-success">
-              {{ new Date(props.row.startDate).toLocaleDateString() }}
+            {{ new Date(props.row.startDate).toLocaleDateString() }}
           </span>
         </b-table-column>
 
         <b-table-column field="endDate" label="Date fin" sortable>
           <span class="tag is-danger">
-              {{ new Date(props.row.endDate).toLocaleDateString() }}
+            {{ new Date(props.row.endDate).toLocaleDateString() }}
           </span>
         </b-table-column>
 
@@ -41,7 +41,7 @@
 
         <b-table-column field="city" label="Apercu">
           <nuxt-link :to="'competitions/' + props.row.id">
-            <b-button icon-left="arrow-right-bold" type="is-primary"></b-button>
+            <b-button icon-left="arrow-right-bold" type="is-primary" />
           </nuxt-link>
         </b-table-column>
       </template>
@@ -49,10 +49,7 @@
         <section class="section">
           <div class="content has-text-grey has-text-centered">
             <p>
-              <b-icon
-                icon="emoticon-sad"
-                size="is-large">
-              </b-icon>
+              <b-icon icon="emoticon-sad" size="is-large" />
             </p>
             <p>Aucune compétition trouvée</p>
           </div>
@@ -63,44 +60,44 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component, Prop, PropSync } from "vue-property-decorator";
-  import { Competition } from "~/definitions";
+import { Vue, Component, Prop, PropSync } from 'vue-property-decorator'
+import { Competition } from '~/definitions'
 
-  @Component
-  export default class Rank extends Vue {
-    @PropSync('competitions', {type: Array}) internal_competitions!: Competition[]
-    @Prop(Number) totalCompetition!: number
-    @Prop(Number) perPage!: number
-    columns = [
-      {
-        field: "name",
-        label: "ID",
-        width: "40"
-      },
-      {
-        field: "type",
-        label: "Type"
-      },
-      {
-        field: "startDate",
-        label: "Date début"
-      },
-      {
-        field: "endDate",
-        label: "Date fin"
-      },
-      {
-        field: "city",
-        label: "Ville"
-      }
-    ];
+@Component
+export default class Rank extends Vue {
+  @PropSync('competitions', { type: Array })
+  internalCompetitions!: Competition[]
 
-    pageChange(params: number) {
-      this.$emit('page-change', params)
+  @Prop(Number) totalCompetition!: number
+  @Prop(Number) perPage!: number
+  columns = [
+    {
+      field: 'name',
+      label: 'ID',
+      width: '40'
+    },
+    {
+      field: 'type',
+      label: 'Type'
+    },
+    {
+      field: 'startDate',
+      label: 'Date début'
+    },
+    {
+      field: 'endDate',
+      label: 'Date fin'
+    },
+    {
+      field: 'city',
+      label: 'Ville'
     }
+  ]
+
+  pageChange(params: number) {
+    this.$emit('page-change', params)
   }
+}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
