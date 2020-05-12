@@ -1,8 +1,8 @@
-import { AuthCredentials } from "~/definitions/index";
+import { AuthCredentials } from '~/definitions/index'
 
 export type FormEvent = {
-  error: boolean,
-  success: boolean,
+  error: boolean
+  success: boolean
   message: string | null
 }
 

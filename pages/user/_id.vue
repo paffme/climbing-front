@@ -1,7 +1,9 @@
 <template>
   <div class="columns">
     <div class="column">
-      <h1 class="title">En cours de création...</h1>
+      <h1 class="title">
+        En cours de création...
+      </h1>
     </div>
   </div>
 </template>
@@ -10,7 +12,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 
 @Component({
-  middleware: 'isAuth',
+  middleware: 'isAuth'
 })
 export default class UserId extends Vue {}
 </script>
