@@ -16,16 +16,20 @@
             </b-notification>
             <form @submit.prevent="subscribeUser(credentials)">
               <b-field required>
-                <b-radio v-model="credentials.sex"
-                         name="name"
-                         :native-value="Sex.Male"
-                         class="b-radio-male">
+                <b-radio
+                  v-model="credentials.sex"
+                  name="name"
+                  :native-value="Sex.Male"
+                  class="b-radio-male"
+                >
                   Homme
                 </b-radio>
-                <b-radio v-model="credentials.sex"
-                         name="name"
-                         :native-value="Sex.Female"
-                         class="b-radio-female">
+                <b-radio
+                  v-model="credentials.sex"
+                  name="name"
+                  :native-value="Sex.Female"
+                  class="b-radio-female"
+                >
                   Femme
                 </b-radio>
               </b-field>
@@ -34,10 +38,16 @@
               </b-field>
               <b-field grouped group-multiline>
                 <b-field label="Prénom" required>
-                  <b-input v-model="credentials.firstName" class="first-name"></b-input>
+                  <b-input
+                    v-model="credentials.firstName"
+                    class="first-name"
+                  ></b-input>
                 </b-field>
                 <b-field label="Nom" required>
-                  <b-input v-model="credentials.lastName" class="last-name"></b-input>
+                  <b-input
+                    v-model="credentials.lastName"
+                    class="last-name"
+                  ></b-input>
                 </b-field>
               </b-field>
               <b-field label="club">
@@ -51,18 +61,31 @@
                   trap-focus
                   :max-date="maxDate"
                   :min-date="minDate"
-                  class="birth-date">
+                  class="birth-date"
+                >
                 </b-datepicker>
               </b-field>
               <b-field label="Mot de passe">
-                <b-input v-model="credentials.password" type="password" password-reveal required class="password">
+                <b-input
+                  v-model="credentials.password"
+                  type="password"
+                  password-reveal
+                  required
+                  class="password"
+                >
                 </b-input>
               </b-field>
 
               <b-field
                 label="Confirmer le mot de passe"
-                :message="form.passwordIsValid ? '' : form.message">
-                <b-input v-model="credentials.passwordConfirmation" type="password" required class="conf-password">
+                :message="form.passwordIsValid ? '' : form.message"
+              >
+                <b-input
+                  v-model="credentials.passwordConfirmation"
+                  type="password"
+                  required
+                  class="conf-password"
+                >
                 </b-input>
               </b-field>
               <nuxt-link to="/login">
@@ -98,38 +121,39 @@ import {
   SubscriptionCredentials
 } from '~/definitions'
 
-  @Component({
-    layout: 'blank',
-    middleware: 'isAuth',
-    data() {
-      return {
-        Sex
-      }
+@Component({
+  layout: 'blank',
+  middleware: 'isAuth',
+  data() {
+    return {
+      Sex
     }
-  })
-  export default class Subscriptions extends Vue {
-    MAX_PASSWORD_LENGTH = 6
-    form: FormSubscription = {
-      error: false,
-      success: false,
-      isLoading: false,
-      message: '',
-      passwordIsValid: true
-    }
-    credentials: SubscriptionCredentials = {
-      email: 'admin@test.com',
-      firstName: 'Laurent',
-      lastName: 'Gbagbo',
-      sex: Sex.Male,
-      club: 'FFME',
-      birthDay: new Date(),
-      dateBirth: 0,
-      password: 'admin@test.com',
-      passwordConfirmation: 'admin@test.com'
-    }
-    maxDate: Date = new Date()
-    minDate: Date = new Date('1/1/1900')
   }
+})
+export default class Subscriptions extends Vue {
+  MAX_PASSWORD_LENGTH = 6
+  form: FormSubscription = {
+    error: false,
+    success: false,
+    isLoading: false,
+    message: '',
+    passwordIsValid: true
+  }
+
+  credentials: SubscriptionCredentials = {
+    email: 'admin@test.com',
+    firstName: 'Laurent',
+    lastName: 'Gbagbo',
+    sex: Sex.Male,
+    club: 'FFME',
+    birthDay: new Date(),
+    dateBirth: 0,
+    password: 'admin@test.com',
+    passwordConfirmation: 'admin@test.com'
+  }
+
+  maxDate: Date = new Date()
+  minDate: Date = new Date('1/1/1900')
 
   async subscribeUser(credentials: SubscriptionCredentials): Promise<void> {
     this.form.isLoading = true

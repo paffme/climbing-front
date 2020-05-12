@@ -27,18 +27,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
-import AuthUser from '~/store/authUser'
+  import { Vue, Component, Prop } from "vue-property-decorator";
 
-@Component({
-  data() {
-    return {
-      // @ts-ignore
-      isConnected: AuthUser.getters?.['Authenticated']() || false
-    }
-  }
-})
-export default class BtnCreateCompetition extends Vue {}
+@Component
+export default class BtnCreateCompetition extends Vue {
+  @Prop(Boolean) isConnected!: boolean
+}
 </script>
 
 <style scoped></style>

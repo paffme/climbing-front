@@ -30,7 +30,7 @@
       </b-field>
     </div>
     <b-tag rounded type="is-success">
-      Compétition actuelle : <bold>{{ totalCompetition }}</bold>
+      Compétition actuelle : <b>{{ totalCompetition }}</b>
     </b-tag>
     <Rank
       :competitions.sync="competitions"

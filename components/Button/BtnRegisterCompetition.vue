@@ -36,13 +36,15 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import UserRegisterToCompetition from '~/components/Form/UserRegisterToCompetition.vue'
 
-@Component
+@Component({
+  components: { UserRegisterToCompetition }
+})
 export default class BtnRegisterCompetition extends Vue {
   @Prop(Number) competitionId!: number
   @Prop(Boolean) isConnected!: boolean
   isAlreadyRegister = false
 
-  openRegisterModal() {
+  openRegisterModal(): void {
     this.$buefy.modal.open({
       parent: this,
       props: {
