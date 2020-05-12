@@ -10,6 +10,10 @@
 
     <template slot="end">
       <b-navbar-item tag="div">
+        <div v-if="isConnected && userCredentials">
+          Connecté en tant que : {{ userCredentials.firstName }}
+          {{ userCredentials.lastName }}
+        </div>
         <template v-for="(item, key) of itemNavbars">
           <template v-if="item.linkTo === 'logout'">
             <b-button :key="key" :icon-left="item.icon" @click="disconnect" />
@@ -28,6 +32,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { authUser } from '~/utils/store-accessor'
+import AuthUser from '~/store/authUser'
 
 type NavbarItem = {
   linkTo: string
@@ -37,6 +42,11 @@ type NavbarItem = {
 @Component
 export default class Navbar extends Vue {
   @Prop({ type: Array, required: true }) readonly navbarItems!: NavbarItem[]
+  // @ts-ignore
+  isConnected = AuthUser.getters?.['Authenticated']() || false
+  // @ts-ignore
+  userCredentials = AuthUser.getters?.['Credentials']() || undefined
+
   itemNavbars?: NavbarItem[] = []
   data() {
     return {

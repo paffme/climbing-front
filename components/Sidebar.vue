@@ -31,7 +31,7 @@
             />
           </template>
           <b-menu-list label="Actions">
-            <template v-if="oauth && oauth.Authenticated">
+            <template v-if="isConnected">
               <b-menu-item
                 icon="logout"
                 label="Se déconnecter"
@@ -64,7 +64,14 @@ import { authUser } from '~/store'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import AuthUser from '~/store/authUser'
 
-@Component
+@Component({
+  data() {
+    return {
+      // @ts-ignore
+      isConnected: AuthUser.getters?.['Authenticated']() || false
+    }
+  }
+})
 export default class Sidebar extends Vue {
   items = [
     {
@@ -79,17 +86,13 @@ export default class Sidebar extends Vue {
     }
   ]
 
-  oauth: AuthUser | null = null
   open = true
   overlay = false
   fullheight = true
   fullwidth = false
   mobile = 'reduce'
 
-  mounted() {
-    console.log('moounted', authUser.Authenticated)
-    this.oauth = authUser
-  }
+  mounted() {}
 
   disconnectUser() {
     authUser.disconnectUser()

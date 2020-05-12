@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="AuthUser.Authenticated">
+    <template v-if="isConnected">
       <b-button
         type="is-success"
         icon-right="license"
@@ -28,12 +28,13 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { authUser } from '~/utils/store-accessor'
+import AuthUser from '~/store/authUser'
 
 @Component({
   data() {
     return {
-      AuthUser: authUser
+      // @ts-ignore
+      isConnected: AuthUser.getters?.['Authenticated']() || false
     }
   }
 })

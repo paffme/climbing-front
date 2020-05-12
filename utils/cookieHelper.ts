@@ -23,7 +23,6 @@ export function getCookie(name: string): null | {} {
       }
     }
   })
-  console.log('finalCookie', finalCookie)
   return finalCookie
 }
 

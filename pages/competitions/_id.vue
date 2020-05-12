@@ -219,6 +219,7 @@ import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { authUser } from '~/utils/store-accessor'
 import RankOneCompetition from '~/components/Table/RankOneCompetition.vue'
 import BtnRegisterCompetition from '~/components/Button/BtnRegisterCompetition.vue'
+import AuthUser from '~/store/authUser'
 
 @Component({
   components: { GoBackBtn, RankOneCompetition, BtnRegisterCompetition },
@@ -226,7 +227,8 @@ import BtnRegisterCompetition from '~/components/Button/BtnRegisterCompetition.v
     return {
       roleNameQueryParams: RoleNameQueryParams,
       categories: CategoryName,
-      sexes: Sex
+      sexes: Sex,
+      AuthUser: authUser
     }
   },
   filters: {
@@ -253,6 +255,10 @@ export default class OneCompetition extends Vue {
   }
 
   userHasRole: boolean = false
+  // @ts-ignore
+  isAutenthicated = AuthUser.getters?.['Authenticated']() || false
+  // @ts-ignore
+  credentials = AuthUser.getters?.['Credentials']() || false
 
   async created() {
     const competitionId = this.$route.params.id
@@ -304,11 +310,11 @@ export default class OneCompetition extends Vue {
 
   // WIP
   async checkUserRole(competitionId: number) {
-    if (!authUser.Authenticated) {
+    if (!this.isAutenthicated) {
       console.log('ERROR - Utilisateur non authentifié')
       return
     }
-    const userId = authUser.Credentials?.id
+    const userId = this.credentials?.id
 
     if (!userId) {
       console.log("ERROR - Utilisateur possédant un token mais pas d'id ")
