@@ -8,16 +8,16 @@ module.exports = {
   transform: {
     '^.+\\.js$': 'babel-jest',
     '.*\\.(vue)$': 'vue-jest',
-    "^.+\\.(ts|tsx)$": "ts-jest"
+    '^.+\\.(ts|tsx)$': 'ts-jest'
   },
   collectCoverage: true,
   collectCoverageFrom: [
     '<rootDir>/components/**/*.vue',
-    '<rootDir>/pages/**/*.vue',
-    '<rootDir>/utils/**/*.ts',
-  ],
+    '<rootDir>/pages/**/*.vue'
+    ],
   modulePathIgnorePatterns: [
     '<rootDir>/cypress/'
+    '<rootDir>/utils/**/*.ts'
   ]
 
 }

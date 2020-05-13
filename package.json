@@ -12,8 +12,8 @@
     "test": "jest",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --record --key 5360d000-8341-4540-930f-633fb0979519",
-    "lint": "eslint --ext .js,.vue,.ts --ignore-path .gitignore .",
-    "lintfix": "eslint --fix --ext .js,.vue,.ts --ignore-path .gitignore ."
+    "lint": "eslint -c ./eslintrc.js --ext .js,.vue,.ts --ignore-path .gitignore .",
+    "lintfix": "eslint -c ./eslintrc.js --fix --ext .js,.vue,.ts --ignore-path .gitignore ."
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
@@ -47,7 +47,7 @@
     "babel-jest": "^24.1.0",
     "cypress": "^4.5.0",
     "cypress-intellij-reporter": "0.0.4",
-    "eslint": "^6.8.0",
+    "eslint": "~7.0.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-prettier": "^3.1.3",
