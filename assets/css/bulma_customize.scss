@@ -21,11 +21,12 @@ $colors: (
 );
 $breadcrumb-item-color: $primary;
 $breadcrumb-item-active-color: $success;
+$tabs-link-active-color: $primary;
 
 // Links
 $input-focus-border-color: $primary;
-$link: $white;
-$link-invert: $primary-invert;
+// $link: $white;
+// $link-invert: $primary-invert;
 $link-focus-border: $primary;
 
 @import "~bulma";

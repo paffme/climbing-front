@@ -6,9 +6,14 @@ export enum CategoryName {
   Cadet = 'cadet',
   Junior = 'junior',
   Senior = 'senior',
-  Veteran = 'veteran',
+  Veteran = 'veteran'
 }
 
+export enum RoleNameQueryParams {
+  pdj = 'pdj',
+  organisateur = 'organisateur',
+  juge = 'juge'
+}
 export enum RoleName {
   Juges = 'Juges',
   President = 'Président',
@@ -17,9 +22,22 @@ export enum RoleName {
   DelegueTechnique = 'Délégués techniques',
   Organisateur = 'Organisateur'
 }
+
+export enum RankingType {
+  CIRCUIT = 'Circuit',
+  UNLIMITED_CONTEST = 'Illimité',
+  LIMITED_CONTEST = 'Limité'
+}
+
+export enum TypeBouldering {
+  QUALIFIER = 'Qualification',
+  SEMI_FINAL = 'Demi-final',
+  FINAL = 'Final'
+}
+
 export enum Sex {
   Male = 'male',
-  Female = 'female',
+  Female = 'female'
 }
 
 export enum TypeCompetition {
@@ -35,99 +53,149 @@ export type CompetitionCategories = {
 
 export type Competition = {
   id?: number | null
-  name: string
-  type: TypeCompetition
-  startDate: Date
-  endDate: Date | string
-  address: string
-  city: string
-  postalCode: string
-  categories: CompetitionCategories[]
+  cancelled?: boolean | null
+  name: string | null
+  description: string | null
+  open: boolean | null
+  agenda: string | null
+  welcomingDate: Date | null
+  type: TypeCompetition | null
+  startDate: Date | null
+  endDate: Date | null
+  address: string | null
+  city: string | null
+  postalCode: string | null
+  categories: CompetitionCategories[] | null
 }
 
 export type ApiCompetition = Competition & {
-  createdAt: Date,
-  updatedAt: Date,
+  createdAt: Date
+  updatedAt: Date
 }
 
-export type FormSubscription = { error: boolean, success: boolean, message: string, passwordIsValid?: boolean, isLoading: boolean }
+export type Form = {
+  error: boolean
+  success: boolean
+  isLoading: boolean
+}
+
+export type FormCreateCompetition = Form & {
+  competition: Competition
+}
+export type FormSubscription = Form & {
+  message: string
+  passwordIsValid?: boolean
+}
+export type FormBoulderingRound = Form & { input: BoulderingRoundInput }
+export type BoulderingRoundInput = {
+  category?: CategoryName
+  sex?: Sex
+  index?: number
+  name?: string
+  quota?: number
+  boulders?: number
+  rankingType?: RankingType
+  type?: TypeBouldering
+  groups?: number
+}
 export type SubscriptionCredentials = {
-  email: string,
-  name: string,
-  lastName: string,
-  sex: string,
-  password: string,
+  email: string
+  firstName: string
+  lastName: string
+  sex: Sex
+  club: string
+  dateBirth: number
+  password: string
   passwordConfirmation: string
   birthDay: Date
   birthYear?: number
 }
 
+export type DTOSubscriptionCredentials = {
+  email: string
+  password: string
+  lastName: string
+  firstName: string
+  sex: Sex
+  club: string
+  birthYear: number
+}
+
 export type APIUser = {
-  createdAt: string,
-  updatedAt: string,
-  id: number,
-  email: string,
-  firstName: string,
+  createdAt: string
+  updatedAt: string
+  id: number
+  email: string
+  firstName: string
   lastName: string
   birthYear: number
   club: string | null
 }
 
 export type TokenCredentials = {
-  token: string,
-  userId: number,
-  expiresIn: number,
+  token: string
+  userId: number
+  expiresIn: number
   createdAt: string
 }
 
 export type AuthCredentials = {
-  email: string,
+  email: string
   password: string
 }
 
 export type UserCredentials = {
-  email: string,
-  firstName: string,
-  lastName: string,
-  createdAt: string,
+  email: string
+  firstName: string
+  lastName: string
+  createdAt: string
   updatedAt: string
 }
 
 export type CompetitionsRegistrations = {
-  createdAt: string,
-  updatedAt: string,
-  userId: number,
+  createdAt: string
+  updatedAt: string
+  userId: number
   competitionId: number
 }
 
 export type BoulderingRounds = {
-  index: number,
-  name: string,
-  quota: number,
-  boulders: number,
-  rankingType: 'CIRCUIT',
+  index: number
+  name: string
+  quota: number
+  boulders: number
+  rankingType: 'CIRCUIT'
   type: 'QUALIFIER'
 }
 
 export type BoulderingResult = {
-  climberId: number,
-  top: boolean,
-  zone: boolean,
+  climberId: number
+  top: boolean
+  zone: boolean
   try: boolean
 }
 
 export type APIRankingResponse = {
   [key: string]: {
-    [key: string]: Array<Ranking>,
+    [key: string]: Array<Ranking>
   }
 }
 
+export type APIUserCompetitionRoles = {
+  organizer: boolean
+  juryPresident: boolean
+  judge: boolean
+  chiefRouteSetter: boolean
+  routeSetter: boolean
+  technicalDelegate: boolean
+}
+
 export type Ranking = {
-  ranking: 0,
+  ranking: 0
   climber: {
-    id: 0,
-    firstName: string,
-    lastName: string,
+    id: 0
+    firstName: string
+    lastName: string
     club: string
   }
 }

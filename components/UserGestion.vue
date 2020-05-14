@@ -5,8 +5,8 @@
     </div>
     <b-tabs v-model="activeTab">
       <template v-for="(role, index) in roles">
-        <b-tab-item :label="role" :key="index">
-          <TabUserSelector :role="role"></TabUserSelector>
+        <b-tab-item :key="index" :label="role">
+          <TabUserSelector :role="role" />
         </b-tab-item>
       </template>
     </b-tabs>
@@ -14,21 +14,25 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component } from "vue-property-decorator";
-  import TabUserSelector from "~/components/TabUserSelector.vue";
-  import {  RoleName } from "~/definitions";
-  import { ApiHelper } from "~/utils/api_helper/apiHelper";
+import { Vue, Component } from 'vue-property-decorator'
+import TabUserSelector from '~/components/TabUserSelector.vue'
 
-  @Component({
-    components: {TabUserSelector}
-  })
-  export default class UserGestion extends Vue {
-    activeTab = 0
-    roles = ['Juges', 'Président', 'Chef routes setters', 'Routes setters', 'Délégués techniques', 'Organisateur']
-    competitionId?: number
-  }
+@Component({
+  components: { TabUserSelector }
+})
+export default class UserGestion extends Vue {
+  activeTab = 0
+  roles = [
+    'Juges',
+    'Président',
+    'Chef routes setters',
+    'Routes setters',
+    'Délégués techniques',
+    'Organisateur'
+  ]
+
+  competitionId?: number
+}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
