@@ -98,38 +98,37 @@ import {
   SubscriptionCredentials
 } from '~/definitions'
 
-  @Component({
-    layout: 'blank',
-    middleware: 'isAuth',
-    data() {
-      return {
-        Sex
-      }
+@Component({
+  layout: 'blank',
+  middleware: 'isAuth',
+  data() {
+    return {
+      Sex
     }
-  })
-  export default class Subscriptions extends Vue {
-    MAX_PASSWORD_LENGTH = 6
-    form: FormSubscription = {
-      error: false,
-      success: false,
-      isLoading: false,
-      message: '',
-      passwordIsValid: true
-    }
-    credentials: SubscriptionCredentials = {
-      email: 'admin@test.com',
-      firstName: 'Laurent',
-      lastName: 'Gbagbo',
-      sex: Sex.Male,
-      club: 'FFME',
-      birthDay: new Date(),
-      dateBirth: 0,
-      password: 'admin@test.com',
-      passwordConfirmation: 'admin@test.com'
-    }
-    maxDate: Date = new Date()
-    minDate: Date = new Date('1/1/1900')
   }
+})
+export default class Subscriptions extends Vue {
+  MAX_PASSWORD_LENGTH = 6
+  form: FormSubscription = {
+    error: false,
+    success: false,
+    isLoading: false,
+    message: '',
+    passwordIsValid: true
+  }
+  credentials: SubscriptionCredentials = {
+    email: 'admin@test.com',
+    firstName: 'Laurent',
+    lastName: 'Gbagbo',
+    sex: Sex.Male,
+    club: 'FFME',
+    birthDay: new Date(),
+    dateBirth: 0,
+    password: 'admin@test.com',
+    passwordConfirmation: 'admin@test.com'
+  }
+  maxDate: Date = new Date()
+  minDate: Date = new Date('1/1/1900')
 
   async subscribeUser(credentials: SubscriptionCredentials): Promise<void> {
     this.form.isLoading = true
