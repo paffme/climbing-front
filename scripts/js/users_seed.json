@@ -1,0 +1,38 @@
+[
+  {
+    "email": "admin@test.com",
+    "password": "admin@test.com",
+    "firstName": "admin",
+    "lastName": "admin",
+    "birthYear": 2000,
+    "sex": "female",
+    "club": "ADMIN"
+  },
+  {
+    "email": "test_0@cypress.com",
+    "password": "test_0@cypress.com",
+    "firstName": "cypress_0",
+    "lastName": "test_0",
+    "birthYear": 2010,
+    "sex": "male",
+    "club": "CY"
+  },
+  {
+    "email": "test_1@cypress.com",
+    "password": "test_1@cypress.com",
+    "firstName": "cypress_1",
+    "lastName": "test_1",
+    "birthYear": 1970,
+    "sex": "female",
+    "club": "CY"
+  },
+  {
+    "email": "test_2@cypress.com",
+    "password": "test_2@cypress.com",
+    "firstName": "cypress_2",
+    "lastName": "test_2",
+    "birthYear": 1970,
+    "sex": "female",
+    "club": "CY"
+  }
+]
