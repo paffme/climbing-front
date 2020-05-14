@@ -1,6 +1,5 @@
 import '../../support'
 
-
 describe('Test for Subscriptions page features', () => {
   const sex: boolean = true
   const email: string = 'cypress@hill.com'
@@ -10,32 +9,42 @@ describe('Test for Subscriptions page features', () => {
   const birthDay: Date = new Date(2000, 4, 20)
   const password: string = 'cyphill'
 
-  function completeSub(sex: boolean,
-                       email: string,
-                       firstName: string,
-                       lastName: string,
-                       club: string,
-                       birthDay: Date,
-                       password: string) {
-    if(sex) cy.get('.b-radio-male > .check').click()
+  function completeSub(
+    sex: boolean,
+    email: string,
+    firstName: string,
+    lastName: string,
+    club: string,
+    birthDay: Date,
+    password: string
+  ) {
+    if (sex) cy.get('.b-radio-male > .check').click()
     else cy.get('.b-radio-female > .check').click()
-    cy.get('.email').type(email)
-      .get('.first-name').type(firstName)
-      .get('.last-name').type(lastName)
-      .get('.club').type(club)
+    cy.get('.email')
+      .type(email)
+      .get('.first-name')
+      .type(firstName)
+      .get('.last-name')
+      .type(lastName)
+      .get('.club')
+      .type(club)
       .typeDate('.birth-date', birthDay)
-      .get('.password').type(password)
-      .get('.conf-password').type(password)
+      .get('.password')
+      .type(password)
+      .get('.conf-password')
+      .type(password)
   }
 
   function clearInput() {
-    completeSub(true,
+    completeSub(
+      true,
       '{selectall}{del}',
       '{selectall}{del}',
       '{selectall}{del}',
       '{selectall}{del}',
       new Date(),
-      '{selectall}{del}')
+      '{selectall}{del}'
+    )
   }
 
   beforeEach(() => {
@@ -53,8 +62,10 @@ describe('Test for Subscriptions page features', () => {
     completeSub(sex, email, firstName, lastName, club, birthDay, password)
     cy.get('.button').click()
 
-    cy.url().should('equal',
-      Cypress.config().baseUrl + 'login?fromSubscription=true')
+    cy.url().should(
+      'equal',
+      Cypress.config().baseUrl + 'login?fromSubscription=true'
+    )
   })
 
   it('Must not create a new user when input missing', () => {
@@ -80,9 +91,9 @@ describe('Test for Subscriptions page features', () => {
   })
 
   it('Must not create a new user when pswd validation != pswd', () => {
-    //clearInput()
+    // clearInput()
 
-    //completeSub(sex, email, firstName, lastName, club, birthDay, password)
+    // completeSub(sex, email, firstName, lastName, club, birthDay, password)
 
     cy.get('.conf-password').type('grrr')
     cy.get('.button').click()
@@ -92,8 +103,7 @@ describe('Test for Subscriptions page features', () => {
   })
 
   it('Must not create a new user with the same ???', () => {
-    //clearInput()
-
-    //completeSub(sex, email, firstName, lastName, club, birthDay, password)
+    // clearInput()
+    // completeSub(sex, email, firstName, lastName, club, birthDay, password)
   })
 })

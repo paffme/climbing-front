@@ -1,6 +1,6 @@
-import { shallowMount, createLocalVue, RouterLinkStub } from "@vue/test-utils";
-import Buefy                                            from 'buefy'
-import CompetitionCreate                           from '@/pages/competitions/create.vue'
+import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
+import Buefy from 'buefy'
+import CompetitionCreate from '@/pages/competitions/create.vue'
 
 let localVue
 describe('CompetitionCreate', () => {

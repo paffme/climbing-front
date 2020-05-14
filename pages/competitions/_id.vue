@@ -119,7 +119,8 @@
                 <div v-if="!competition.cancelled" class="is-pulled-right">
                   <BtnRegisterCompetition
                     :competition-id="competition.id"
-                    :is-connected="isAutenthicated" />
+                    :is-connected="isAutenthicated"
+                  />
                 </div>
               </div>
             </div>

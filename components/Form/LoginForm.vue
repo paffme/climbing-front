@@ -3,10 +3,20 @@
     @submit.prevent="emitForm(userCredential.email, userCredential.password)"
   >
     <b-field label="Email" required>
-      <b-input v-model="userCredential.email" type="text" class="email"></b-input>
+      <b-input
+        v-model="userCredential.email"
+        type="text"
+        class="email"
+      ></b-input>
     </b-field>
     <b-field label="Mot de passe">
-      <b-input v-model="userCredential.password" password-reveal type="password" required class="password">
+      <b-input
+        v-model="userCredential.password"
+        password-reveal
+        type="password"
+        required
+        class="password"
+      >
       </b-input>
     </b-field>
     <nuxt-link to="/subscriptions">

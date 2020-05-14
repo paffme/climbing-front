@@ -61,7 +61,7 @@ import CreateCompetitionForm from '~/components/Form/CreateCompetitionForm.vue'
   components: { GoBackBtn, CreateCompetitionForm },
   middleware: 'isAuth'
 })
-  export default class CompetitionCreate extends Vue {}
+export default class CompetitionCreate extends Vue {}
 </script>
 
 <style scoped>

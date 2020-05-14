@@ -1,6 +1,6 @@
 import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
-import Buefy                                            from 'buefy'
-import Login                           from '@/pages/login.vue'
+import Buefy from 'buefy'
+import Login from '@/pages/login.vue'
 
 let localVue
 describe('Login', () => {

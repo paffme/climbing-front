@@ -1,6 +1,6 @@
 import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
-import Buefy                                            from 'buefy'
-import Competitions                           from '@/pages/index.vue'
+import Buefy from 'buefy'
+import Competitions from '@/pages/index.vue'
 
 let localVue
 describe('Competitions', () => {
