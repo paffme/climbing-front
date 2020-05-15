@@ -6,9 +6,9 @@ import {
   CompetitionsRegistrations,
   Competition,
   ApiCompetition,
-  UserCredentials,
+  APIUserCredentials,
   AuthCredentials,
-  TokenCredentials,
+  APIToken,
   APIRankingResponse,
   BoulderingRoundInput,
   APIUserCompetitionRoles,
@@ -248,13 +248,13 @@ async function subscribeUser(
 
 async function getUser(
   userId: number
-): Promise<AxiosResponse<UserCredentials>> {
+): Promise<AxiosResponse<APIUserCredentials>> {
   return axios.get(`/users/${userId}`)
 }
 
 async function getToken(
   credentials: AuthCredentials
-): Promise<AxiosResponse<TokenCredentials>> {
+): Promise<AxiosResponse<APIToken>> {
   return axios.post('/users/token', credentials)
 }
 

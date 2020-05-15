@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { LoginFormEvent } from '~/definitions/FormEvent'
+import { LoginEvent } from '~/definitions/FormEvent'
 import { AuthCredentials } from '~/definitions'
 
 @Component
@@ -50,7 +50,7 @@ export default class LoginForm extends Vue {
       success: true,
       message: null,
       data: this.userCredential
-    } as LoginFormEvent)
+    } as LoginEvent)
   }
 }
 </script>

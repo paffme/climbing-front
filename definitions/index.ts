@@ -132,7 +132,7 @@ export type APIUser = {
   club: string | null
 }
 
-export type TokenCredentials = {
+export type APIToken = {
   token: string
   userId: number
   expiresIn: number
@@ -144,7 +144,7 @@ export type AuthCredentials = {
   password: string
 }
 
-export type UserCredentials = {
+export type APIUserCredentials = {
   email: string
   firstName: string
   lastName: string
