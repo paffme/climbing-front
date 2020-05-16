@@ -27,7 +27,7 @@
           <div class="tile is-4 is-parent">
             <StatsBlock
               :number="dashboardStats.nbCompetitions"
-              description="Compétitions au total"
+              description="Compétitions totales"
               type="is-danger"
             />
           </div>
@@ -61,11 +61,12 @@ import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { Competition } from '~/definitions'
 import BtnCreateCompetition from '~/components/Button/BtnCreateCompetition.vue'
 import { futureCompetitions } from '~/utils/filterHelper'
+import { AxiosError } from "axios";
 
 @Component({
   components: { Rank, StatsBlock, BtnCreateCompetition }
 })
-export default class Competitions extends Vue {
+export default class Dashboard extends Vue {
   data = [
     {
       id: 4,
@@ -90,35 +91,79 @@ export default class Competitions extends Vue {
   competitions?: Competition[] = []
   dashboardStats = {
     futureCompetitions: 0,
-    nbClimber: 1320,
+    nbClimber: 0,
     nbCompetitions: 0
   }
 
   async created() {
     try {
-      const response = await ApiHelper.GetCompetitions(futureCompetitions())
       this.dashboardStats.nbClimber = await this.fetchNbClimber()
-      this.dashboardStats.futureCompetitions = Array.isArray(response.data)
-        ? response.data.length
-        : 0
+      this.competitions = await this.fetchFutureCompetitions()
       this.dashboardStats.nbCompetitions = await this.fetchNbCompetitions()
-      this.dashboardStats.nbCompetitions = Array.isArray(response.data)
-        ? response.data.length
-        : 0
-      this.competitions = response.data
-    } catch (e) {
+      this.dashboardStats.futureCompetitions = this.countCompetitions(this.competitions)
+    } catch (err) {
       this.competitions = []
+      this.handleAxiosError(err)
     }
   }
 
   async fetchNbClimber(): Promise<number> {
-    const response = await ApiHelper.GetUserCount()
-    return response.data.count
+    try {
+      const response = await ApiHelper.GetUserCount()
+      return response.data.count
+    } catch(err) {
+      console.log('fetchFutureCompetitions - ERR', err)
+      throw err
+    }
   }
 
   async fetchNbCompetitions(): Promise<number> {
-    const response = await ApiHelper.GetCompetitionsCount()
-    return response.data.count
+    try {
+      const response = await ApiHelper.GetCompetitionsCount()
+      return response.data.count
+    } catch(err) {
+      console.log('fetchFutureCompetitions - ERR', err)
+      throw err
+    }
+  }
+
+  async fetchFutureCompetitions(): Promise<Competition[]> {
+    try {
+      const axiosResponse = await ApiHelper.GetCompetitions(futureCompetitions())
+      return axiosResponse.data
+    } catch(err) {
+      console.log('fetchFutureCompetitions - ERR', err)
+      throw err
+    }
+  }
+
+  countCompetitions(competitions: Competition[]): number {
+    return Array.isArray(competitions)
+      ? competitions.length
+      : 0
+  }
+
+  handleAxiosError(error: AxiosError): void {
+    if (error.response) {
+      /*
+       * The request was made and the server responded with a
+       * status code that falls out of the range of 2xx
+       */
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      /*
+       * The request was made but no response was received, `error.request`
+       * is an instance of XMLHttpRequest in the browser and an instance
+       * of http.ClientRequest in Node.js
+       */
+      console.log(error.request);
+    } else {
+      // Something happened in setting up the request and triggered an Error
+      console.log('Error', error.message);
+    }
+    console.log(error);
   }
 }
 </script>
