@@ -66,28 +66,7 @@ import { AxiosError } from "axios";
 @Component({
   components: { Rank, StatsBlock, BtnCreateCompetition }
 })
-export default class Dashboard extends Vue {
-  data = [
-    {
-      id: 4,
-      name: 'Chalais Savoyard',
-      categories: [
-        {
-          sex: 'female',
-          name: 'benjamin'
-        }
-      ],
-      startDate: '2020-04-25T14:50:54.000Z',
-      endDate: '2020-04-25T14:50:54.000Z',
-      city: 'Choisy',
-      address: '19 Avenue Villejuif',
-      postalCode: '94420',
-      type: 'lead',
-      createdAt: '2020-04-25T17:18:33.000Z',
-      updatedAt: '2020-04-25T17:18:33.000Z'
-    }
-  ]
-
+export default class Competitions extends Vue {
   competitions?: Competition[] = []
   dashboardStats = {
     futureCompetitions: 0,
@@ -97,11 +76,13 @@ export default class Dashboard extends Vue {
 
   async created() {
     try {
+      const response = await this.fetchFutureCompetitions()
       this.dashboardStats.nbClimber = await this.fetchNbClimber()
-      this.competitions = await this.fetchFutureCompetitions()
       this.dashboardStats.nbCompetitions = await this.fetchNbCompetitions()
-      this.dashboardStats.futureCompetitions = this.countCompetitions(this.competitions)
+      this.dashboardStats.futureCompetitions = response.length
+      this.competitions = response
     } catch (err) {
+      console.log('error Created - Index', err)
       this.competitions = []
       this.handleAxiosError(err)
     }

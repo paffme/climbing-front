@@ -8,14 +8,7 @@
             {{ competition.name }}
           </h1>
           <template v-if="userHasRole">
-            <b-button
-              type="is-info"
-              icon-right="tools"
-              tag="router-link"
-              :to="`/competitions/edit/${competition.id}`"
-            >
-              Editer cette compétition
-            </b-button>
+            <BtnEditCompetition />
           </template>
           <template v-else-if="!userHasRole">
             <BtnRegisterCompetition
@@ -126,11 +119,16 @@
             </div>
             <div class="column is-6">
               <GmapMap
-                :center="{ lat: 10, lng: 10 }"
-                :zoom="7"
-                map-type-id="terrain"
-                style="width: 100%; height: 100vh;"
-              />
+                :center="{ lat: maps.lat, lng: maps.lng }"
+                :zoom="15"
+                map-type-id="roadmap"
+                style="width: 100%; height: 100vh;">
+                <GmapMarker
+                  :position="{ lat: maps.lat, lng: maps.lng }"
+                  :clickable="true"
+                  :draggable="true"
+                />
+              </GmapMap>
             </div>
           </div>
           <hr />
@@ -215,9 +213,15 @@ import { authUser } from '~/utils/store-accessor'
 import RankOneCompetition from '~/components/Table/RankOneCompetition.vue'
 import BtnRegisterCompetition from '~/components/Button/BtnRegisterCompetition.vue'
 import AuthUser from '~/store/authUser'
+import BtnEditCompetition from '~/components/Button/BtnEditCompetition.vue'
 
 @Component({
-  components: { GoBackBtn, RankOneCompetition, BtnRegisterCompetition },
+  components: {
+    GoBackBtn,
+    RankOneCompetition,
+    BtnRegisterCompetition,
+    BtnEditCompetition
+  },
   data() {
     return {
       roleNameQueryParams: RoleNameQueryParams,
@@ -244,6 +248,10 @@ export default class OneCompetition extends Vue {
   competition: Competition | null = null
   isAlreadyRegister: boolean = false
   isLoading = true
+  maps = {
+    lat: 10,
+    lng: 12
+  }
   filter = {
     sex: Sex.Male,
     categorie: CategoryName.Benjamin
@@ -271,6 +279,7 @@ export default class OneCompetition extends Vue {
     try {
       const result = await ApiHelper.GetCompetition(competitionId)
       this.competition = result.data
+      await this.getLatLng(this.competition)
       this.isAlreadyRegister = await this.checkIfUserIsRegisterToCompetition(
         competitionId
       )
@@ -335,6 +344,18 @@ export default class OneCompetition extends Vue {
         'ERROR - Imposssible de récupérer les roles utilisateurs',
         err
       )
+    }
+  }
+
+  async getLatLng(competition: Competition) {
+    try {
+      const response: any = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${competition.address}+${competition.city}+${competition.postalCode}&key=AIzaSyCYI4Fwja8HZVbqP-Te_sf0FR4I4PeF7mY`)
+      const data = await response.json()
+      console.log('response latLng', data)
+      this.maps.lat = data.results[0].geometry?.location?.lat
+      this.maps.lng = data.results[0].geometry?.location?.lng
+    } catch(err) {
+      console.log('getLatLng ERROR', err)
     }
   }
 }
