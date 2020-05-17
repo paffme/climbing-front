@@ -8,7 +8,7 @@
             {{ competition.name }}
           </h1>
           <template v-if="userHasRole">
-            <BtnEditCompetition />
+            <BtnEditCompetition :competition-id="competition.id" />
           </template>
           <template v-else-if="!userHasRole">
             <BtnRegisterCompetition
@@ -122,7 +122,8 @@
                 :center="{ lat: maps.lat, lng: maps.lng }"
                 :zoom="15"
                 map-type-id="roadmap"
-                style="width: 100%; height: 100vh;">
+                style="width: 100%; height: 100vh;"
+              >
                 <GmapMarker
                   :position="{ lat: maps.lat, lng: maps.lng }"
                   :clickable="true"
@@ -222,6 +223,7 @@ import BtnEditCompetition from '~/components/Button/BtnEditCompetition.vue'
     BtnRegisterCompetition,
     BtnEditCompetition
   },
+  middleware: ['setHeader'],
   data() {
     return {
       roleNameQueryParams: RoleNameQueryParams,
@@ -252,6 +254,7 @@ export default class OneCompetition extends Vue {
     lat: 10,
     lng: 12
   }
+
   filter = {
     sex: Sex.Male,
     categorie: CategoryName.Benjamin
@@ -326,7 +329,7 @@ export default class OneCompetition extends Vue {
     }
 
     try {
-      const response = await ApiHelper.GetUserCompetitionRoles(
+      const response = await ApiHelper.GetRolesForCompetition(
         competitionId,
         userId
       )
@@ -349,12 +352,14 @@ export default class OneCompetition extends Vue {
 
   async getLatLng(competition: Competition) {
     try {
-      const response: any = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${competition.address}+${competition.city}+${competition.postalCode}&key=AIzaSyCYI4Fwja8HZVbqP-Te_sf0FR4I4PeF7mY`)
+      const response: any = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${competition.address}+${competition.city}+${competition.postalCode}&key=AIzaSyCYI4Fwja8HZVbqP-Te_sf0FR4I4PeF7mY`
+      )
       const data = await response.json()
       console.log('response latLng', data)
       this.maps.lat = data.results[0].geometry?.location?.lat
       this.maps.lng = data.results[0].geometry?.location?.lng
-    } catch(err) {
+    } catch (err) {
       console.log('getLatLng ERROR', err)
     }
   }

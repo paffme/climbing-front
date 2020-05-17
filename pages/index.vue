@@ -5,7 +5,7 @@
         <h1 class="title">
           Tableau de bord FFME
         </h1>
-        <BtnCreateCompetition />
+        <BtnCreateCompetition :is-connected="isConnected" />
       </div>
 
       <div class="custom_section page_stats">
@@ -55,15 +55,22 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import { AxiosError } from 'axios'
 import Rank from '~/components/Rank.vue'
 import StatsBlock from '~/components/StatsBlock.vue'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { Competition } from '~/definitions'
 import BtnCreateCompetition from '~/components/Button/BtnCreateCompetition.vue'
 import { futureCompetitions } from '~/utils/filterHelper'
-import { AxiosError } from "axios";
+import AuthUser from '~/store/authUser'
 
 @Component({
+  data() {
+    return {
+      // @ts-ignore
+      isConnected: AuthUser.getters?.['Authenticated']() || false
+    }
+  },
   components: { Rank, StatsBlock, BtnCreateCompetition }
 })
 export default class Competitions extends Vue {
@@ -92,7 +99,7 @@ export default class Competitions extends Vue {
     try {
       const response = await ApiHelper.GetUserCount()
       return response.data.count
-    } catch(err) {
+    } catch (err) {
       console.log('fetchFutureCompetitions - ERR', err)
       throw err
     }
@@ -102,7 +109,7 @@ export default class Competitions extends Vue {
     try {
       const response = await ApiHelper.GetCompetitionsCount()
       return response.data.count
-    } catch(err) {
+    } catch (err) {
       console.log('fetchFutureCompetitions - ERR', err)
       throw err
     }
@@ -110,18 +117,18 @@ export default class Competitions extends Vue {
 
   async fetchFutureCompetitions(): Promise<Competition[]> {
     try {
-      const axiosResponse = await ApiHelper.GetCompetitions(futureCompetitions())
+      const axiosResponse = await ApiHelper.GetCompetitions(
+        futureCompetitions()
+      )
       return axiosResponse.data
-    } catch(err) {
+    } catch (err) {
       console.log('fetchFutureCompetitions - ERR', err)
       throw err
     }
   }
 
   countCompetitions(competitions: Competition[]): number {
-    return Array.isArray(competitions)
-      ? competitions.length
-      : 0
+    return Array.isArray(competitions) ? competitions.length : 0
   }
 
   handleAxiosError(error: AxiosError): void {
@@ -130,21 +137,21 @@ export default class Competitions extends Vue {
        * The request was made and the server responded with a
        * status code that falls out of the range of 2xx
        */
-      console.log(error.response.data);
-      console.log(error.response.status);
-      console.log(error.response.headers);
+      console.log(error.response.data)
+      console.log(error.response.status)
+      console.log(error.response.headers)
     } else if (error.request) {
       /*
        * The request was made but no response was received, `error.request`
        * is an instance of XMLHttpRequest in the browser and an instance
        * of http.ClientRequest in Node.js
        */
-      console.log(error.request);
+      console.log(error.request)
     } else {
       // Something happened in setting up the request and triggered an Error
-      console.log('Error', error.message);
+      console.log('Error', error.message)
     }
-    console.log(error);
+    console.log(error)
   }
 }
 </script>
