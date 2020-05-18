@@ -1,3 +1,5 @@
+const axios = require('axios')
+
 module.exports = {
   mode: 'spa',
   /*
@@ -18,6 +20,26 @@ module.exports = {
   },
   server: {
     port: 8002
+  },
+  generate: {
+    routes: async () => {
+      const BASE_URL = 'https://paffme.hdaroit.fr/api/v1'
+
+      const axiosResponse = await axios.get(
+        BASE_URL + '/competitions?page=1&perPage=30'
+      )
+      const routesToGenerate = []
+      if (!axiosResponse.data && !Array.isArray(axiosResponse.data)) {
+        throw new Error('Data is invalid')
+      }
+
+      axiosResponse.data.forEach((competition) => {
+        routesToGenerate.push('/competitions/' + competition.id)
+        routesToGenerate.push('/competitions/edit/' + competition.id)
+      })
+
+      return routesToGenerate
+    }
   },
   /*
    ** Customize the progress-bar color
