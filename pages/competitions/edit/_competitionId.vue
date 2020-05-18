@@ -1,3 +1,4 @@
+import { RoleName } from "~/definitions";
 <template>
   <div class="columns">
     <div class="column">
@@ -25,7 +26,9 @@
             </li>
           </ul>
         </nav>
-
+        <b-notification>
+          Connecté en tant que {{ displayCurrentRole(role) }}
+        </b-notification>
         <div class="columns">
           <div class="column">
             <div class="tiles">
@@ -83,6 +86,9 @@
                 </template>
               </b-notification>
 
+              <div class="column-is-6">
+                <BouldersSettingsComponent :competition-id="idCompetition" />
+              </div>
               <div class="column is-6">
                 <b-notification :closable="false">
                   <template v-if="internalCompetition">
@@ -109,12 +115,14 @@ import GoBackBtn from '~/components/GoBackBtn.vue'
 import {
   ApiCompetition,
   APIUserCompetitionRoles,
-  RoleName
+  RoleName,
+  Roles
 } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import RoundCompetitionForm from '~/components/Form/RoundCompetitionForm.vue'
 import { authUser } from '~/utils/store-accessor'
 import RolesComponent from '~/components/RolesComponent/RolesComponent.vue'
+import BouldersSettingsComponent from '~/components/BouldersSettingsComponent/BouldersSettingsComponent.vue'
 
 @Component({
   middleware: ['isAuth', 'setHeader'],
@@ -137,7 +145,8 @@ import RolesComponent from '~/components/RolesComponent/RolesComponent.vue'
     UserGestion,
     EditCompetitionForm,
     GoBackBtn,
-    RoundCompetitionForm
+    RoundCompetitionForm,
+    BouldersSettingsComponent
   },
   data() {
     return {
@@ -162,9 +171,31 @@ export default class EditOneCompetition extends Vue {
       authUser.Credentials?.id as number
     )
 
+    console.log('response', response)
     this.role = response.data
+  }
 
-    console.log('this.roles', this.role)
+  displayCurrentRole(role?: APIUserCompetitionRoles | null): string | null {
+    if (!role) return null
+    let currentRole: Roles | null = null
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
+    for (const [roleName, bool] of Object.entries(role)) {
+      if (bool) {
+        if (roleName === Roles.chiefRouteSetter)
+          currentRole = Roles.chiefRouteSetter
+        if (roleName === Roles.organizer) currentRole = Roles.organizer
+        if (roleName === Roles.routeSetter) currentRole = Roles.routeSetter
+        if (roleName === Roles.juryPresident) currentRole = Roles.juryPresident
+        if (roleName === Roles.judge) currentRole = Roles.judge
+        if (roleName === Roles.chiefRouteSetter)
+          currentRole = Roles.chiefRouteSetter
+        if (roleName === Roles.technicalDelegate)
+          currentRole = Roles.technicalDelegate
+      }
+    }
+    console.log('currentRole', currentRole)
+    return currentRole
   }
 
   async getCompetition(idCompetition: number): Promise<ApiCompetition | null> {

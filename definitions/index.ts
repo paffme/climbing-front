@@ -35,6 +35,12 @@ export enum TypeBouldering {
   FINAL = 'Final'
 }
 
+export enum TypeBoulderingRound {
+  QUALIFIER = 'QUALIFIER',
+  SEMI_FINAL = 'SEMI_FINAL',
+  FINAL = 'FINAL'
+}
+
 export enum Sex {
   Male = 'male',
   Female = 'female'
@@ -97,6 +103,22 @@ export type BoulderingRoundInput = {
   rankingType?: RankingType
   type?: TypeBouldering
   groups?: number
+}
+export enum StateRound {
+  PENDING = 'PENDING',
+  ONGOING = 'ONGOING',
+  ENDED = 'ENDED'
+}
+export type BoulderingLimitedRounds = {
+  id: number
+  competitionId: number
+  name: number
+  quota: number
+  type: string
+  sex: Sex
+  category: CategoryName
+  state: StateRound
+  maxTries: number
 }
 export type SubscriptionCredentials = {
   email: string
@@ -173,7 +195,7 @@ export type BoulderingRounds = {
   quota: number
   boulders: number
   rankingType: 'CIRCUIT'
-  type: 'QUALIFIER'
+  type: TypeBoulderingRound.QUALIFIER
 }
 
 export type BoulderingResult = {
@@ -198,6 +220,15 @@ export type APIUserCompetitionRoles = {
   technicalDelegate: boolean
 }
 
+export enum Roles {
+  organizer = 'organizer',
+  juryPresident = 'juryPresident',
+  judge = 'judge',
+  chiefRouteSetter = 'chiefRouteSetter',
+  routeSetter = 'routeSetter',
+  technicalDelegate = 'technicalDelegate'
+}
+
 export type Ranking = {
   ranking: 0
   climber: {
@@ -206,4 +237,9 @@ export type Ranking = {
     lastName: string
     club: string
   }
+}
+
+export type CategoriesSelect = {
+  genre: ['femme' | 'homme']
+  category: CategoryName
 }
