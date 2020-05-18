@@ -16,7 +16,7 @@ jobs:
     - name: Lint files
       run: yarn lint
     - name: Run build task
-      run: yarn run build
+      run: yarn run generate
     - name: Deploy to Server
       uses: easingthemes/ssh-deploy@v2.0.8
       env:
