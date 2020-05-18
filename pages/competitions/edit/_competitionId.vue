@@ -29,51 +29,8 @@
         <div class="columns">
           <div class="column">
             <div class="tiles">
-              <div class="columns" v-if="idCompetition && role">
-                <div v-if="role.organizer" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.Organisateur"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-                <div v-if="role.organizer" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.President"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-                <div v-if="role.organizer" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.ChefRouteSetter"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-
-                <div v-if="role.juryPresident" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.Juges"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-                <div v-if="role.juryPresident" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.DelegueTechnique"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-                <div v-if="role.juryPresident" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.ChefRouteSetter"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-
-                <div v-if="role.chiefRouteSetter" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.RouteSetter"
-                    :competition-id="idCompetition"
-                  />
-                </div>
+              <div :closable="false">
+                <UserGestion />
               </div>
               <b-notification :closable="false">
                 <template v-if="internalCompetition">
@@ -106,14 +63,13 @@ import { Component, Vue } from 'vue-property-decorator'
 import UserGestion from '~/components/UserGestion.vue'
 import EditCompetitionForm from '~/components/Form/EditCompetitionForm.vue'
 import GoBackBtn from '~/components/GoBackBtn.vue'
-import { ApiCompetition, APIUserCompetitionRoles, RoleName } from "~/definitions";
+import { ApiCompetition } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import RoundCompetitionForm from '~/components/Form/RoundCompetitionForm.vue'
 import { authUser } from '~/utils/store-accessor'
-import RolesComponent from '~/components/RolesComponent/RolesComponent.vue'
 
 @Component({
-  middleware: ['isAuth', 'setHeader'],
+  middleware: 'isAuth',
   validate({ params }: any) {
     const competitionId = parseInt(params.competitionId, 10)
     if (!competitionId) {
@@ -129,38 +85,23 @@ import RolesComponent from '~/components/RolesComponent/RolesComponent.vue'
     }
   },
   components: {
-    RolesComponent,
     UserGestion,
     EditCompetitionForm,
     GoBackBtn,
     RoundCompetitionForm
-  },
-  data() {
-    return {
-      role_name: RoleName
-    }
   }
 })
 export default class EditOneCompetition extends Vue {
   idCompetition?: number
   internalCompetition: ApiCompetition | null = null
-  role: APIUserCompetitionRoles | null = null
+  role: string | null = null
 
   async mounted() {
     this.idCompetition =
       parseInt(this.$route.params.competitionId, 10) || undefined
-
-    if (!this.idCompetition) throw Error('ID de la compétition manquante')
-    this.internalCompetition = await this.getCompetition(this.idCompetition)
-
-    const response = await ApiHelper.GetRolesForCompetition(
-      this.idCompetition,
-      authUser.Credentials?.id as number
-    )
-
-    this.role = response.data
-
-    console.log('this.roles', this.role)
+    this.internalCompetition = this.idCompetition
+      ? await this.getCompetition(this.idCompetition)
+      : null
   }
 
   async getCompetition(idCompetition: number): Promise<ApiCompetition | null> {

@@ -350,7 +350,7 @@ describe('ApiHelper', () => {
         const spy = jest.spyOn(API_URL, 'getUserCompetitionRoles')
         axios.get.mockResolvedValue('success')
 
-        const result = await ApiHelper.GetRolesForCompetition(3, 4)
+        const result = await ApiHelper.GetUserCompetitionRoles(3, 4)
         expect(spy).toBeCalledWith(3, 4)
         expect(result).toEqual('success')
       })

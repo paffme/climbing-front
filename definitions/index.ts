@@ -20,7 +20,7 @@ export enum RoleName {
   ChefRouteSetter = 'Chef routes setters',
   RouteSetter = 'Routes setters',
   DelegueTechnique = 'Délégués techniques',
-  Organisateur = 'Organisateurs'
+  Organisateur = 'Organisateur'
 }
 
 export enum RankingType {
@@ -130,14 +130,6 @@ export type APIUser = {
   lastName: string
   birthYear: number
   club: string | null
-}
-
-export type User = {
-  id: number
-  firstName: string
-  lastName: string
-  createdAt: string
-  updatedAt: string
 }
 
 export type APIToken = {

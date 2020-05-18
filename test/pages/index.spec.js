@@ -1,7 +1,7 @@
 import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
-import Buefy from 'buefy'
-import Dashboard from '@/pages/index.vue'
-import { ApiHelper } from '~/utils/api_helper/apiHelper'
+import Buefy                                            from 'buefy'
+import Dashboard                                        from '@/pages/index.vue'
+import { ApiHelper }                                    from "~/utils/api_helper/apiHelper"
 
 let localVue
 describe('Competitions', () => {
@@ -44,7 +44,7 @@ describe('Competitions', () => {
   describe('fetchFutureCompetitions', () => {
     test('Should call GetCompetitions with right parameter', async () => {
       const spy = jest.spyOn(ApiHelper, 'GetCompetitions')
-      spy.mockResolvedValue({ data: competitionMock })
+      spy.mockResolvedValue({data: competitionMock})
       const futureCompetitions = await wrapper.vm.fetchFutureCompetitions()
 
       expect(futureCompetitions).toEqual(competitionMock)
@@ -55,7 +55,7 @@ describe('Competitions', () => {
     test('Should call GetUserCount with right parameter', async () => {
       const spy = jest.spyOn(ApiHelper, 'GetUserCount')
       const count = 1992
-      spy.mockResolvedValue({ data: { count } })
+      spy.mockResolvedValue({data: {count}})
       const nbClimber = await wrapper.vm.fetchNbClimber()
 
       expect(nbClimber).toEqual(count)
@@ -66,7 +66,7 @@ describe('Competitions', () => {
     test('Should call GetCompetitionsCount with right parameter', async () => {
       const spy = jest.spyOn(ApiHelper, 'GetCompetitionsCount')
       const count = 1992
-      spy.mockResolvedValue({ data: { count } })
+      spy.mockResolvedValue({data: {count}})
       const nbCompetitions = await wrapper.vm.fetchNbCompetitions()
 
       expect(nbCompetitions).toEqual(count)

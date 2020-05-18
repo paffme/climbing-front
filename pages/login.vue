@@ -4,7 +4,9 @@
       <div id="login">
         <div class="card">
           <div class="card-header">
-            <LogoComponent />
+            <nuxt-link to="/">
+              <img src="../assets/ffme_logo.png" alt="" width="140" />
+            </nuxt-link>
           </div>
           <div class="card-content">
             <template v-if="fromSubscription">
@@ -41,11 +43,10 @@ import { FormEvent, LoginEvent } from '~/definitions/FormEvent'
 import { APIToken, APIUserCredentials } from '~/definitions'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import Message from '~/definitions/fr'
-import LogoComponent from '~/components/LogoComponent.vue'
 
 @Component({
   layout: 'blank',
-  components: { LoginForm, LogoComponent },
+  components: { LoginForm },
   middleware: 'isAuth'
 })
 export default class Login extends Vue {

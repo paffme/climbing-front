@@ -4,7 +4,7 @@
       <div id="login">
         <div class="card">
           <div class="card-header">
-            <LogoComponent />
+            <img src="../assets/ffme_logo.png" alt="" width="140" />
           </div>
           <div class="card-content">
             <b-notification
@@ -120,11 +120,9 @@ import {
   Sex,
   SubscriptionCredentials
 } from '~/definitions'
-import LogoComponent from '~/components/LogoComponent.vue'
 
 @Component({
   layout: 'blank',
-  components: { LogoComponent },
   middleware: 'isAuth',
   data() {
     return {

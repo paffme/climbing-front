@@ -3,7 +3,6 @@ import { AxiosHelper } from '~/utils/axiosHelper'
 
 const unauthorizedRoute = ['login', 'subscriptions']
 const isAuth: Middleware = ({ route, store, redirect }) => {
-  console.log('ISAUTH')
   if (!route.name) {
     return
   }

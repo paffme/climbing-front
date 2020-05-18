@@ -85,12 +85,7 @@
         />
       </b-field>
 
-      <b-field
-        v-if="
-          internalCompetition.categories &&
-          Array.isArray(internalCompetition.categories).length > 0
-        "
-      >
+      <b-field v-if="internalCompetition.categories.length > 0">
         <b-select v-model="selectedOptions" multiple>
           <option
             v-for="(categorie, index) in internalCompetition.categories"
@@ -166,11 +161,8 @@ export default class EditCompetitionForm extends Vue {
   }
 
   addCategory(result: any) {
-    const competitionCategories = Array.isArray(
-      this.internalCompetition?.categories
-    )
-      ? this.internalCompetition.categories
-      : undefined
+    const competitionCategories =
+      this.internalCompetition && this.internalCompetition.categories
     if (!competitionCategories) {
       return
     }
@@ -199,11 +191,8 @@ export default class EditCompetitionForm extends Vue {
       return
     }
 
-    let competitionCategories = Array.isArray(
-      this.internalCompetition?.categories
-    )
-      ? this.internalCompetition.categories
-      : undefined
+    let competitionCategories =
+      this.internalCompetition && this.internalCompetition.categories
 
     if (!competitionCategories) {
       return
