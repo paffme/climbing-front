@@ -9,6 +9,10 @@ span.form_link {
   padding: 8px 0;
 }
 
+li {
+  list-style-type: none;
+}
+
 .page-enter-active, .page-leave-active {
   transition: opacity .5s;
 }

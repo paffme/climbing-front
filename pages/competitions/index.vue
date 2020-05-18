@@ -10,7 +10,7 @@
         label="Nombre de compétition par page"
         custom-class="little-margin"
       >
-        <b-select v-model="perPage">
+        <b-select v-model="perPage" @input="loadCompetitions">
           <option :value="1">
             1
           </option>
@@ -23,8 +23,8 @@
           <option :value="20">
             20
           </option>
-          <option :value="50">
-            50
+          <option :value="30">
+            30
           </option>
         </b-select>
       </b-field>
@@ -58,6 +58,8 @@ export default class IndexCompetitions extends Vue {
 
   async created() {
     try {
+      const totalCompetition = await ApiHelper.GetCompetitionsCount()
+      this.totalCompetition = totalCompetition.data.count
       await this.loadCompetitions()
     } catch (e) {
       console.log(e)
@@ -66,9 +68,6 @@ export default class IndexCompetitions extends Vue {
   }
 
   async loadCompetitions() {
-    const totalCompetition = await ApiHelper.GetCompetitionsCount()
-    this.totalCompetition = totalCompetition.data.count
-    console.log('totalCompetition', this.totalCompetition)
     this.competitions = await this.fetchCompetitions()
   }
 

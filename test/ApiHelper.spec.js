@@ -239,7 +239,7 @@ describe('ApiHelper', () => {
 
     describe('AddRound', () => {
       test('Should call with right args', async () => {
-        const spy = jest.spyOn(API_URL, 'addRound')
+        const spy = jest.spyOn(API_URL, 'getOraddRound')
         axios.post.mockResolvedValue('success')
 
         const result = await ApiHelper.AddRound(1)

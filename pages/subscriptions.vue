@@ -55,8 +55,8 @@
               </b-field>
               <b-field label="Date de naissance">
                 <b-datepicker
-                  editable
                   v-model="credentials.birthDay"
+                  editable
                   placeholder="Cliquer pour selectionner"
                   icon="calendar-today"
                   trap-focus
@@ -139,10 +139,11 @@ export default class Subscriptions extends Vue {
     error: false,
     success: false,
     isLoading: false,
+    isEdition: false,
     message: '',
     passwordIsValid: true
   }
-  
+
   credentials: SubscriptionCredentials = {
     email: 'admin@test.com',
     firstName: 'Laurent',
@@ -154,7 +155,7 @@ export default class Subscriptions extends Vue {
     password: 'admin@test.com',
     passwordConfirmation: 'admin@test.com'
   }
-  
+
   maxDate: Date = new Date()
   minDate: Date = new Date('1/1/1900')
 
@@ -208,7 +209,7 @@ export default class Subscriptions extends Vue {
       firstName: credentials.firstName,
       sex: credentials.sex,
       club: credentials.club,
-      birthYear: new Date().getFullYear() - credentials.birthDay.getFullYear()
+      birthYear: credentials.birthDay.getFullYear()
     }
   }
 }

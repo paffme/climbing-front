@@ -1,0 +1,49 @@
+<template>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-header-title">Ajout de la création d'un round</span>
+    </div>
+    <div class="card-content">
+      <FormRoundCompetition
+        :genre="genre"
+        :category="category"
+        @createRound="onCreateRound"
+      />
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import FormRoundCompetition from '~/components/Form/FormRoundCompetition.vue'
+import { CategoryName, Sex } from '~/definitions'
+
+@Component({
+  components: { FormRoundCompetition },
+  data() {
+    return {
+      round: {
+        category: 'microbe',
+        sex: 'male',
+        maxTries: 0,
+        name: 'string',
+        quota: 0,
+        boulders: 0,
+        rankingType: 'CIRCUIT',
+        type: 'QUALIFIER',
+        groups: 0
+      }
+    }
+  }
+})
+export default class BouldersCreateRound extends Vue {
+  @Prop(String) genre?: Sex
+  @Prop(String) category?: CategoryName
+  onCreateRound(value: any) {
+    this.$emit('createRound', value)
+    this.$emit('close')
+  }
+}
+</script>
+
+<style scoped></style>

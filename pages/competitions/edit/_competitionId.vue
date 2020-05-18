@@ -18,81 +18,92 @@
                 Compétitions
               </nuxt-link>
             </li>
-            <li class="is-active">
-              <a v-if="internalCompetition" href="#" aria-current="page">{{
-                internalCompetition.name
-              }}</a>
+            <li class="is-primary">
+              <nuxt-link
+                v-if="competition"
+                :to="`/competitions/${competition.id}`"
+              >
+                {{ competition.name }}
+              </nuxt-link>
             </li>
           </ul>
         </nav>
-
+        <b-notification>
+          Connecté en tant que {{ displayCurrentRole(role) }}
+        </b-notification>
         <div class="columns">
           <div class="column">
-            <div class="tiles">
-              <div v-if="idCompetition && role" class="columns">
-                <div v-if="role.organizer" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.Organisateur"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-                <div v-if="role.organizer" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.President"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-                <div v-if="role.organizer" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.ChefRouteSetter"
-                    :competition-id="idCompetition"
-                  />
-                </div>
+            <b-notification :closable="false">
+              <template v-if="competition">
+                <CompetitionForm
+                  :competition="competition"
+                  @emit="onEditCompetition"
+                />
+              </template>
+            </b-notification>
 
-                <div v-if="role.juryPresident" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.Juges"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-                <div v-if="role.juryPresident" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.DelegueTechnique"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-                <div v-if="role.juryPresident" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.ChefRouteSetter"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-
-                <div v-if="role.chiefRouteSetter" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.RouteSetter"
-                    :competition-id="idCompetition"
-                  />
-                </div>
+            <div
+              v-if="competition && competition.id && role"
+              id="role-component"
+              class="columns is-multiline"
+            >
+              <div v-if="role.organizer" class="roles column is-4">
+                <RolesComponent
+                  :role-name="role_name.Organisateur"
+                  :competition-id="competition.id"
+                />
               </div>
-              <b-notification :closable="false">
-                <template v-if="internalCompetition">
-                  <EditCompetitionForm
-                    :internal_competition="internalCompetition"
-                  />
-                </template>
-              </b-notification>
-
-              <div class="column is-6">
-                <b-notification :closable="false">
-                  <template v-if="internalCompetition">
-                    <h3 class="subtitle">
-                      Ajout des rounds
-                    </h3>
-                    <RoundCompetitionForm />
-                  </template>
-                </b-notification>
+              <div v-if="role.organizer" class="roles column is-4">
+                <RolesComponent
+                  :role-name="role_name.President"
+                  :competition-id="competition.id"
+                />
               </div>
+              <div
+                v-if="role.organizer || role.juryPresident"
+                class="roles column is-4"
+              >
+                <RolesComponent
+                  :role-name="role_name.ChefRouteSetter"
+                  :competition-id="competition.id"
+                />
+              </div>
+
+              <div v-if="role.juryPresident" class="roles column is-4">
+                <RolesComponent
+                  :role-name="role_name.Juges"
+                  :competition-id="competition.id"
+                />
+              </div>
+              <div v-if="role.juryPresident" class="roles column is-4">
+                <RolesComponent
+                  :role-name="role_name.DelegueTechnique"
+                  :competition-id="competition.id"
+                />
+              </div>
+
+              <div v-if="role.chiefRouteSetter" class="roles column is-4">
+                <RolesComponent
+                  :role-name="role_name.RouteSetter"
+                  :competition-id="competition.id"
+                />
+              </div>
+            </div>
+
+            <div
+              v-if="role && role.juryPresident"
+              id="boulder-settings"
+              class="notification"
+            >
+              <BouldersSettingsComponent
+                :competition-id="competition.id"
+                :bouldering="bouldering"
+                @loadBouldering="onLoadBouldering"
+              />
+            </div>
+
+            <div id="delete-competition">
+              <BtnDeleteCompetition />
             </div>
           </div>
         </div>
@@ -102,22 +113,71 @@
 </template>
 
 <script lang="ts">
+import _ from 'lodash'
 import { Component, Vue } from 'vue-property-decorator'
 import UserGestion from '~/components/UserGestion.vue'
-import EditCompetitionForm from '~/components/Form/EditCompetitionForm.vue'
-import GoBackBtn from '~/components/GoBackBtn.vue'
+import GoBackBtn from '~/components/Button/GoBackBtn.vue'
 import {
+  APIBoulderingRounds,
   ApiCompetition,
   APIUserCompetitionRoles,
-  RoleName
+  Competition,
+  CompetitionEdit,
+  RoleName,
+  Roles
 } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
-import RoundCompetitionForm from '~/components/Form/RoundCompetitionForm.vue'
 import { authUser } from '~/utils/store-accessor'
 import RolesComponent from '~/components/RolesComponent/RolesComponent.vue'
+import BouldersSettingsComponent from '~/components/BouldersSettingsComponent/BouldersSettingsComponent.vue'
+import CompetitionForm from '~/components/Form/CompetitionForm.vue'
+import BtnDeleteCompetition from '~/components/Button/BtnDeleteCompetition.vue'
+import { AxiosHelper } from '~/utils/axiosHelper'
+
+async function fetchRole(
+  competitionId?: number,
+  userId?: number
+): Promise<APIUserCompetitionRoles | null> {
+  if (!competitionId || !userId) return null
+  const response = await ApiHelper.GetRolesForCompetition(
+    competitionId,
+    userId as number
+  )
+
+  return response.data
+}
+
+async function fetchBouldering(
+  competitionId: number
+): Promise<APIBoulderingRounds> {
+  const response = await ApiHelper.GetRound(competitionId)
+
+  // @ts-ignore
+  return _.isEmpty(response.data) ? null : response.data
+}
+
+async function fetchCompetition(idCompetition: number): Promise<Competition> {
+  const result = await ApiHelper.GetCompetition(idCompetition)
+  return {
+    ...result.data,
+    startDate: result.data?.startDate ? new Date(result.data?.startDate) : null,
+    endDate: result.data?.endDate ? new Date(result.data.endDate) : null,
+    welcomingDate: result.data?.welcomingDate
+      ? new Date(result.data.welcomingDate)
+      : null
+  }
+}
 
 @Component({
   middleware: ['isAuth', 'setHeader'],
+  components: {
+    RolesComponent,
+    UserGestion,
+    CompetitionForm,
+    BtnDeleteCompetition,
+    GoBackBtn,
+    BouldersSettingsComponent
+  },
   validate({ params }: any) {
     const competitionId = parseInt(params.competitionId, 10)
     if (!competitionId) {
@@ -126,58 +186,103 @@ import RolesComponent from '~/components/RolesComponent/RolesComponent.vue'
 
     return true
   },
-  async fetch() {
-    const userId = authUser.Credentials?.id
-    if (!userId) {
-      throw new Error('Vous devez être connecté')
+  async asyncData(ctx) {
+    const idCompetition = parseInt(ctx.params.competitionId, 10)
+
+    try {
+      const competition = await fetchCompetition(idCompetition)
+
+      const bouldering = await fetchBouldering(idCompetition)
+
+      const role = await fetchRole(idCompetition, authUser.Credentials?.id)
+
+      return {
+        competition,
+        role,
+        bouldering
+      }
+    } catch (err) {
+      if (err.response.status === 401) {
+        ctx.redirect(498, '/login')
+      } else {
+        AxiosHelper.HandleAxiosError(this, err)
+      }
     }
-  },
-  components: {
-    RolesComponent,
-    UserGestion,
-    EditCompetitionForm,
-    GoBackBtn,
-    RoundCompetitionForm
   },
   data() {
     return {
-      role_name: RoleName
+      role_name: RoleName,
+      idCompetition: undefined,
+      competition: null
     }
   }
 })
 export default class EditOneCompetition extends Vue {
-  idCompetition?: number
-  internalCompetition: ApiCompetition | null = null
+  competition: ApiCompetition | null = null
   role: APIUserCompetitionRoles | null = null
+  bouldering: APIBoulderingRounds | null = null
 
-  async mounted() {
-    this.idCompetition =
-      parseInt(this.$route.params.competitionId, 10) || undefined
-
-    if (!this.idCompetition) throw new Error('ID de la compétition manquante')
-    this.internalCompetition = await this.getCompetition(this.idCompetition)
-
-    const response = await ApiHelper.GetRolesForCompetition(
-      this.idCompetition,
-      authUser.Credentials?.id as number
-    )
-
-    this.role = response.data
-
-    console.log('this.roles', this.role)
+  async onLoadBouldering() {
+    if (!this.competition?.id) return
+    this.bouldering = await fetchBouldering(this.competition.id)
   }
 
-  async getCompetition(idCompetition: number): Promise<ApiCompetition | null> {
-    const result = await ApiHelper.GetCompetition(idCompetition)
+  async onEditCompetition(competition: Competition) {
+    try {
+      if (!this.competition?.id) throw new Error('No id has been found')
+      const newCompetition = await ApiHelper.UpdateCompetition(
+        this.competition.id,
+        this.editCompetitionDTO(competition)
+      )
+      this.$buefy.toast.open({
+        type: 'is-success',
+        message: 'Compétition créée'
+      })
+      console.log('newCOmpetition', newCompetition.data)
+      this.competition = newCompetition.data
+    } catch (err) {
+      AxiosHelper.HandleAxiosError(this, err)
+      this.$buefy.toast.open({
+        type: 'is-danger',
+        message: "Une erreur s'est produite"
+      })
+    }
+  }
+
+  async onDeleteCompetition() {}
+
+  displayCurrentRole(role?: APIUserCompetitionRoles | null): string | null {
+    if (!role) return null
+    let currentRole: Roles | null = null
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
+    for (const [roleName, bool] of Object.entries(role)) {
+      if (bool) {
+        if (roleName === Roles.chiefRouteSetter)
+          currentRole = Roles.chiefRouteSetter
+        if (roleName === Roles.organizer) currentRole = Roles.organizer
+        if (roleName === Roles.routeSetter) currentRole = Roles.routeSetter
+        if (roleName === Roles.juryPresident) currentRole = Roles.juryPresident
+        if (roleName === Roles.judge) currentRole = Roles.judge
+        if (roleName === Roles.chiefRouteSetter)
+          currentRole = Roles.chiefRouteSetter
+        if (roleName === Roles.technicalDelegate)
+          currentRole = Roles.technicalDelegate
+      }
+    }
+    return currentRole
+  }
+
+  editCompetitionDTO(competition: Competition): CompetitionEdit {
     return {
-      ...result.data,
-      startDate: result.data?.startDate
-        ? new Date(result.data?.startDate)
-        : null,
-      endDate: result.data?.endDate ? new Date(result.data.endDate) : null,
-      welcomingDate: result.data?.welcomingDate
-        ? new Date(result.data.welcomingDate)
-        : null
+      name: competition.name || undefined,
+      type: competition.type || undefined,
+      startDate: competition.startDate || undefined,
+      endDate: competition.endDate || undefined,
+      address: competition.address || undefined,
+      city: competition.city || undefined,
+      postalCode: competition.postalCode || undefined,
+      categories: competition.categories || undefined
     }
   }
 }

@@ -67,7 +67,9 @@ describe('ApiUrl Helper', () => {
       )
     })
     test('addRound - Should return a correct URL', () => {
-      expect(API_URL.addRound(2)).toEqual('/competitions/2/bouldering-rounds')
+      expect(API_URL.getOraddRound(2)).toEqual(
+        '/competitions/2/bouldering-rounds'
+      )
     })
     test('addBoulderingResult - Should return a correct URL', () => {
       expect(API_URL.addBoulderingResult(2, 2, 3)).toEqual(
