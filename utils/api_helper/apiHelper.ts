@@ -50,8 +50,9 @@ export const ApiHelper = {
   AddCompetitor: addCompetitor,
   SubscribeUser: subscribeUser,
   GetUser: getUser,
+  GetUsers: getUsers,
   GetToken: getToken,
-  GetUserCompetitionRoles: getUserCompetitionRoles,
+  GetRolesForCompetition: getUserCompetitionRoles,
   GetUserCount: getUserCount,
   GetCompetitionsCount: getCompetitionsCount,
   GetCompetitionRankings: getCompetitionRankings,
@@ -61,7 +62,7 @@ export const ApiHelper = {
 async function addUserInCompetition(
   competitionId: number,
   userId: number
-): Promise<void> {
+): Promise<AxiosResponse<void>> {
   return axios.get(
     API_URL.registerOrRemoveUserInCompetition(competitionId, userId)
   )
@@ -70,7 +71,7 @@ async function addUserInCompetition(
 async function removeUserFromCompetition(
   competitionId: number,
   userId: number
-): Promise<void> {
+): Promise<AxiosResponse<void>> {
   return axios.delete(
     API_URL.registerOrRemoveUserInCompetition(competitionId, userId)
   )
@@ -82,110 +83,125 @@ async function getRegistrations(
   return axios.get(API_URL.getRegistrations(competitionId))
 }
 
-async function getJuryPresidents(competitionId: number): Promise<APIUser> {
+async function getJuryPresidents(
+  competitionId: number
+): Promise<AxiosResponse<APIUser[]>> {
   return axios.get(API_URL.getJuryPresidents(competitionId))
 }
 async function addJuryPresident(
   competitionId: number,
   userId: number
-): Promise<void> {
+): Promise<AxiosResponse<void>> {
   return axios.put(API_URL.addOrRemoveJuryPresident(competitionId, userId))
 }
 async function removeJuryPresident(
   competitionId: number,
   userId: number
-): Promise<void> {
+): Promise<AxiosResponse<void>> {
   return axios.delete(API_URL.addOrRemoveJuryPresident(competitionId, userId))
 }
 
-async function getJudges(competitionId: number): Promise<APIUser> {
+async function getJudges(
+  competitionId: number
+): Promise<AxiosResponse<APIUser[]>> {
   return axios.get(API_URL.getJudges(competitionId))
 }
 
-async function addJudge(competitionId: number, userId: number): Promise<void> {
+async function addJudge(
+  competitionId: number,
+  userId: number
+): Promise<AxiosResponse<void>> {
   return axios.put(API_URL.addOrRemoveJudge(competitionId, userId))
 }
 
 async function removeJudge(
   competitionId: number,
   userId: number
-): Promise<void> {
+): Promise<AxiosResponse<void>> {
   return axios.delete(API_URL.addOrRemoveJudge(competitionId, userId))
 }
 
-async function getChiefRouteSetters(competitionId: number): Promise<APIUser> {
+async function getChiefRouteSetters(
+  competitionId: number
+): Promise<AxiosResponse<APIUser[]>> {
   return axios.get(API_URL.getChiefRouteSetters(competitionId))
 }
 
 async function addChiefRouteSetters(
   competitionId: number,
   userId: number
-): Promise<void> {
+): Promise<AxiosResponse<void>> {
   return axios.put(API_URL.addOrRemoveChiefRouteSetters(competitionId, userId))
 }
 
 async function removeChiefRouteSetters(
   competitionId: number,
   userId: number
-): Promise<void> {
+): Promise<AxiosResponse<void>> {
   return axios.delete(
     API_URL.addOrRemoveChiefRouteSetters(competitionId, userId)
   )
 }
 
-async function getRouteSetters(competitionId: number): Promise<APIUser> {
+async function getRouteSetters(
+  competitionId: number
+): Promise<AxiosResponse<APIUser[]>> {
   return axios.get(API_URL.getRouteSetters(competitionId))
 }
 
 async function addRouteSetters(
   competitionId: number,
   userId: number
-): Promise<void> {
+): Promise<AxiosResponse<void>> {
   return axios.put(API_URL.addOrRemoveRouteSetters(competitionId, userId))
 }
 
 async function removeRouteSetters(
   competitionId: number,
   userId: number
-): Promise<void> {
+): Promise<AxiosResponse<void>> {
   return axios.delete(API_URL.addOrRemoveRouteSetters(competitionId, userId))
 }
 
-async function getTechnicalDelegates(competitionId: number): Promise<APIUser> {
+async function getTechnicalDelegates(
+  competitionId: number
+): Promise<AxiosResponse<APIUser[]>> {
   return axios.get(API_URL.getTechnicalDelegates(competitionId))
 }
 
 async function addTechnicalDelegates(
   competitionId: number,
   userId: number
-): Promise<void> {
+): Promise<AxiosResponse<void>> {
   return axios.put(API_URL.addOrRemoveTechnicalDelegates(competitionId, userId))
 }
 
 async function removeTechnicalDelegates(
   competitionId: number,
   userId: number
-): Promise<void> {
+): Promise<AxiosResponse<void>> {
   return axios.delete(
     API_URL.addOrRemoveTechnicalDelegates(competitionId, userId)
   )
 }
 
-async function getOrganizers(competitionId: number): Promise<APIUser> {
+async function getOrganizers(
+  competitionId: number
+): Promise<AxiosResponse<APIUser[]>> {
   return axios.get(API_URL.getOrganizers(competitionId))
 }
 
 async function addOrganizers(
   competitionId: number,
   userId: number
-): Promise<void> {
+): Promise<AxiosResponse<void>> {
   return axios.put(API_URL.addOrRemoveOrganizers(competitionId, userId))
 }
 
 async function removeOrganizers(
   competitionId: number,
   userId: number
-): Promise<void> {
+): Promise<AxiosResponse<void>> {
   return axios.delete(API_URL.addOrRemoveOrganizers(competitionId, userId))
 }
 
@@ -201,7 +217,7 @@ async function addBoulderingResult(
   competitionId: number,
   roundId: number,
   boulderId: number
-): Promise<void> {
+): Promise<AxiosResponse<void>> {
   return axios.post(
     API_URL.addBoulderingResult(competitionId, roundId, boulderId),
     body
@@ -226,7 +242,9 @@ async function getCompetition(
   return axios.get(API_URL.updateOrGetCompetition(idCompetition))
 }
 
-async function updateCompetition(body: Competition): Promise<void> {
+async function updateCompetition(
+  body: Competition
+): Promise<AxiosResponse<void>> {
   if (!body.id) {
     return Promise.reject(new Error('ID not defined'))
   }
@@ -250,6 +268,10 @@ async function getUser(
   userId: number
 ): Promise<AxiosResponse<APIUserCredentials>> {
   return axios.get(`/users/${userId}`)
+}
+
+async function getUsers(query?: string): Promise<AxiosResponse<APIUser[]>> {
+  return axios.get(API_URL.getUsers(query))
 }
 
 async function getToken(

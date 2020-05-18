@@ -38,6 +38,10 @@ export default class AuthUser extends VuexModule {
     removeCookie('credentials')
   }
 
+  get Token() {
+    return getCookie('token')
+  }
+
   get Authenticated() {
     return !!getCookie('token')
   }

@@ -72,7 +72,7 @@ export default class IndexCompetitions extends Vue {
     this.competitions = await this.fetchCompetitions()
   }
 
-  async fetchCompetitions(): Promise<Competition[]>  {
+  async fetchCompetitions(): Promise<Competition[]> {
     try {
       const response = await ApiHelper.GetCompetitionsPagination(
         this.page,
@@ -80,9 +80,9 @@ export default class IndexCompetitions extends Vue {
       )
 
       return response.data
-    } catch(err) {
+    } catch (err) {
       console.log('fetchCompetitions - Error', err)
-      throw err;
+      throw err
     }
   }
 
