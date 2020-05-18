@@ -1,6 +1,6 @@
 import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
-import Buefy                                            from 'buefy'
-import BtnRegisterCompetition                           from '@/components/Button/BtnRegisterCompetition.vue'
+import Buefy from 'buefy'
+import BtnRegisterCompetition from '@/components/Button/BtnRegisterCompetition.vue'
 
 let localVue
 describe('BtnRegisterCompetition', () => {

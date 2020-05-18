@@ -3,10 +3,20 @@
     @submit.prevent="emitForm(userCredential.email, userCredential.password)"
   >
     <b-field label="Email" required>
-      <b-input v-model="userCredential.email" type="text" class="email"></b-input>
+      <b-input
+        v-model="userCredential.email"
+        type="text"
+        class="email"
+      ></b-input>
     </b-field>
     <b-field label="Mot de passe">
-      <b-input v-model="userCredential.password" password-reveal type="password" required class="password">
+      <b-input
+        v-model="userCredential.password"
+        password-reveal
+        type="password"
+        required
+        class="password"
+      >
       </b-input>
     </b-field>
     <nuxt-link to="/subscriptions">
@@ -24,7 +34,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { LoginFormEvent } from '~/definitions/FormEvent'
+import { LoginEvent } from '~/definitions/FormEvent'
 import { AuthCredentials } from '~/definitions'
 
 @Component
@@ -40,7 +50,7 @@ export default class LoginForm extends Vue {
       success: true,
       message: null,
       data: this.userCredential
-    } as LoginFormEvent)
+    } as LoginEvent)
   }
 }
 </script>

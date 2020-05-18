@@ -1,6 +1,6 @@
 import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
 import Buefy from 'buefy'
-import Subscriptions                           from '@/pages/subscriptions.vue'
+import Subscriptions from '@/pages/subscriptions.vue'
 
 let localVue
 describe('Subscriptions', () => {

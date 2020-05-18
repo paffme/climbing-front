@@ -5,7 +5,7 @@
         <h1 class="title">
           Tableau de bord FFME
         </h1>
-        <BtnCreateCompetition />
+        <BtnCreateCompetition :is-connected="isConnected" />
       </div>
 
       <div class="custom_section page_stats">
@@ -27,7 +27,7 @@
           <div class="tile is-4 is-parent">
             <StatsBlock
               :number="dashboardStats.nbCompetitions"
-              description="Compétitions au total"
+              description="Compétitions totales"
               type="is-danger"
             />
           </div>
@@ -55,70 +55,103 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import { AxiosError } from 'axios'
 import Rank from '~/components/Rank.vue'
 import StatsBlock from '~/components/StatsBlock.vue'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { Competition } from '~/definitions'
 import BtnCreateCompetition from '~/components/Button/BtnCreateCompetition.vue'
 import { futureCompetitions } from '~/utils/filterHelper'
+import AuthUser from '~/store/authUser'
 
 @Component({
+  data() {
+    return {
+      // @ts-ignore
+      isConnected: AuthUser.getters?.['Authenticated']() || false
+    }
+  },
   components: { Rank, StatsBlock, BtnCreateCompetition }
 })
 export default class Competitions extends Vue {
-  data = [
-    {
-      id: 4,
-      name: 'Chalais Savoyard',
-      categories: [
-        {
-          sex: 'female',
-          name: 'benjamin'
-        }
-      ],
-      startDate: '2020-04-25T14:50:54.000Z',
-      endDate: '2020-04-25T14:50:54.000Z',
-      city: 'Choisy',
-      address: '19 Avenue Villejuif',
-      postalCode: '94420',
-      type: 'lead',
-      createdAt: '2020-04-25T17:18:33.000Z',
-      updatedAt: '2020-04-25T17:18:33.000Z'
-    }
-  ]
-
   competitions?: Competition[] = []
   dashboardStats = {
     futureCompetitions: 0,
-    nbClimber: 1320,
+    nbClimber: 0,
     nbCompetitions: 0
   }
 
   async created() {
     try {
-      const response = await ApiHelper.GetCompetitions(futureCompetitions())
+      const response = await this.fetchFutureCompetitions()
       this.dashboardStats.nbClimber = await this.fetchNbClimber()
-      this.dashboardStats.futureCompetitions = Array.isArray(response.data)
-        ? response.data.length
-        : 0
       this.dashboardStats.nbCompetitions = await this.fetchNbCompetitions()
-      this.dashboardStats.nbCompetitions = Array.isArray(response.data)
-        ? response.data.length
-        : 0
-      this.competitions = response.data
-    } catch (e) {
+      this.dashboardStats.futureCompetitions = response.length
+      this.competitions = response
+    } catch (err) {
+      console.log('error Created - Index', err)
       this.competitions = []
+      this.handleAxiosError(err)
     }
   }
 
   async fetchNbClimber(): Promise<number> {
-    const response = await ApiHelper.GetUserCount()
-    return response.data.count
+    try {
+      const response = await ApiHelper.GetUserCount()
+      return response.data.count
+    } catch (err) {
+      console.log('fetchFutureCompetitions - ERR', err)
+      throw err
+    }
   }
 
   async fetchNbCompetitions(): Promise<number> {
-    const response = await ApiHelper.GetCompetitionsCount()
-    return response.data.count
+    try {
+      const response = await ApiHelper.GetCompetitionsCount()
+      return response.data.count
+    } catch (err) {
+      console.log('fetchFutureCompetitions - ERR', err)
+      throw err
+    }
+  }
+
+  async fetchFutureCompetitions(): Promise<Competition[]> {
+    try {
+      const axiosResponse = await ApiHelper.GetCompetitions(
+        futureCompetitions()
+      )
+      return axiosResponse.data
+    } catch (err) {
+      console.log('fetchFutureCompetitions - ERR', err)
+      throw err
+    }
+  }
+
+  countCompetitions(competitions: Competition[]): number {
+    return Array.isArray(competitions) ? competitions.length : 0
+  }
+
+  handleAxiosError(error: AxiosError): void {
+    if (error.response) {
+      /*
+       * The request was made and the server responded with a
+       * status code that falls out of the range of 2xx
+       */
+      console.log(error.response.data)
+      console.log(error.response.status)
+      console.log(error.response.headers)
+    } else if (error.request) {
+      /*
+       * The request was made but no response was received, `error.request`
+       * is an instance of XMLHttpRequest in the browser and an instance
+       * of http.ClientRequest in Node.js
+       */
+      console.log(error.request)
+    } else {
+      // Something happened in setting up the request and triggered an Error
+      console.log('Error', error.message)
+    }
+    console.log(error)
   }
 }
 </script>

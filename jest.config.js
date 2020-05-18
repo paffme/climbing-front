@@ -15,9 +15,6 @@ module.exports = {
     '<rootDir>/components/**/*.vue',
     '<rootDir>/pages/**/*.vue',
     '<rootDir>/utils/**/*.ts'
-    ],
-  modulePathIgnorePatterns: [
-    '<rootDir>/cypress/'
-  ]
-
+  ],
+  modulePathIgnorePatterns: ['<rootDir>/cypress/']
 }

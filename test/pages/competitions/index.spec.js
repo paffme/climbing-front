@@ -1,6 +1,6 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import Buefy from 'buefy'
-import IndexCompetitions                           from '@/pages/competitions/index.vue'
+import IndexCompetitions from '@/pages/competitions/index.vue'
 
 let localVue
 describe('IndexCompetitions', () => {

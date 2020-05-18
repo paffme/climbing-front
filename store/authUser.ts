@@ -3,8 +3,8 @@ import {
   APIUser,
   AuthCredentials,
   DTOSubscriptionCredentials,
-  TokenCredentials,
-  UserCredentials
+  APIToken,
+  APIUserCredentials
 } from '~/definitions'
 import {
   createCookie,
@@ -15,7 +15,6 @@ import {
 } from '~/utils/cookieHelper'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { AxiosResponse } from '~/node_modules/axios'
-import { AxiosHelper } from '~/utils/axiosHelper'
 
 @Module({
   name: 'authUser',
@@ -24,13 +23,12 @@ import { AxiosHelper } from '~/utils/axiosHelper'
 })
 export default class AuthUser extends VuexModule {
   @Mutation
-  setTokenCredentials(newTokenCredential: TokenCredentials) {
-    AxiosHelper.SetHeaderAuthorizationToken(newTokenCredential.token)
-    createCookie('token', newTokenCredential.token)
+  addTokenToCookies(newTokenCredential: string) {
+    createCookie('token', newTokenCredential)
   }
 
   @Mutation
-  setUserCredentials(newUserCredential: UserCredentials) {
+  setUserCredentials(newUserCredential: APIUserCredentials) {
     createCookieFromObject('credentials', newUserCredential)
   }
 
@@ -55,12 +53,12 @@ export default class AuthUser extends VuexModule {
   @Action({ rawError: true }) // Use to get a detailled errors
   async fetchToken(
     credentials: AuthCredentials
-  ): Promise<AxiosResponse<TokenCredentials>> {
+  ): Promise<AxiosResponse<APIToken>> {
     return ApiHelper.GetToken(credentials)
   }
 
   @Action({ rawError: true }) // Use to get a detailled errors
-  async fetchUser(userId: number): Promise<AxiosResponse<UserCredentials>> {
+  async fetchUser(userId: number): Promise<AxiosResponse<APIUserCredentials>> {
     return ApiHelper.GetUser(userId)
   }
 

@@ -1,6 +1,6 @@
-import { shallowMount, createLocalVue, RouterLinkStub } from "@vue/test-utils";
-import Buefy                                            from 'buefy'
-import EditOneCompetition                           from '@/pages/competitions/edit/_competitionId.vue'
+import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
+import Buefy from 'buefy'
+import EditOneCompetition from '@/pages/competitions/edit/_competitionId.vue'
 
 let localVue
 describe('EditOneCompetition', () => {

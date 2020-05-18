@@ -20,7 +20,7 @@ export enum RoleName {
   ChefRouteSetter = 'Chef routes setters',
   RouteSetter = 'Routes setters',
   DelegueTechnique = 'Délégués techniques',
-  Organisateur = 'Organisateur'
+  Organisateur = 'Organisateurs'
 }
 
 export enum RankingType {
@@ -132,7 +132,15 @@ export type APIUser = {
   club: string | null
 }
 
-export type TokenCredentials = {
+export type User = {
+  id: number
+  firstName: string
+  lastName: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type APIToken = {
   token: string
   userId: number
   expiresIn: number
@@ -144,7 +152,7 @@ export type AuthCredentials = {
   password: string
 }
 
-export type UserCredentials = {
+export type APIUserCredentials = {
   email: string
   firstName: string
   lastName: string

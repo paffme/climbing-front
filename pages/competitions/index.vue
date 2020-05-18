@@ -58,26 +58,37 @@ export default class IndexCompetitions extends Vue {
 
   async created() {
     try {
-      await this.loadData()
+      await this.loadCompetitions()
     } catch (e) {
       console.log(e)
       this.competitions = []
     }
   }
 
-  async loadData() {
-    const response = await ApiHelper.GetCompetitionsPagination(
-      this.page,
-      this.perPage
-    )
+  async loadCompetitions() {
     const totalCompetition = await ApiHelper.GetCompetitionsCount()
     this.totalCompetition = totalCompetition.data.count
-    this.competitions = response.data
+    console.log('totalCompetition', this.totalCompetition)
+    this.competitions = await this.fetchCompetitions()
+  }
+
+  async fetchCompetitions(): Promise<Competition[]> {
+    try {
+      const response = await ApiHelper.GetCompetitionsPagination(
+        this.page,
+        this.perPage
+      )
+
+      return response.data
+    } catch (err) {
+      console.log('fetchCompetitions - Error', err)
+      throw err
+    }
   }
 
   async pageChange(pageNumber: number) {
     this.page = pageNumber
-    await this.loadData()
+    await this.loadCompetitions()
   }
 }
 </script>
