@@ -35,7 +35,7 @@ describe('ApiUrl Helper', () => {
     })
     test('addOrRemoveChiefRouteSetters - Should return a correct URL', () => {
       expect(API_URL.addOrRemoveChiefRouteSetters(1, 2)).toEqual(
-        '​/competitions​/1​/chief-route-setters​/2'
+        '/competitions/1/chief-route-setters/2'
       )
     })
     test('getRouteSetters - Should return a correct URL', () => {
@@ -45,7 +45,7 @@ describe('ApiUrl Helper', () => {
     })
     test('addOrRemoveRouteSetters - Should return a correct URL', () => {
       expect(API_URL.addOrRemoveRouteSetters(2, 1)).toEqual(
-        '​/competitions​/2​/route-setters​/1'
+        '/competitions/2/route-setters/1'
       )
     })
     test('getTechnicalDelegates - Should return a correct URL', () => {
@@ -55,7 +55,7 @@ describe('ApiUrl Helper', () => {
     })
     test('addOrRemoveTechnicalDelegates - Should return a correct URL', () => {
       expect(API_URL.addOrRemoveTechnicalDelegates(2, 1)).toEqual(
-        '​/competitions​/2​/technical-delegates/1'
+        '/competitions/2/technical-delegates/1'
       )
     })
     test('getOrganizers - Should return a correct URL', () => {
@@ -63,7 +63,7 @@ describe('ApiUrl Helper', () => {
     })
     test('addOrRemoveOrganizers - Should return a correct URL', () => {
       expect(API_URL.addOrRemoveOrganizers(2, 1)).toEqual(
-        '​/competitions​/2​/organizers/1'
+        '/competitions/2/organizers/1'
       )
     })
     test('addRound - Should return a correct URL', () => {
@@ -118,5 +118,15 @@ describe('ApiUrl Helper', () => {
       expect(API_URL.getCompetitionsPagination(1, 3)).toEqual(
         '/competitions?page=1&perPage=3'
       ))
+
+    test('getUsers - Should return a correct URL', () => {
+      expect(API_URL.getUsers()).toEqual('/users')
+    })
+
+    test('getUsers - Should return a correct URL With Query', () => {
+      expect(API_URL.getUsers('{"lastName":{"$re":"Rubz"}}')).toEqual(
+        '/users?q={"lastName":{"$re":"Rubz"}}'
+      )
+    })
   })
 })

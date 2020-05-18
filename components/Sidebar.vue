@@ -16,7 +16,7 @@
             src="https://bulma.io/images/placeholders/128x128.png"
           />
         </figure>
-        <p>Connor McGregor</p>
+        <p>{{ credentials.firstName + " " + credentials.lastName}}</p>
       </div>
       <hr />
       <b-menu>
@@ -68,7 +68,9 @@ import AuthUser from '~/store/authUser'
   data() {
     return {
       // @ts-ignore
-      isConnected: AuthUser.getters?.['Authenticated']() || false
+      isConnected: AuthUser.getters?.['Authenticated']() || false,
+      // @ts-ignore
+      credentials: AuthUser.getters?.['Credentials']() || undefined
     }
   }
 })
