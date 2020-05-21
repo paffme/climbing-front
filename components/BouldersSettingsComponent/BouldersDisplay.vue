@@ -16,10 +16,16 @@
     </header>
     <div class="card-content">
       <div class="content">
+        <div class="meta meta-1 is-flex">
+          <b-tag rounded>{{ round.type }}</b-tag>
+          <b-tag rounded>{{ round.state }}</b-tag>
+        </div>
         <ul>
-          <li>ID : {{ round.id }}</li>
           <li>Sex : {{ round.sex }}</li>
           <li>Catégorie : {{ round.category }}</li>
+          <li>Nom : {{ round.name }}</li>
+          <li>Quota : {{ round.quota }}</li>
+          <li>Nombre d'essais : {{ round.maxTries }}</li>
         </ul>
       </div>
     </div>
@@ -44,6 +50,9 @@ export default class BouldersDisplay extends Vue {
 </script>
 
 <style scoped>
+  ul {
+    list-style-type: none;
+  }
   .icon {
     cursor: pointer;
   }
@@ -51,6 +60,12 @@ export default class BouldersDisplay extends Vue {
     display: flex;
     align-items: center;
     padding: 0 10px;
+  }
+  .card-content {
+    padding: 0.8rem 0.5rem;
+  }
+  .meta {
+    justify-content: space-between;
   }
   .card-header-title {
     text-align: center !important;

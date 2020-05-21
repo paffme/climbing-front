@@ -1,13 +1,12 @@
 <template>
-  <b-field v-if="categories" label="Selectionner la catégories">
-    {{ selected }}
+  <b-field v-if="categoryCanBeSelected" label="Selectionner la catégories">
     <b-select
       v-model="selected"
       placeholder="Selectionner une catégorie"
       rounded
       @input="$emit('select', selected)"
     >
-      <template v-for="category in categories">
+      <template v-for="category in categoryCanBeSelected">
         <option
           v-for="(genre, key) in category.genre"
           :key="category.category + key"
@@ -31,11 +30,11 @@ import { CategoriesSelect } from '~/definitions'
   }
 })
 export default class BouldersSelectCategories extends Vue {
-  @Prop(Array) categories!: CategoriesSelect[]
+  @Prop(Array) categoryCanBeSelected!: CategoriesSelect[]
   selected: {category: string, genre: string} | null = null
 
   created() {
-    this.selected = { "category": this.categories[0].category, "genre": this.categories[0].genre[0] }
+    this.selected = { "category": this.categoryCanBeSelected[0].category, "genre": this.categoryCanBeSelected[0].genre[0] }
   }
 }
 </script>

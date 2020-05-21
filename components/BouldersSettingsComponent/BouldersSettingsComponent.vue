@@ -16,34 +16,48 @@
           <!-- Dans le cas ou j'ai des qualifications -->
           <template v-else>
             <div class="select-input">
-              <BouldersSelectCategories :categories="fakeCategories" @select="onSelect" />
+              <BouldersSelectCategories :category-can-be-selected="categoriesCanBeSelected" @select="onSelect" />
             </div>
             <div class="columns">
               <div class="column is-one-thirds">
-                <BouldersDisplay
-                  v-if="categoriesDisplayed.qualification"
-                  :qualification-round="typeBoulderingRound.QUALIFIER"
-                  :round="categoriesDisplayed.qualification"
-                  @delete="onDeleteRound"
-                />
+                <template v-if="categoriesDisplayed.qualification">
+                  <BouldersDisplay
+                    v-if="categoriesDisplayed.qualification"
+                    :qualification-round="typeBoulderingRound.QUALIFIER"
+                    :round="categoriesDisplayed.qualification"
+                    @delete="onDeleteRound"
+                  />
+                </template>
+                <template v-else>
+                  <BouldersDisplayEmpty />
+                </template>
               </div>
 
               <div class="column is-one-thirds">
-                <BouldersDisplay
-                  v-if="categoriesDisplayed.semi"
-                  :qualification-round="typeBoulderingRound.SEMI_FINAL"
-                  :round="categoriesDisplayed.semi"
-                  @delete="onDeleteRound"
-                />
+                <template v-if="categoriesDisplayed.semi">
+                  <BouldersDisplay
+                    v-if="categoriesDisplayed.semi"
+                    :qualification-round="typeBoulderingRound.SEMI_FINAL"
+                    :round="categoriesDisplayed.semi"
+                    @delete="onDeleteRound"
+                  />
+                </template>
+                <template v-else>
+                  <BouldersDisplayEmpty />
+                </template>
               </div>
 
               <div class="column is-one-thirds">
-                <BouldersDisplay
-                  v-if="categoriesDisplayed.final"
-                  :qualification-round="typeBoulderingRound.FINAL"
-                  :round="categoriesDisplayed.final"
-                  @delete="onDeleteRound"
-                />
+                <template v-if="categoriesDisplayed.final">
+                  <BouldersDisplay
+                    :qualification-round="typeBoulderingRound.FINAL"
+                    :round="categoriesDisplayed.final"
+                    @delete="onDeleteRound"
+                  />
+                </template>
+                <template v-else>
+                  <BouldersDisplayEmpty />
+                </template>
               </div>
             </div>
           </template>
@@ -57,13 +71,13 @@ import BouldersSelectCategories from '~/components/BouldersSettingsComponent/Bou
 import BouldersDisplay from '~/components/BouldersSettingsComponent/BouldersDisplay.vue'
 import {
   APIBoulderingRounds,
-  BoulderingLimitedRounds,
   CategoriesSelect,
   CategoryDisplay, TempCategoriesSelect,
   TypeBoulderingRound,
   CategoryName
 } from "~/definitions";
 import BouldersEmpty from "~/components/BouldersSettingsComponent/BouldersEmpty.vue";
+import BouldersDisplayEmpty from "~/components/BouldersSettingsComponent/BouldersDisplayEmpty.vue";
 
 @Component({
   data() {
@@ -71,15 +85,12 @@ import BouldersEmpty from "~/components/BouldersSettingsComponent/BouldersEmpty.
       typeBoulderingRound: TypeBoulderingRound
     }
   },
-  components: { BouldersSelectCategories, BouldersDisplay, BouldersEmpty }
+  components: { BouldersSelectCategories, BouldersDisplay, BouldersEmpty, BouldersDisplayEmpty }
 })
 export default class BouldersSettingsComponent extends Vue {
   @Prop(Object) bouldering!: APIBoulderingRounds
 
-  fakeCategories = [
-    { genre: ['femme', 'homme'], category: 'minime' },
-    { genre: ['femme'], category: 'poussin' }
-  ]
+  categoriesCanBeSelected: CategoriesSelect[] | null = null
 
   categoriesDisplayed: CategoryDisplay = {
     qualification: null,
@@ -89,8 +100,8 @@ export default class BouldersSettingsComponent extends Vue {
 
   // .HOOKS
   created() {
-    const categories = this.extractCategoryGenre(this.bouldering)
-    this.updateDisplayedCategories({category: categories[0].category, genre: categories[0].genre[0]})
+    this.categoriesCanBeSelected = this.extractCategoryGenre(this.bouldering)
+    this.updateDisplayedCategories({category: this.categoriesCanBeSelected[0].category, genre: this.categoriesCanBeSelected[0].genre[0]})
   }
 
   // .PERSO FUNCTION
@@ -99,8 +110,7 @@ export default class BouldersSettingsComponent extends Vue {
   }
 
   onDeleteRound(roundId: number) {
-    console.log('onDeleteRound', roundId)
-    alert('Delete' + roundId)
+    alert('Delete - roundId = ' + roundId)
   }
 
   updateDisplayedCategories(categories: {

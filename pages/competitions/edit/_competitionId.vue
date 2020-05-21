@@ -233,17 +233,6 @@ async function fetchBouldering(competitionId: number) {
           category: 'poussin',
           state: 'PENDING',
           maxTries: 0
-        },
-        FINAL: {
-          id: 1,
-          competitionId: 0,
-          name: 0,
-          quota: 0,
-          type: 'CIRCUIT',
-          sex: 'female',
-          category: 'poussin',
-          state: 'PENDING',
-          maxTries: 0
         }
       }
     },
