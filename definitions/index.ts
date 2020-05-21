@@ -83,6 +83,7 @@ export type Form = {
   error: boolean
   success: boolean
   isLoading: boolean
+  isEdition: boolean
 }
 
 export type FormCreateCompetition = Form & {
@@ -92,7 +93,9 @@ export type FormSubscription = Form & {
   message: string
   passwordIsValid?: boolean
 }
-export type FormBoulderingRound = Form & { input: BoulderingRoundInput }
+export type FormBoulderingRound = Form & {
+  input: BoulderingRoundInput | BoulderingRoundInputEdit
+}
 export type BoulderingRoundInput = {
   category?: CategoryName
   sex?: Sex
@@ -103,6 +106,11 @@ export type BoulderingRoundInput = {
   rankingType?: RankingType
   type?: TypeBouldering
   groups?: number
+  maxTries?: number
+}
+
+export type BoulderingRoundInputEdit = BoulderingRoundInput & {
+  id: number
 }
 export enum StateRound {
   PENDING = 'PENDING',
@@ -254,11 +262,16 @@ export type Ranking = {
 }
 
 export type CategoriesSelect = {
-  genre: Array<string>
+  genre: Array<Sex>
+  category: CategoryName
+}
+
+export type CurrentCategory = {
+  genre: Sex
   category: CategoryName
 }
 
 export type TempCategoriesSelect = {
-  genre?: Array<string>
+  genre: Array<Sex>
   category?: CategoryName
 }

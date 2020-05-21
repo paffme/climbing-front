@@ -48,6 +48,8 @@ export default {
     `/${RouteName.competitions}/${competitionId}/organizers/${userId}`,
   getOraddRound: (competitionId: number) =>
     `/${RouteName.competitions}/${competitionId}/bouldering-rounds`,
+  updateOrRemoveRound: (competitionId: number, roundId: number) =>
+    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}`,
   addBoulderingResult: (
     competitionId: number,
     roundId: number,

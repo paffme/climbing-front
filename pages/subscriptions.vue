@@ -138,6 +138,7 @@ export default class Subscriptions extends Vue {
     error: false,
     success: false,
     isLoading: false,
+    isEdition: false,
     message: '',
     passwordIsValid: true
   }

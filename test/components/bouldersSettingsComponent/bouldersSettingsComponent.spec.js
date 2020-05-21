@@ -1,10 +1,5 @@
-import {
-  shallowMount,
-  createLocalVue,
-  RouterLinkStub,
-  mount
-} from '@vue/test-utils'
-import Buefy                     from 'buefy'
+import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
+import Buefy from 'buefy'
 import BouldersSettingsComponent from '@/components/BouldersSettingsComponent/BouldersSettingsComponent'
 
 let localVue

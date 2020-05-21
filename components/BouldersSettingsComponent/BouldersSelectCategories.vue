@@ -11,7 +11,8 @@
           v-for="(genre, key) in category.genre"
           :key="category.category + key"
           :value="{ category: category.category, genre }"
-        >{{ category.category + ' - ' + genre }}
+        >
+          {{ category.category + ' - ' + genre }}
         </option>
       </template>
     </b-select>
@@ -19,8 +20,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
-import { CategoriesSelect } from '~/definitions'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { CategoriesSelect, CurrentCategory } from '~/definitions'
 
 @Component({
   data() {
@@ -31,10 +32,19 @@ import { CategoriesSelect } from '~/definitions'
 })
 export default class BouldersSelectCategories extends Vue {
   @Prop(Array) categoryCanBeSelected!: CategoriesSelect[]
-  selected: {category: string, genre: string} | null = null
+  @Prop(Object) currentSelect!: CurrentCategory
+  @Watch('currentSelect', { immediate: true, deep: true })
+  onCurrentSelectChange(val: CurrentCategory) {
+    this.selected = val
+  }
+
+  selected: { category: string; genre: string } | null = null
 
   created() {
-    this.selected = { "category": this.categoryCanBeSelected[0].category, "genre": this.categoryCanBeSelected[0].genre[0] }
+    this.selected = {
+      category: this.categoryCanBeSelected[0].category,
+      genre: this.categoryCanBeSelected[0].genre[0]
+    }
   }
 }
 </script>

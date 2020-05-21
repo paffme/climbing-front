@@ -144,6 +144,7 @@ export default class CreateCompetitionForm extends Vue {
     error: false,
     success: false,
     isLoading: false,
+    isEdition: false,
     competition: {
       name: 'Chalais Savoyard',
       type: TypeCompetition.Bouldering,

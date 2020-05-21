@@ -67,7 +67,7 @@ export default class Login extends Vue {
 
     try {
       const apiToken = await this.fetchToken(loginEvent)
-      this.setToken(apiToken.token)
+      this.setToken(apiToken.token, apiToken.expiresIn)
 
       const user = await this.fetchUser(apiToken.userId)
       this.setUser(user)
@@ -108,8 +108,8 @@ export default class Login extends Vue {
     }
   }
 
-  setToken(token: string): void {
-    authUser.addTokenToCookies(token)
+  setToken(token: string, expiresIn: number): void {
+    authUser.addTokenToCookies(token, expiresIn)
     AxiosHelper.SetHeaderAuthorizationToken(token)
   }
 

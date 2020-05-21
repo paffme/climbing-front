@@ -12,8 +12,9 @@ import {
   APIRankingResponse,
   BoulderingRoundInput,
   APIUserCompetitionRoles,
-  DTOSubscriptionCredentials, APIBoulderingRounds
-} from "~/definitions";
+  DTOSubscriptionCredentials,
+  APIBoulderingRounds
+} from '~/definitions'
 import { AxiosResponse } from '~/node_modules/axios'
 import API_URL from '~/utils/api_helper/apiUrl'
 
@@ -58,6 +59,8 @@ export const ApiHelper = {
   GetCompetitionRankings: getCompetitionRankings,
   GetCompetitionsPagination: getCompetitionsPagination,
   GetRound: getRound,
+  DeleteRound: deleteRound,
+  EditRound: editRound
 }
 
 async function addUserInCompetition(
@@ -214,9 +217,23 @@ async function addRound(
 }
 
 async function getRound(
-  competitionId: number
+  roundId: number
 ): Promise<AxiosResponse<APIBoulderingRounds>> {
-  return axios.get(API_URL.getOraddRound(competitionId))
+  return axios.get(API_URL.getOraddRound(roundId))
+}
+
+async function deleteRound(
+  competitionId: number,
+  roundId: number
+): Promise<AxiosResponse<void>> {
+  return axios.delete(API_URL.updateOrRemoveRound(competitionId, roundId))
+}
+async function editRound(
+  competitionId: number,
+  roundId: number,
+  body: BoulderingRoundInput
+): Promise<AxiosResponse<void>> {
+  return axios.patch(API_URL.updateOrRemoveRound(competitionId, roundId), body)
 }
 
 async function addBoulderingResult(

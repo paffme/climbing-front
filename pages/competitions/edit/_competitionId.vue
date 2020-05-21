@@ -78,25 +78,17 @@
             </div>
             <b-notification :closable="false">
               <template v-if="competition">
-                <EditCompetitionForm
-                  :internal_competition="competition"
-                />
+                <EditCompetitionForm :internal_competition="competition" />
               </template>
             </b-notification>
 
-            <div class="notification">
-              <BouldersSettingsComponent :bouldering="bouldering" />
+            <div v-if="role.juryPresident" class="notification">
+              <BouldersSettingsComponent
+                :competition-id="competition.id"
+                :bouldering="bouldering"
+                @loadBouldering="onLoadBouldering"
+              />
             </div>
-            <!--<div class="column is-6">
-              <b-notification :closable="false">
-                <template v-if="competition">
-                  <h3 class="subtitle">
-                    Ajout des rounds
-                  </h3>
-                  <RoundCompetitionForm />
-                </template>
-              </b-notification>
-            </div>-->
           </div>
         </div>
       </div>
@@ -113,143 +105,43 @@ import GoBackBtn from '~/components/GoBackBtn.vue'
 import {
   APIBoulderingRounds,
   ApiCompetition,
-  APIUserCompetitionRoles, Competition,
+  APIUserCompetitionRoles,
+  Competition,
   RoleName,
   Roles
-} from "~/definitions";
+} from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
-import RoundCompetitionForm from '~/components/Form/RoundCompetitionForm.vue'
 import { authUser } from '~/utils/store-accessor'
 import RolesComponent from '~/components/RolesComponent/RolesComponent.vue'
 import BouldersSettingsComponent from '~/components/BouldersSettingsComponent/BouldersSettingsComponent.vue'
 
-async function fetchRole(competitionId?: number, userId?: number): Promise<APIUserCompetitionRoles | null> {
+async function fetchRole(
+  competitionId?: number,
+  userId?: number
+): Promise<APIUserCompetitionRoles | null> {
   if (!competitionId || !userId) return null
-const response = await ApiHelper.GetRolesForCompetition(
-  competitionId,
-  userId as number
-)
+  const response = await ApiHelper.GetRolesForCompetition(
+    competitionId,
+    userId as number
+  )
 
-return response.data
+  return response.data
 }
 
-async function fetchBouldering(competitionId: number) {
+async function fetchBouldering(
+  competitionId: number
+): Promise<APIBoulderingRounds> {
   const response = await ApiHelper.GetRound(competitionId)
 
-
-  return _.isEmpty(response.data) ? {
-    minime: {
-      female: {
-        QUALIFIER: {
-          id: 0,
-          competitionId: 0,
-          name: 0,
-          quota: 0,
-          type: 'CIRCUIT',
-          sex: 'female',
-          category: 'minime',
-          state: 'PENDING',
-          maxTries: 0
-        },
-        SEMI_FINAL: {
-          id: 0,
-          competitionId: 0,
-          name: 0,
-          quota: 0,
-          type: 'CIRCUIT',
-          sex: 'female',
-          category: 'minime',
-          state: 'PENDING',
-          maxTries: 0
-        },
-        FINAL: {
-          id: 0,
-          competitionId: 0,
-          name: 0,
-          quota: 0,
-          type: 'CIRCUIT',
-          sex: 'female',
-          category: 'minime',
-          state: 'PENDING',
-          maxTries: 0
-        }
-      },
-      male: {
-        QUALIFIER: {
-          id: 0,
-          competitionId: 0,
-          name: 0,
-          quota: 0,
-          type: 'CIRCUIT',
-          sex: 'male',
-          category: 'minime',
-          state: 'PENDING',
-          maxTries: 0
-        },
-        SEMI_FINAL: {
-          id: 0,
-          competitionId: 0,
-          name: 0,
-          quota: 0,
-          type: 'CIRCUIT',
-          sex: 'male',
-          category: 'minime',
-          state: 'PENDING',
-          maxTries: 0
-        },
-        FINAL: {
-          id: 0,
-          competitionId: 0,
-          name: 0,
-          quota: 0,
-          type: 'CIRCUIT',
-          sex: 'male',
-          category: 'minime',
-          state: 'PENDING',
-          maxTries: 0
-        }
-      }
-    },
-    poussin: {
-      female: {
-        QUALIFIER: {
-          id: 1,
-          competitionId: 0,
-          name: 0,
-          quota: 0,
-          type: 'CIRCUIT',
-          sex: 'female',
-          category: 'poussin',
-          state: 'PENDING',
-          maxTries: 0
-        },
-        SEMI_FINAL: {
-          id: 1,
-          competitionId: 0,
-          name: 0,
-          quota: 0,
-          type: 'CIRCUIT',
-          sex: 'female',
-          category: 'poussin',
-          state: 'PENDING',
-          maxTries: 0
-        }
-      }
-    },
-    senior: {},
-    cadet: {
-      female: {}
-    }
-  } : response.data
+  // @ts-ignore
+  return _.isEmpty(response.data) ? null : response.data
 }
 
 async function fetchCompetition(idCompetition: number): Promise<Competition> {
   const result = await ApiHelper.GetCompetition(idCompetition)
   return {
     ...result.data,
-    startDate: result.data?.startDate
-      ? new Date(result.data?.startDate)
-      : null,
+    startDate: result.data?.startDate ? new Date(result.data?.startDate) : null,
     endDate: result.data?.endDate ? new Date(result.data.endDate) : null,
     welcomingDate: result.data?.welcomingDate
       ? new Date(result.data.welcomingDate)
@@ -259,6 +151,13 @@ async function fetchCompetition(idCompetition: number): Promise<Competition> {
 
 @Component({
   middleware: ['isAuth', 'setHeader'],
+  components: {
+    RolesComponent,
+    UserGestion,
+    EditCompetitionForm,
+    GoBackBtn,
+    BouldersSettingsComponent
+  },
   validate({ params }: any) {
     const competitionId = parseInt(params.competitionId, 10)
     if (!competitionId) {
@@ -267,8 +166,7 @@ async function fetchCompetition(idCompetition: number): Promise<Competition> {
 
     return true
   },
-  async asyncData (ctx) {
-
+  async asyncData(ctx) {
     const idCompetition = parseInt(ctx.params.competitionId, 10)
 
     const competition = await fetchCompetition(idCompetition)
@@ -283,14 +181,6 @@ async function fetchCompetition(idCompetition: number): Promise<Competition> {
       bouldering
     }
   },
-  components: {
-    RolesComponent,
-    UserGestion,
-    EditCompetitionForm,
-    GoBackBtn,
-    RoundCompetitionForm,
-    BouldersSettingsComponent
-  },
   data() {
     return {
       role_name: RoleName,
@@ -303,6 +193,11 @@ export default class EditOneCompetition extends Vue {
   competition: ApiCompetition | null = null
   role: APIUserCompetitionRoles | null = null
   bouldering: APIBoulderingRounds | null = null
+
+  async onLoadBouldering() {
+    if (!this.competition?.id) return
+    this.bouldering = await fetchBouldering(this.competition.id)
+  }
 
   displayCurrentRole(role?: APIUserCompetitionRoles | null): string | null {
     if (!role) return null

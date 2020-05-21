@@ -356,7 +356,6 @@ export default class OneCompetition extends Vue {
         `https://maps.googleapis.com/maps/api/geocode/json?address=${competition.address}+${competition.city}+${competition.postalCode}&key=AIzaSyCYI4Fwja8HZVbqP-Te_sf0FR4I4PeF7mY`
       )
       const data = await response.json()
-      console.log('response latLng', data)
       this.maps.lat = data.results[0].geometry?.location?.lat
       this.maps.lng = data.results[0].geometry?.location?.lng
     } catch (err) {

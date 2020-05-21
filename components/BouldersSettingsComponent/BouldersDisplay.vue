@@ -4,21 +4,28 @@
       <b-icon
         class="icon"
         type="is-info"
-        icon="square-edit-outline"></b-icon>
+        icon="square-edit-outline"
+        @click.native="$emit('edit', round)"
+      ></b-icon>
       <p class="card-header-title">
         {{ qualificationRound }}
       </p>
       <b-icon
-        @click.native="$emit('delete', round.id)"
         icon="delete"
         class="icon"
-        type="is-danger"></b-icon>
+        type="is-danger"
+        @click.native="$emit('delete', round.id)"
+      ></b-icon>
     </header>
     <div class="card-content">
       <div class="content">
         <div class="meta meta-1 is-flex">
-          <b-tag rounded>{{ round.type }}</b-tag>
-          <b-tag rounded>{{ round.state }}</b-tag>
+          <b-tag rounded>
+            {{ round.type }}
+          </b-tag>
+          <b-tag rounded>
+            {{ round.state }}
+          </b-tag>
         </div>
         <ul>
           <li>Sex : {{ round.sex }}</li>
@@ -35,7 +42,6 @@
       </span>
     </footer>
   </div>
-
 </template>
 
 <script lang="ts">
@@ -50,24 +56,24 @@ export default class BouldersDisplay extends Vue {
 </script>
 
 <style scoped>
-  ul {
-    list-style-type: none;
-  }
-  .icon {
-    cursor: pointer;
-  }
-  .card-header {
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-  }
-  .card-content {
-    padding: 0.8rem 0.5rem;
-  }
-  .meta {
-    justify-content: space-between;
-  }
-  .card-header-title {
-    text-align: center !important;
-  }
+ul {
+  list-style-type: none;
+}
+.icon {
+  cursor: pointer;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+.card-content {
+  padding: 0.8rem 0.5rem;
+}
+.meta {
+  justify-content: space-between;
+}
+.card-header-title {
+  text-align: center !important;
+}
 </style>
