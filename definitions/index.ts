@@ -58,7 +58,7 @@ export type CompetitionCategories = {
 }
 
 export type Competition = {
-  id?: number | null
+  id?: number
   cancelled?: boolean | null
   name: string | null
   description: string | null
@@ -119,6 +119,12 @@ export type BoulderingLimitedRounds = {
   category: CategoryName
   state: StateRound
   maxTries: number
+}
+
+export type CategoryDisplay = {
+  qualification: null | BoulderingLimitedRounds
+  semi: null | BoulderingLimitedRounds
+  final: null | BoulderingLimitedRounds
 }
 export type SubscriptionCredentials = {
   email: string
@@ -211,6 +217,14 @@ export type APIRankingResponse = {
   }
 }
 
+export type APIBoulderingRounds = {
+  [key: string]: {
+    [key: string]: {
+      [key: string]: BoulderingLimitedRounds
+    }
+  }
+}
+
 export type APIUserCompetitionRoles = {
   organizer: boolean
   juryPresident: boolean
@@ -240,6 +254,11 @@ export type Ranking = {
 }
 
 export type CategoriesSelect = {
-  genre: ['femme' | 'homme']
+  genre: Array<string>
   category: CategoryName
+}
+
+export type TempCategoriesSelect = {
+  genre?: Array<string>
+  category?: CategoryName
 }

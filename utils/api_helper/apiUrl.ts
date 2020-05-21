@@ -46,7 +46,7 @@ export default {
     `/${RouteName.competitions}/${competitionId}/organizers`,
   addOrRemoveOrganizers: (competitionId: number, userId: number): string =>
     `/${RouteName.competitions}/${competitionId}/organizers/${userId}`,
-  addRound: (competitionId: number) =>
+  getOraddRound: (competitionId: number) =>
     `/${RouteName.competitions}/${competitionId}/bouldering-rounds`,
   addBoulderingResult: (
     competitionId: number,

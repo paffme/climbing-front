@@ -1,5 +1,5 @@
 <template>
-  <b-field v-if="categories" label="Rounded">
+  <b-field v-if="categories" label="Selectionner la catégories">
     {{ selected }}
     <b-select
       v-model="selected"
@@ -10,10 +10,9 @@
       <template v-for="category in categories">
         <option
           v-for="(genre, key) in category.genre"
-          :key="key"
+          :key="category.category + key"
           :value="{ category: category.category, genre }"
-        >
-          {{ category.category + ' - ' + genre }}
+        >{{ category.category + ' - ' + genre }}
         </option>
       </template>
     </b-select>
@@ -24,10 +23,20 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { CategoriesSelect } from '~/definitions'
 
-@Component
+@Component({
+  data() {
+    return {
+      selected: null
+    }
+  }
+})
 export default class BouldersSelectCategories extends Vue {
   @Prop(Array) categories!: CategoriesSelect[]
-  selected = null
+  selected: {category: string, genre: string} | null = null
+
+  created() {
+    this.selected = { "category": this.categories[0].category, "genre": this.categories[0].genre[0] }
+  }
 }
 </script>
 

@@ -1,3 +1,4 @@
+
 /* const allData = {
   "microbe": {
     "female": {
@@ -691,32 +692,6 @@ const limitedData = {
   cadet: {
     female: {}
   }
-}
-
-function extractCategoryGenre(data) {
-  if (!data) return []
-  const final = []
-  for (const [key, value] of Object.entries(data)) {
-    const haveFemaleCategory =
-      value.female && Object.keys(value.female).length !== 0
-    const haveMaleCategory = value.male && Object.keys(value.male).length !== 0
-
-    if (!haveFemaleCategory && !haveMaleCategory) continue
-
-    const temp = [{ genre: [] }]
-
-    if (haveFemaleCategory) {
-      temp[0].genre.push('femme')
-    }
-    if (haveMaleCategory) {
-      temp[0].genre.push('homme')
-    }
-
-    temp[0].category = key
-    final.push(temp)
-  }
-
-  return final
 }
 
 describe('TransformFunction', () => {

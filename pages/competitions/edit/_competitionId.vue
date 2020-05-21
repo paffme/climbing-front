@@ -1,4 +1,3 @@
-import { RoleName } from "~/definitions";
 <template>
   <div class="columns">
     <div class="column">
@@ -20,8 +19,8 @@ import { RoleName } from "~/definitions";
               </nuxt-link>
             </li>
             <li class="is-active">
-              <a v-if="internalCompetition" href="#" aria-current="page">{{
-                internalCompetition.name
+              <a v-if="competition" href="#" aria-current="page">{{
+                competition.name
               }}</a>
             </li>
           </ul>
@@ -31,75 +30,73 @@ import { RoleName } from "~/definitions";
         </b-notification>
         <div class="columns">
           <div class="column">
-            <div class="tiles">
-              <div v-if="idCompetition && role" class="columns">
-                <div v-if="role.organizer" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.Organisateur"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-                <div v-if="role.organizer" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.President"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-                <div v-if="role.organizer" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.ChefRouteSetter"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-
-                <div v-if="role.juryPresident" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.Juges"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-                <div v-if="role.juryPresident" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.DelegueTechnique"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-                <div v-if="role.juryPresident" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.ChefRouteSetter"
-                    :competition-id="idCompetition"
-                  />
-                </div>
-
-                <div v-if="role.chiefRouteSetter" class="roles column is-4">
-                  <RolesComponent
-                    :role-name="role_name.RouteSetter"
-                    :competition-id="idCompetition"
-                  />
-                </div>
+            <div v-if="competition.id && role" class="columns">
+              <div v-if="role.organizer" class="roles column is-4">
+                <RolesComponent
+                  :role-name="role_name.Organisateur"
+                  :competition-id="competition.id"
+                />
               </div>
-              <b-notification :closable="false">
-                <template v-if="internalCompetition">
-                  <EditCompetitionForm
-                    :internal_competition="internalCompetition"
-                  />
-                </template>
-              </b-notification>
-
-              <div class="column-is-6">
-                <BouldersSettingsComponent :competition-id="idCompetition" />
+              <div v-if="role.organizer" class="roles column is-4">
+                <RolesComponent
+                  :role-name="role_name.President"
+                  :competition-id="competition.id"
+                />
               </div>
-              <div class="column is-6">
-                <b-notification :closable="false">
-                  <template v-if="internalCompetition">
-                    <h3 class="subtitle">
-                      Ajout des rounds
-                    </h3>
-                    <RoundCompetitionForm />
-                  </template>
-                </b-notification>
+              <div v-if="role.organizer" class="roles column is-4">
+                <RolesComponent
+                  :role-name="role_name.ChefRouteSetter"
+                  :competition-id="competition.id"
+                />
+              </div>
+
+              <div v-if="role.juryPresident" class="roles column is-4">
+                <RolesComponent
+                  :role-name="role_name.Juges"
+                  :competition-id="competition.id"
+                />
+              </div>
+              <div v-if="role.juryPresident" class="roles column is-4">
+                <RolesComponent
+                  :role-name="role_name.DelegueTechnique"
+                  :competition-id="competition.id"
+                />
+              </div>
+              <div v-if="role.juryPresident" class="roles column is-4">
+                <RolesComponent
+                  :role-name="role_name.ChefRouteSetter"
+                  :competition-id="competition.id"
+                />
+              </div>
+
+              <div v-if="role.chiefRouteSetter" class="roles column is-4">
+                <RolesComponent
+                  :role-name="role_name.RouteSetter"
+                  :competition-id="competition.id"
+                />
               </div>
             </div>
+            <b-notification :closable="false">
+              <template v-if="competition">
+                <EditCompetitionForm
+                  :internal_competition="competition"
+                />
+              </template>
+            </b-notification>
+
+            <div class="notification">
+              <BouldersSettingsComponent :bouldering="bouldering" />
+            </div>
+            <!--<div class="column is-6">
+              <b-notification :closable="false">
+                <template v-if="competition">
+                  <h3 class="subtitle">
+                    Ajout des rounds
+                  </h3>
+                  <RoundCompetitionForm />
+                </template>
+              </b-notification>
+            </div>-->
           </div>
         </div>
       </div>
@@ -108,21 +105,168 @@ import { RoleName } from "~/definitions";
 </template>
 
 <script lang="ts">
+import _ from 'lodash'
 import { Component, Vue } from 'vue-property-decorator'
 import UserGestion from '~/components/UserGestion.vue'
 import EditCompetitionForm from '~/components/Form/EditCompetitionForm.vue'
 import GoBackBtn from '~/components/GoBackBtn.vue'
 import {
+  APIBoulderingRounds,
   ApiCompetition,
-  APIUserCompetitionRoles,
+  APIUserCompetitionRoles, Competition,
   RoleName,
   Roles
-} from '~/definitions'
+} from "~/definitions";
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import RoundCompetitionForm from '~/components/Form/RoundCompetitionForm.vue'
 import { authUser } from '~/utils/store-accessor'
 import RolesComponent from '~/components/RolesComponent/RolesComponent.vue'
 import BouldersSettingsComponent from '~/components/BouldersSettingsComponent/BouldersSettingsComponent.vue'
+
+async function fetchRole(competitionId?: number, userId?: number): Promise<APIUserCompetitionRoles | null> {
+  if (!competitionId || !userId) return null
+const response = await ApiHelper.GetRolesForCompetition(
+  competitionId,
+  userId as number
+)
+
+return response.data
+}
+
+async function fetchBouldering(competitionId: number) {
+  const response = await ApiHelper.GetRound(competitionId)
+
+
+  return _.isEmpty(response.data) ? {
+    minime: {
+      female: {
+        QUALIFIER: {
+          id: 0,
+          competitionId: 0,
+          name: 0,
+          quota: 0,
+          type: 'CIRCUIT',
+          sex: 'female',
+          category: 'minime',
+          state: 'PENDING',
+          maxTries: 0
+        },
+        SEMI_FINAL: {
+          id: 0,
+          competitionId: 0,
+          name: 0,
+          quota: 0,
+          type: 'CIRCUIT',
+          sex: 'female',
+          category: 'minime',
+          state: 'PENDING',
+          maxTries: 0
+        },
+        FINAL: {
+          id: 0,
+          competitionId: 0,
+          name: 0,
+          quota: 0,
+          type: 'CIRCUIT',
+          sex: 'female',
+          category: 'minime',
+          state: 'PENDING',
+          maxTries: 0
+        }
+      },
+      male: {
+        QUALIFIER: {
+          id: 0,
+          competitionId: 0,
+          name: 0,
+          quota: 0,
+          type: 'CIRCUIT',
+          sex: 'male',
+          category: 'minime',
+          state: 'PENDING',
+          maxTries: 0
+        },
+        SEMI_FINAL: {
+          id: 0,
+          competitionId: 0,
+          name: 0,
+          quota: 0,
+          type: 'CIRCUIT',
+          sex: 'male',
+          category: 'minime',
+          state: 'PENDING',
+          maxTries: 0
+        },
+        FINAL: {
+          id: 0,
+          competitionId: 0,
+          name: 0,
+          quota: 0,
+          type: 'CIRCUIT',
+          sex: 'male',
+          category: 'minime',
+          state: 'PENDING',
+          maxTries: 0
+        }
+      }
+    },
+    poussin: {
+      female: {
+        QUALIFIER: {
+          id: 1,
+          competitionId: 0,
+          name: 0,
+          quota: 0,
+          type: 'CIRCUIT',
+          sex: 'female',
+          category: 'poussin',
+          state: 'PENDING',
+          maxTries: 0
+        },
+        SEMI_FINAL: {
+          id: 1,
+          competitionId: 0,
+          name: 0,
+          quota: 0,
+          type: 'CIRCUIT',
+          sex: 'female',
+          category: 'poussin',
+          state: 'PENDING',
+          maxTries: 0
+        },
+        FINAL: {
+          id: 1,
+          competitionId: 0,
+          name: 0,
+          quota: 0,
+          type: 'CIRCUIT',
+          sex: 'female',
+          category: 'poussin',
+          state: 'PENDING',
+          maxTries: 0
+        }
+      }
+    },
+    senior: {},
+    cadet: {
+      female: {}
+    }
+  } : response.data
+}
+
+async function fetchCompetition(idCompetition: number): Promise<Competition> {
+  const result = await ApiHelper.GetCompetition(idCompetition)
+  return {
+    ...result.data,
+    startDate: result.data?.startDate
+      ? new Date(result.data?.startDate)
+      : null,
+    endDate: result.data?.endDate ? new Date(result.data.endDate) : null,
+    welcomingDate: result.data?.welcomingDate
+      ? new Date(result.data.welcomingDate)
+      : null
+  }
+}
 
 @Component({
   middleware: ['isAuth', 'setHeader'],
@@ -134,10 +278,20 @@ import BouldersSettingsComponent from '~/components/BouldersSettingsComponent/Bo
 
     return true
   },
-  async fetch() {
-    const userId = authUser.Credentials?.id
-    if (!userId) {
-      throw new Error('Vous devez être connecté')
+  async asyncData (ctx) {
+
+    const idCompetition = parseInt(ctx.params.competitionId, 10)
+
+    const competition = await fetchCompetition(idCompetition)
+
+    const bouldering = await fetchBouldering(idCompetition)
+
+    const role = await fetchRole(idCompetition, authUser.Credentials?.id)
+
+    return {
+      competition,
+      role,
+      bouldering
     }
   },
   components: {
@@ -150,30 +304,16 @@ import BouldersSettingsComponent from '~/components/BouldersSettingsComponent/Bo
   },
   data() {
     return {
-      role_name: RoleName
+      role_name: RoleName,
+      idCompetition: undefined,
+      competition: null
     }
   }
 })
 export default class EditOneCompetition extends Vue {
-  idCompetition?: number
-  internalCompetition: ApiCompetition | null = null
+  competition: ApiCompetition | null = null
   role: APIUserCompetitionRoles | null = null
-
-  async mounted() {
-    this.idCompetition =
-      parseInt(this.$route.params.competitionId, 10) || undefined
-
-    if (!this.idCompetition) throw new Error('ID de la compétition manquante')
-    this.internalCompetition = await this.getCompetition(this.idCompetition)
-
-    const response = await ApiHelper.GetRolesForCompetition(
-      this.idCompetition,
-      authUser.Credentials?.id as number
-    )
-
-    console.log('response', response)
-    this.role = response.data
-  }
+  bouldering: APIBoulderingRounds | null = null
 
   displayCurrentRole(role?: APIUserCompetitionRoles | null): string | null {
     if (!role) return null
@@ -194,22 +334,7 @@ export default class EditOneCompetition extends Vue {
           currentRole = Roles.technicalDelegate
       }
     }
-    console.log('currentRole', currentRole)
     return currentRole
-  }
-
-  async getCompetition(idCompetition: number): Promise<ApiCompetition | null> {
-    const result = await ApiHelper.GetCompetition(idCompetition)
-    return {
-      ...result.data,
-      startDate: result.data?.startDate
-        ? new Date(result.data?.startDate)
-        : null,
-      endDate: result.data?.endDate ? new Date(result.data.endDate) : null,
-      welcomingDate: result.data?.welcomingDate
-        ? new Date(result.data.welcomingDate)
-        : null
-    }
   }
 }
 </script>
