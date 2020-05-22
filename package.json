@@ -14,7 +14,7 @@
     "cypress:run": "cypress run --record --key 5360d000-8341-4540-930f-633fb0979519",
     "lint": "eslint -c ./eslintrc.js --ext .js,.vue,.ts --ignore-path .gitignore .",
     "lintfix": "eslint -c ./eslintrc.js --fix --ext .js,.vue,.ts --ignore-path .gitignore .",
-    "db:seed": "ts-node scripts/seed-db.ts",
+    "db:seed": "node scripts/js/seed-db.js",
     "db:drop": "ts-node scripts/drop-db.ts"
   },
   "dependencies": {
