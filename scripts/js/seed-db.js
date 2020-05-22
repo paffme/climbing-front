@@ -8,7 +8,7 @@ const BASE_URL = 'https://paffme.hdaroit.fr/api/v1'
 class URL {
   static createUser = `${BASE_URL}/users`
   static logUser = `${BASE_URL}/users/token`
-  static deleteUser = (id) => `${BASE_URL}/users/token${id}`
+  static deleteUser = (id) => `${BASE_URL}/users/${id}`
   static createCompetition = `${BASE_URL}/competitions`
 }
 
@@ -31,8 +31,12 @@ async function logUser(user) {
   })
 }
 
-async function rmUser(userId) {
-  return axios.delete(URL.deleteUser(userId));
+async function rmUser(userId, token) {
+  return axios.delete(URL.deleteUser(userId), {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
 }
 
 async function createCompetition(competition) {
@@ -53,42 +57,23 @@ async function createCompetition(competition) {
 }
 
 async function start_seed() {
-  const promises = []
-  // for (const user of UsersSeed) {
-  //   promises.push(createUser(user))
-  // }
-  //
-  // await Promise.all(promises)
-  
-  // for (const user of UsersSeed) {
-    promises.push(logUser(UsersSeed[0]).then((response) => {
-      console.log('request',
-        response['config']['url'],
-        response['config']['data'],
-        response['status'])
-      
-      rmUser(response['data']['userId']).then((response) => {
-        console.log('request', response)
-      })
-    }))
-  // }
-  //
-  // Promise.all(promises).then(response => {
-  //   promises.push(rmUser(response['id']))
-  // })
-  //
-  return Promise.all(promises)
+  await createUser(UsersSeed[0])
+
+  const user = await logUser(UsersSeed[0])
+  console.log('request',
+    user['config']['url'],
+    user['config']['data'],
+    user['status'])
+  return rmUser(user.data.userId, user.data.token)
 }
 
 start_seed()
   .then(response => {
-    response.forEach((request) => {
-      // console.log('request',
-      //   request['config']['url'],
-      //   request['config']['data'],
-      //   request['status'])
-    })
+    console.log('request',
+      response['config']['url'],
+      response['config']['data'],
+      response['status'])
   })
-  // .catch((err) => {
-  //   console.error(err)
-  // })
+  .catch((err) => {
+    console.error(err)
+  })
