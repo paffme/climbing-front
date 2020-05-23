@@ -15,6 +15,7 @@ export function getCookies(): Array<Object> {
 
 export function getCookie(name: string): null | {} {
   const cookies = document.cookie.replace('; ', ';').split(';')
+  console.log('cookies', cookies)
   let finalCookie = null
   cookies.forEach((cookie) => {
     const splitted = cookie.split('=')

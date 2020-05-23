@@ -1,4 +1,6 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
+import Vuex from 'vuex'
+
 import {
   APIUser,
   AuthCredentials,
@@ -16,15 +18,24 @@ import {
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { AxiosResponse } from '~/node_modules/axios'
 
+
+interface StoreType {
+  mm: AuthUser
+}
+// Declare empty store first
+const store = new Vuex.Store<StoreType>({})
+
 @Module({
   name: 'authUser',
-  stateFactory: true,
-  namespaced: true
+  store: store,
+  dynamic: true
 })
 export default class AuthUser extends VuexModule {
+  public myToken = getCookie('token')
   @Mutation
-  addTokenToCookies(newTokenCredential: string) {
-    createCookie('token', newTokenCredential)
+  addTokenToCookies(newTokenCredential: string, expireIn: number) {
+    createCookie('token', newTokenCredential, expireIn)
+    this.myToken = newTokenCredential
   }
 
   @Mutation
@@ -39,7 +50,8 @@ export default class AuthUser extends VuexModule {
   }
 
   get Token() {
-    return getCookie('token')
+    return this.myToken
+    // return getCookie('token')
   }
 
   get Authenticated() {
