@@ -56,23 +56,39 @@ async function createCompetition(competition) {
   })
 }
 
-async function start_seed() {
-  await createUser(UsersSeed[0])
-
-  const user = await logUser(UsersSeed[0])
+function logRequest(request) {
   console.log('request',
-    user['config']['url'],
-    user['config']['data'],
-    user['status'])
-  return rmUser(user.data.userId, user.data.token)
+    request['config']['url'],
+    request['config']['data'],
+    request['status'])
+}
+
+async function start_seed() {
+  
+  for(const user of UsersSeed) {
+    const create = await createUser(user)
+    logRequest(create)
+
+    const login = await logUser(user)
+    logRequest(login)
+    //return rmUser(user.data.userId, user.data.token)
+  }
+  
+  // for(const user of UsersSeed) {
+  //   const login = await logUser(user)
+  //   logRequest(login)
+  //
+  //   const rm = await rmUser(login.data.userId, login.data.token)
+  //   logRequest(rm)
+  // }
 }
 
 start_seed()
   .then(response => {
-    console.log('request',
-      response['config']['url'],
-      response['config']['data'],
-      response['status'])
+    // console.log('request',
+    //   response['config']['url'],
+    //   response['config']['data'],
+    //   response['status'])
   })
   .catch((err) => {
     console.error(err)

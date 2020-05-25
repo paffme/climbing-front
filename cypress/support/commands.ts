@@ -20,7 +20,7 @@ Cypress.Commands.add("login", login)
 
 function typeDate(datePickerRef: string, date: Date): Cypress.Chainable {
   cy.get(datePickerRef).click()
-    .get('.pagination-list > .has-addons')
+  cy.get('.pagination-list > .has-addons')
     .get('select').each(($child, index) => {
       if(index == 0) {
         cy.wrap($child).select(String(date.getMonth() - 1));

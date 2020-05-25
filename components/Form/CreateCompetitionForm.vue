@@ -5,7 +5,10 @@
     </div>
     <form class="form" @submit.prevent="registerCompetition()">
       <b-field horizontal label="Nom compétition">
-        <b-input v-model="Form.competition.name" name="subject" expanded />
+        <b-input v-model="Form.competition.name"
+                 name="subject"
+                 expanded
+                 class="name"/>
       </b-field>
 
       <b-field horizontal label="Date">
@@ -15,6 +18,7 @@
             placeholder="Date de début"
             icon="calendar-today"
             trap-focus
+            class="date-start"
           />
         </b-field>
         <b-field>
@@ -23,12 +27,13 @@
             placeholder="Date de fin"
             icon="calendar-today"
             trap-focus
+            class="date-end"
           />
         </b-field>
       </b-field>
 
       <b-field horizontal label="Compétition open">
-        <b-switch v-model="Form.competition.open" />
+        <b-switch v-model="Form.competition.open" class="status"/>
       </b-field>
       <b-field horizontal label="Date d'accueil">
         <b-datepicker
@@ -36,6 +41,7 @@
           placeholder="Date d'accueil"
           icon="calendar-today"
           trap-focus
+          class="date-welcome"
         />
       </b-field>
 
@@ -43,6 +49,7 @@
         <b-select
           v-model="Form.competition.type"
           placeholder="Selectionner type de compétition"
+          class="type"
         >
           <option
             v-for="(type, index) in typeCompetiton"
@@ -56,15 +63,16 @@
 
       <b-field horizontal grouped label="Adresse">
         <b-field>
-          <b-input v-model="Form.competition.address" placeholder="Adresse" />
+          <b-input v-model="Form.competition.address" placeholder="Adresse" class="street"/>
         </b-field>
         <b-field expanded>
-          <b-input v-model="Form.competition.city" placeholder="Ville" />
+          <b-input v-model="Form.competition.city" placeholder="Ville" class="city"/>
         </b-field>
         <b-field expanded>
           <b-input
             v-model="Form.competition.postalCode"
             placeholder="Code postal"
+            class="postal-code"
           />
         </b-field>
       </b-field>
@@ -100,11 +108,11 @@
       </b-field>
 
       <b-field horizontal label="Description">
-        <b-input v-model="Form.competition.description" type="textarea" />
+        <b-input v-model="Form.competition.description" type="textarea" class="description"/>
       </b-field>
 
       <b-field horizontal label="Agenda">
-        <b-input v-model="Form.competition.agenda" type="textarea" />
+        <b-input v-model="Form.competition.agenda" type="textarea" class="agenda"/>
       </b-field>
 
       <div class="is-pulled-right">
@@ -113,6 +121,7 @@
           tag="button"
           :loading="Form.isLoading"
           @click="registerCompetition"
+          class="create-competition"
         >
           Valider compétition
         </b-button>
