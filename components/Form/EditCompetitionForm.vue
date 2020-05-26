@@ -9,7 +9,11 @@
       @submit.prevent="updateCompetition(internalCompetition)"
     >
       <b-field horizontal label="Nom compétition">
-        <b-input v-model="internalCompetition.name" name="subject" expanded />
+        <b-input v-model="internalCompetition.name"
+                 name="subject"
+                 expanded
+                 class="name"
+        />
       </b-field>
 
       <b-field horizontal label="Date">
@@ -20,6 +24,7 @@
             placeholder="Date de début"
             icon="calendar-today"
             trap-focus
+            class="date-start"
           />
         </b-field>
         <b-field>
@@ -29,12 +34,13 @@
             placeholder="Date de fin"
             icon="calendar-today"
             trap-focus
+            class="date-end"
           />
         </b-field>
       </b-field>
 
       <b-field horizontal label="Compétition open">
-        <b-switch v-model="internalCompetition.open" />
+        <b-switch v-model="internalCompetition.open" class="status"/>
       </b-field>
       <b-field horizontal label="Date d'accueil">
         <b-datetimepicker
@@ -42,6 +48,7 @@
           placeholder="Date d'accueil"
           icon="calendar-today"
           trap-focus
+          class="date-welcome"
         />
       </b-field>
 
@@ -49,9 +56,10 @@
         <b-select
           v-model="internalCompetition.type"
           placeholder="Selectionner type de compétition"
+          class="type"
         >
           <option
-            v-for="(type, key) in typeCompetiton"
+            v-for="(type, key) in typeCompetition"
             :key="key"
             :value="type"
           >
@@ -65,15 +73,17 @@
           <b-input
             v-model="internalCompetition.address"
             placeholder="Adresse"
+            class="street"
           />
         </b-field>
         <b-field expanded>
-          <b-input v-model="internalCompetition.city" placeholder="Ville" />
+          <b-input v-model="internalCompetition.city" placeholder="Ville" class="city" />
         </b-field>
         <b-field expanded>
           <b-input
             v-model="internalCompetition.postalCode"
             placeholder="Code postal"
+            class="postal-num"
           />
         </b-field>
       </b-field>
@@ -111,11 +121,11 @@
       </b-field>
 
       <b-field horizontal label="Description">
-        <b-input v-model="internalCompetition.description" type="textarea" />
+        <b-input v-model="internalCompetition.description" type="textarea" class="description" />
       </b-field>
 
       <b-field horizontal label="Agenda">
-        <b-input v-model="internalCompetition.agenda" type="textarea" />
+        <b-input v-model="internalCompetition.agenda" type="textarea" class="agenda" />
       </b-field>
 
       <div class="is-pulled-right">
@@ -124,6 +134,7 @@
           tag="button"
           native-type="submit"
           :loading="isLoading"
+          class="update-competition"
         >
           Valider compétition
         </b-button>
@@ -146,7 +157,7 @@ export default class EditCompetitionForm extends Vue {
   @Prop({ default: Object }) readonly internalCompetition!: Competition
   categoryIndex: number | null = null
   selectedOptions = []
-  typeCompetiton = TypeCompetition
+  typeCompetition = TypeCompetition
   isLoading = false
 
   async updateCompetition(competitionData: Competition) {

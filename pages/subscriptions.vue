@@ -142,7 +142,7 @@ export default class Subscriptions extends Vue {
     message: '',
     passwordIsValid: true
   }
-
+  
   credentials: SubscriptionCredentials = {
     email: 'admin@test.com',
     firstName: 'Laurent',
@@ -154,7 +154,7 @@ export default class Subscriptions extends Vue {
     password: 'admin@test.com',
     passwordConfirmation: 'admin@test.com'
   }
-
+  
   maxDate: Date = new Date()
   minDate: Date = new Date('1/1/1900')
 
