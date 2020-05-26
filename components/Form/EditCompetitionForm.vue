@@ -19,6 +19,7 @@
       <b-field horizontal label="Date">
         <b-field>
           <b-datepicker
+            editable
             v-model="internalCompetition.startDate"
             placeholder="Date de début"
             icon="calendar-today"
@@ -28,6 +29,7 @@
         </b-field>
         <b-field>
           <b-datepicker
+            editable
             v-model="internalCompetition.endDate"
             placeholder="Date de fin"
             icon="calendar-today"
@@ -95,7 +97,12 @@
         />
       </b-field>
 
-      <b-field v-if="internalCompetition.categories.length > 0">
+      <b-field
+        v-if="
+          internalCompetition.categories &&
+          Array.isArray(internalCompetition.categories).length > 0
+        "
+      >
         <b-select v-model="selectedOptions" multiple>
           <option
             v-for="(categorie, index) in internalCompetition.categories"
@@ -172,8 +179,11 @@ export default class EditCompetitionForm extends Vue {
   }
 
   addCategory(result: any) {
-    const competitionCategories =
-      this.internalCompetition && this.internalCompetition.categories
+    const competitionCategories = Array.isArray(
+      this.internalCompetition?.categories
+    )
+      ? this.internalCompetition.categories
+      : undefined
     if (!competitionCategories) {
       return
     }
@@ -202,8 +212,11 @@ export default class EditCompetitionForm extends Vue {
       return
     }
 
-    let competitionCategories =
-      this.internalCompetition && this.internalCompetition.categories
+    let competitionCategories = Array.isArray(
+      this.internalCompetition?.categories
+    )
+      ? this.internalCompetition.categories
+      : undefined
 
     if (!competitionCategories) {
       return

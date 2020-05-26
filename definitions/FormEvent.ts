@@ -6,6 +6,6 @@ export type FormEvent = {
   message: string | null
 }
 
-export type LoginFormEvent = FormEvent & {
+export type LoginEvent = FormEvent & {
   data: AuthCredentials
 }

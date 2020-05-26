@@ -54,7 +54,7 @@ export default class UserRegisterToCompetition extends Vue {
       await ApiHelper.AddCompetitor(this.competitionId, this.credentials.id)
       // @ts-ignore
       this.$parent.close()
-      this.$emit('hasRegister')
+      this.$emit('registerSuccess')
       this.isLoading = false
     } catch (err) {
       console.log('err', err)

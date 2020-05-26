@@ -1,4 +1,3 @@
-const ROUTE_NAME = 'competitions'
 enum RouteName {
   competitions = 'competitions',
   users = 'users'
@@ -7,63 +6,62 @@ export default {
   registerOrRemoveUserInCompetition: (
     competitionId: number,
     userId: number
-  ): string => `/${ROUTE_NAME}/${competitionId}/registrations/${userId}`,
+  ): string =>
+    `/${RouteName.competitions}/${competitionId}/registrations/${userId}`,
   getRegistrations: (competitionId: number): string =>
-    `/${ROUTE_NAME}/${competitionId}/registrations`,
+    `/${RouteName.competitions}/${competitionId}/registrations`,
   addCompetitor: (competitionId: number, userId: number): string =>
-    `/${ROUTE_NAME}/${competitionId}/registrations/${userId}`,
+    `/${RouteName.competitions}/${competitionId}/registrations/${userId}`,
   getUserCompetitionRoles: (competitionId: number, userId: number): string =>
     `/${RouteName.users}/${userId}/competitions-roles/${competitionId}`,
+  getUsers: (query?: string): string =>
+    `/${RouteName.users}${query ? '?q=' + query : ''}`,
   getJuryPresidents: (competitionId: number): string =>
-    `/${ROUTE_NAME}/${competitionId}/jury-presidents`,
+    `/${RouteName.competitions}/${competitionId}/jury-presidents`,
   addOrRemoveJuryPresident: (competitionId: number, userId: number): string =>
-    `/${ROUTE_NAME}/${competitionId}/jury-presidents/${userId}`,
+    `/${RouteName.competitions}/${competitionId}/jury-presidents/${userId}`,
   getJudges: (competitionId: number): string =>
-    `/${ROUTE_NAME}/${competitionId}/judges`,
+    `/${RouteName.competitions}/${competitionId}/judges`,
   addOrRemoveJudge: (competitionId: number, userId: number): string =>
-    `/${ROUTE_NAME}/${competitionId}/judges/${userId}`,
+    `/${RouteName.competitions}/${competitionId}/judges/${userId}`,
   getChiefRouteSetters: (competitionId: number): string =>
-    `/${ROUTE_NAME}/${competitionId}/chief-route-setters`,
+    `/${RouteName.competitions}/${competitionId}/chief-route-setters`,
   addOrRemoveChiefRouteSetters: (
     competitionId: number,
     userId: number
   ): string =>
-    // eslint-disable-next-line no-irregular-whitespace
-    `​/${ROUTE_NAME}​/${competitionId}​/chief-route-setters​/${userId}`,
+    `/${RouteName.competitions}/${competitionId}/chief-route-setters/${userId}`,
   getRouteSetters: (competitionId: number): string =>
-    `/${ROUTE_NAME}/${competitionId}/route-setters`,
+    `/${RouteName.competitions}/${competitionId}/route-setters`,
   addOrRemoveRouteSetters: (competitionId: number, userId: number): string =>
-    // eslint-disable-next-line no-irregular-whitespace
-    `​/${ROUTE_NAME}​/${competitionId}​/route-setters​/${userId}`,
+    `/${RouteName.competitions}/${competitionId}/route-setters/${userId}`,
   getTechnicalDelegates: (competitionId: number): string =>
-    `/${ROUTE_NAME}/${competitionId}/technical-delegates`,
+    `/${RouteName.competitions}/${competitionId}/technical-delegates`,
   addOrRemoveTechnicalDelegates: (
     competitionId: number,
     userId: number
   ): string =>
-    // eslint-disable-next-line no-irregular-whitespace
-    `​/${ROUTE_NAME}​/${competitionId}​/technical-delegates/${userId}`,
+    `/${RouteName.competitions}/${competitionId}/technical-delegates/${userId}`,
   getOrganizers: (competitionId: number): string =>
-    `/${ROUTE_NAME}/${competitionId}/organizers`,
+    `/${RouteName.competitions}/${competitionId}/organizers`,
   addOrRemoveOrganizers: (competitionId: number, userId: number): string =>
-    // eslint-disable-next-line no-irregular-whitespace
-    `​/${ROUTE_NAME}​/${competitionId}​/organizers/${userId}`,
+    `/${RouteName.competitions}/${competitionId}/organizers/${userId}`,
   addRound: (competitionId: number) =>
-    `/${ROUTE_NAME}/${competitionId}/bouldering-rounds`,
+    `/${RouteName.competitions}/${competitionId}/bouldering-rounds`,
   addBoulderingResult: (
     competitionId: number,
     roundId: number,
     boulderId: number
   ) =>
-    `/${ROUTE_NAME}/${competitionId}/bouldering-rounds/${roundId}/boulders/${boulderId}/results`,
+    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/boulders/${boulderId}/results`,
   createOrGetCompetitions: (query?: string) =>
-    `/${ROUTE_NAME}${query ? '?q=' + query : ''}`,
+    `/${RouteName.competitions}${query ? '?q=' + query : ''}`,
   getCompetitionsPagination: (page: number, perPage: number) =>
-    `/${ROUTE_NAME}?page=${page}&perPage=${perPage}`,
+    `/${RouteName.competitions}?page=${page}&perPage=${perPage}`,
   updateOrGetCompetition: (competitionId: number) =>
-    `/${ROUTE_NAME}/${competitionId}`,
+    `/${RouteName.competitions}/${competitionId}`,
   getCompetitionRankings: (competitionId: number) =>
-    `/${ROUTE_NAME}/${competitionId}/rankings`,
+    `/${RouteName.competitions}/${competitionId}/rankings`,
   getUserCount: () => '/users/count',
-  getCompetitionsCount: () => `/${ROUTE_NAME}/count`
+  getCompetitionsCount: () => `/${RouteName.competitions}/count`
 }

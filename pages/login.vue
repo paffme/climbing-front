@@ -4,23 +4,27 @@
       <div id="login">
         <div class="card">
           <div class="card-header">
-            <nuxt-link to="/">
-              <img src="../assets/ffme_logo.png" alt="" width="140" />
-            </nuxt-link>
+            <LogoComponent />
           </div>
           <div class="card-content">
             <template v-if="fromSubscription">
-              <b-notification type="is-success" :closable="true">
+              <b-notification
+                id="from-subscription"
+                type="is-info"
+                :closable="true"
+              >
                 {{ form.message }}
               </b-notification>
             </template>
-            <b-notification
-              :type="form.error ? 'is-danger' : 'is-success'"
-              :closable="false"
-              :active.sync="form.success || form.error"
-            >
-              {{ form.message }}
-            </b-notification>
+            <template v-else>
+              <b-notification
+                :type="form.error ? 'is-danger' : 'is-success'"
+                :closable="false"
+                :active.sync="form.success || form.error"
+              >
+                {{ form.message }}
+              </b-notification>
+            </template>
             <LoginForm @emitForm="connectUser" />
           </div>
         </div>
@@ -33,11 +37,15 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { authUser } from '~/store'
 import LoginForm from '~/components/Form/LoginForm.vue'
-import { FormEvent, LoginFormEvent } from '~/definitions/FormEvent'
+import { FormEvent, LoginEvent } from '~/definitions/FormEvent'
+import { APIToken, APIUserCredentials } from '~/definitions'
+import { AxiosHelper } from '~/utils/axiosHelper'
+import Message from '~/definitions/fr'
+import LogoComponent from '~/components/LogoComponent.vue'
 
 @Component({
   layout: 'blank',
-  components: { LoginForm },
+  components: { LoginForm, LogoComponent },
   middleware: 'isAuth'
 })
 export default class Login extends Vue {
@@ -47,37 +55,72 @@ export default class Login extends Vue {
     message: null
   }
 
-  fromSubscription = false // Utiliser pour afficher message perso si l'utilisateur provient de la page d'inscription
+  fromSubscription: boolean = false // Utiliser pour afficher message perso si l'utilisateur provient de la page d'inscription
 
   mounted() {
-    this.fromSubscription = !!this.$route.query.fromSubscription
-    this.form.message = this.fromSubscription
-      ? 'Vous pouvez désormais vous connecter'
-      : ''
+    this.fromSubscription = !!this.$route.query?.fromSubscription
+    this.form.message = this.fromSubscription ? Message.LoginIncitation : ''
   }
 
-  async connectUser(loginFormEvent: LoginFormEvent) {
-    this.form.success = loginFormEvent.success
-    this.form.error = loginFormEvent.error
-    this.form.message = loginFormEvent.message
+  async connectUser(loginEvent: LoginEvent) {
+    this.initForm(loginEvent)
+
     try {
-      const tokenCredentials = await authUser.fetchToken({
-        email: loginFormEvent.data.email,
-        password: loginFormEvent.data.password
-      })
-      authUser.setTokenCredentials(tokenCredentials.data)
-      const userCredential = await authUser.fetchUser(
-        tokenCredentials.data.userId
-      )
-      authUser.setUserCredentials(userCredential.data)
+      const apiToken = await this.fetchToken(loginEvent)
+      this.setToken(apiToken.token)
+
+      const user = await this.fetchUser(apiToken.userId)
+      this.setUser(user)
+
       this.form.success = true
       this.form.message = "Vous allez être redirigé vers la page d'accueil"
+
       await this.$router.push({ name: 'index' })
     } catch (error) {
       console.log('err', error)
       this.form.error = true
       this.form.message = 'Identifiant / Mot de passe incorrecte'
     }
+  }
+
+  async fetchToken(loginEvent: LoginEvent): Promise<APIToken> {
+    try {
+      const response = await authUser.fetchToken({
+        email: loginEvent.data.email,
+        password: loginEvent.data.password
+      })
+
+      return response.data
+    } catch (err) {
+      console.log('fetchToken - Error', err)
+      throw err
+    }
+  }
+
+  async fetchUser(userId: number): Promise<APIUserCredentials> {
+    try {
+      const response = await authUser.fetchUser(userId)
+
+      return response.data
+    } catch (err) {
+      console.log('fetchToken - Error', err)
+      throw err
+    }
+  }
+
+  setToken(token: string): void {
+    authUser.addTokenToCookies(token)
+    AxiosHelper.SetHeaderAuthorizationToken(token)
+  }
+
+  setUser(userCredential: APIUserCredentials) {
+    authUser.setUserCredentials(userCredential)
+  }
+
+  initForm(loginEvent: LoginEvent): void {
+    this.form.success = loginEvent.success
+    this.form.error = loginEvent.error
+    this.form.message = loginEvent.message
   }
 }
 </script>

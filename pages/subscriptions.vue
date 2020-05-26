@@ -4,7 +4,7 @@
       <div id="login">
         <div class="card">
           <div class="card-header">
-            <img src="../assets/ffme_logo.png" alt="" width="140" />
+            <LogoComponent />
           </div>
           <div class="card-content">
             <b-notification
@@ -16,16 +16,20 @@
             </b-notification>
             <form @submit.prevent="subscribeUser(credentials)">
               <b-field required>
-                <b-radio v-model="credentials.sex"
-                         name="name"
-                         :native-value="Sex.Male"
-                         class="b-radio-male">
+                <b-radio
+                  v-model="credentials.sex"
+                  name="name"
+                  :native-value="Sex.Male"
+                  class="b-radio-male"
+                >
                   Homme
                 </b-radio>
-                <b-radio v-model="credentials.sex"
-                         name="name"
-                         :native-value="Sex.Female"
-                         class="b-radio-female">
+                <b-radio
+                  v-model="credentials.sex"
+                  name="name"
+                  :native-value="Sex.Female"
+                  class="b-radio-female"
+                >
                   Femme
                 </b-radio>
               </b-field>
@@ -34,10 +38,16 @@
               </b-field>
               <b-field grouped group-multiline>
                 <b-field label="Prénom" required>
-                  <b-input v-model="credentials.firstName" class="first-name"></b-input>
+                  <b-input
+                    v-model="credentials.firstName"
+                    class="first-name"
+                  ></b-input>
                 </b-field>
                 <b-field label="Nom" required>
-                  <b-input v-model="credentials.lastName" class="last-name"></b-input>
+                  <b-input
+                    v-model="credentials.lastName"
+                    class="last-name"
+                  ></b-input>
                 </b-field>
               </b-field>
               <b-field label="club">
@@ -45,24 +55,38 @@
               </b-field>
               <b-field label="Date de naissance">
                 <b-datepicker
+                  editable
                   v-model="credentials.birthDay"
                   placeholder="Cliquer pour selectionner"
                   icon="calendar-today"
                   trap-focus
                   :max-date="maxDate"
                   :min-date="minDate"
-                  class="birth-date">
+                  class="birth-date"
+                >
                 </b-datepicker>
               </b-field>
               <b-field label="Mot de passe">
-                <b-input v-model="credentials.password" type="password" password-reveal required class="password">
+                <b-input
+                  v-model="credentials.password"
+                  type="password"
+                  password-reveal
+                  required
+                  class="password"
+                >
                 </b-input>
               </b-field>
 
               <b-field
                 label="Confirmer le mot de passe"
-                :message="form.passwordIsValid ? '' : form.message">
-                <b-input v-model="credentials.passwordConfirmation" type="password" required class="conf-password">
+                :message="form.passwordIsValid ? '' : form.message"
+              >
+                <b-input
+                  v-model="credentials.passwordConfirmation"
+                  type="password"
+                  required
+                  class="conf-password"
+                >
                 </b-input>
               </b-field>
               <nuxt-link to="/login">
@@ -97,9 +121,11 @@ import {
   Sex,
   SubscriptionCredentials
 } from '~/definitions'
+import LogoComponent from '~/components/LogoComponent.vue'
 
 @Component({
   layout: 'blank',
+  components: { LogoComponent },
   middleware: 'isAuth',
   data() {
     return {
@@ -116,6 +142,7 @@ export default class Subscriptions extends Vue {
     message: '',
     passwordIsValid: true
   }
+  
   credentials: SubscriptionCredentials = {
     email: 'admin@test.com',
     firstName: 'Laurent',
@@ -127,6 +154,7 @@ export default class Subscriptions extends Vue {
     password: 'admin@test.com',
     passwordConfirmation: 'admin@test.com'
   }
+  
   maxDate: Date = new Date()
   minDate: Date = new Date('1/1/1900')
 

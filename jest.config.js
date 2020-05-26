@@ -13,11 +13,8 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: [
     '<rootDir>/components/**/*.vue',
-    '<rootDir>/pages/**/*.vue'
-    ],
-  modulePathIgnorePatterns: [
-    '<rootDir>/cypress/'
+    '<rootDir>/pages/**/*.vue',
     '<rootDir>/utils/**/*.ts'
-  ]
-
+  ],
+  modulePathIgnorePatterns: ['<rootDir>/cypress/']
 }
