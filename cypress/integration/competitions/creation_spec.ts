@@ -44,7 +44,7 @@ describe('Test for Creation of Competition', () => {
     cy.url().should('equal',
       Cypress.config().baseUrl + 'competitions/create')
   })
-  
+
   it('Must create a competition', () => {
     cy.visit('competitions/create')
 
