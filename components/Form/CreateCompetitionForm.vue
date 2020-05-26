@@ -11,6 +11,7 @@
       <b-field horizontal label="Date">
         <b-field>
           <b-datepicker
+            editable
             v-model="Form.competition.startDate"
             placeholder="Date de début"
             icon="calendar-today"
@@ -19,6 +20,7 @@
         </b-field>
         <b-field>
           <b-datepicker
+            editable
             v-model="Form.competition.endDate"
             placeholder="Date de fin"
             icon="calendar-today"
@@ -32,6 +34,7 @@
       </b-field>
       <b-field horizontal label="Date d'accueil">
         <b-datepicker
+          editable
           v-model="Form.competition.welcomingDate"
           placeholder="Date d'accueil"
           icon="calendar-today"

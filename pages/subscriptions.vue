@@ -55,6 +55,7 @@
               </b-field>
               <b-field label="Date de naissance">
                 <b-datepicker
+                  editable
                   v-model="credentials.birthDay"
                   placeholder="Cliquer pour selectionner"
                   icon="calendar-today"

@@ -15,6 +15,7 @@
       <b-field horizontal label="Date">
         <b-field>
           <b-datepicker
+            editable
             v-model="internalCompetition.startDate"
             placeholder="Date de début"
             icon="calendar-today"
@@ -23,6 +24,7 @@
         </b-field>
         <b-field>
           <b-datepicker
+            editable
             v-model="internalCompetition.endDate"
             placeholder="Date de fin"
             icon="calendar-today"
