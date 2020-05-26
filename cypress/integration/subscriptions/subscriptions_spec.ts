@@ -82,8 +82,8 @@ describe('Test for Subscriptions page features', () => {
     ]
 
     listInput.forEach((input) => {
-      cy.get(input[1]).type('{selectall}{del}')
-      cy.get('.button').click()
+      cy.get(input[1] + " > input").clear();
+      cy.get(".button").click();
       cy.url().should('equal', Cypress.config().baseUrl + 'subscriptions')
 
       cy.get(input[1]).type(input[0])
@@ -102,10 +102,11 @@ describe('Test for Subscriptions page features', () => {
     cy.get('.help').contains('Les mots de passe doivent être similaires')
   })
 
-  it('Must not create a new user with the same email', () => {
+  it("Must not create a new user with the same email", () => {
     // seedUsers();
-    clearInput()
+    clearInput();
 
-    completeSub(sex, email, firstName, lastName, club, birthDay, password)
-    completeSub(false, email, "e", "e", "e", birthDay, password)
+    completeSub(sex, email, firstName, lastName, club, birthDay, password);
+    completeSub(false, email, "e", "e", "e", birthDay, password);
+  })
 })
