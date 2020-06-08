@@ -12,7 +12,10 @@ import {
   APIRankingResponse,
   BoulderingRoundInput,
   APIUserCompetitionRoles,
-  DTOSubscriptionCredentials
+  DTOSubscriptionCredentials,
+  APIBoulderingRounds,
+  CompetitionEdit,
+  APIBoulderingGroups
 } from '~/definitions'
 import { AxiosResponse } from '~/node_modules/axios'
 import API_URL from '~/utils/api_helper/apiUrl'
@@ -56,7 +59,16 @@ export const ApiHelper = {
   GetUserCount: getUserCount,
   GetCompetitionsCount: getCompetitionsCount,
   GetCompetitionRankings: getCompetitionRankings,
-  GetCompetitionsPagination: getCompetitionsPagination
+  GetCompetitionsPagination: getCompetitionsPagination,
+  GetRound: getRound,
+  DeleteRound: deleteRound,
+  EditRound: editRound,
+  GetGroups: getGroups,
+  DeleteGroups: deleteGroups,
+  AddGroup: addGroup,
+  AddBoulder: addBoulder,
+  AssignJudgeToBoulder: assignJudgeToBoulder,
+  DeleteJudgeToBoulder: deleteJudgeToBoulder
 }
 
 async function addUserInCompetition(
@@ -209,7 +221,27 @@ async function addRound(
   competitionId: number,
   body: BoulderingRoundInput
 ): Promise<BoulderingRounds> {
-  return axios.post(API_URL.addRound(competitionId), body)
+  return axios.post(API_URL.getOraddRound(competitionId), body)
+}
+
+async function getRound(
+  roundId: number
+): Promise<AxiosResponse<APIBoulderingRounds>> {
+  return axios.get(API_URL.getOraddRound(roundId))
+}
+
+async function deleteRound(
+  competitionId: number,
+  roundId: number
+): Promise<AxiosResponse<void>> {
+  return axios.delete(API_URL.updateOrRemoveRound(competitionId, roundId))
+}
+async function editRound(
+  competitionId: number,
+  roundId: number,
+  body: BoulderingRoundInput
+): Promise<AxiosResponse<void>> {
+  return axios.patch(API_URL.updateOrRemoveRound(competitionId, roundId), body)
 }
 
 async function addBoulderingResult(
@@ -243,12 +275,10 @@ async function getCompetition(
 }
 
 async function updateCompetition(
-  body: Competition
-): Promise<AxiosResponse<void>> {
-  if (!body.id) {
-    return Promise.reject(new Error('ID not defined'))
-  }
-  return axios.patch(API_URL.updateOrGetCompetition(body.id), body)
+  id: number,
+  body: CompetitionEdit
+): Promise<AxiosResponse<ApiCompetition>> {
+  return axios.patch(API_URL.updateOrGetCompetition(id), body)
 }
 
 async function addCompetitor(
@@ -308,4 +338,61 @@ async function getCompetitionsPagination(
   perPage: number
 ): Promise<AxiosResponse<Competition[]>> {
   return axios.get(API_URL.getCompetitionsPagination(page, perPage))
+}
+
+async function getGroups(
+  competitionId: number,
+  roundId: number
+): Promise<AxiosResponse<APIBoulderingGroups[]>> {
+  return axios.get(API_URL.getBoulderingGroups(competitionId, roundId))
+}
+
+async function deleteGroups(
+  competitionId: number,
+  roundId: number,
+  groupId: number
+): Promise<AxiosResponse<void>> {
+  return axios.delete(
+    API_URL.deleteBoulderingGroups(competitionId, roundId, groupId)
+  )
+}
+
+async function addGroup(
+  competitionId: number,
+  roundId: number,
+  body: { name: string }
+): Promise<AxiosResponse<void>> {
+  return axios.post(API_URL.createBoulderingGroup(competitionId, roundId), body)
+}
+
+async function addBoulder(
+  competitionId: number,
+  roundId: number,
+  groupId: number
+): Promise<AxiosResponse<void>> {
+  return axios.post(API_URL.createBoulder(competitionId, roundId, groupId))
+}
+
+async function assignJudgeToBoulder(
+  competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number,
+  userId: number
+): Promise<AxiosResponse<void>> {
+  return axios.put(
+    API_URL.judgeToBoulder(competitionId, roundId, groupId, boulderId, userId)
+  )
+}
+
+async function deleteJudgeToBoulder(
+  competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number,
+  userId: number
+): Promise<AxiosResponse<void>> {
+  return axios.delete(
+    API_URL.judgeToBoulder(competitionId, roundId, groupId, boulderId, userId)
+  )
 }

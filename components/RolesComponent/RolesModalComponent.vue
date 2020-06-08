@@ -7,37 +7,14 @@
     </header>
     <div class="card-content">
       <span class="description-text"
-        >Trouver un utilisateur via son nom et/ou prénom</span
+        >Trouver un utilisateur via son <b>nom</b></span
       >
       <div class="custom-field">
-        <b-field>
-          <b-autocomplete
-            id="userInput"
-            v-model="name"
-            rounded
-            icon="magnify"
-            placeholder="Jean Valjean"
-            :data="suggestedUsers || []"
-            field="name"
-            @typing="$emit('input', name)"
-            @select="(option) => (selected = option)"
-          >
-            <template slot-scope="props">
-              {{ props.option.name }}#{{ props.option.id }}
-            </template>
-            <template slot="empty">
-              Aucun résultat trouvée
-            </template>
-          </b-autocomplete>
-          <b-button
-            type="is-info"
-            :disabled="!selected"
-            icon="check"
-            @click="confirmChoice(selected)"
-          >
-            Ajouter
-          </b-button>
-        </b-field>
+        <SearchUser
+          :suggested-users="suggestedUsers"
+          @select="onSelect"
+          @input="onInput"
+        />
       </div>
     </div>
   </div>
@@ -45,17 +22,20 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import SearchUser from '~/components/Form/SearchUser.vue'
 
-@Component
+@Component({
+  components: { SearchUser }
+})
 export default class RolesModalComponent extends Vue {
   @Prop(Array) suggestedUsers!: Array<{ name: string; id: number }>
-  name: string | null = null
-  selected: { name: string; id: number } | null = null
 
-  confirmChoice(user: { name: string; id: number }) {
+  onSelect(user: { name: string; id: number }) {
+    console.log('user', user)
     this.$emit('select', user)
-    this.name = null
   }
+
+  onInput() {}
 }
 </script>
 

@@ -1,7 +1,6 @@
+const axios = require('axios')
 const UsersSeed = require('../../cypress/fixtures/users_seed')
 const CompetitionSeed = require('../../cypress/fixtures/users_seed')
-const axios = require('axios')
-
 
 const BASE_URL = 'https://paffme.hdaroit.fr/api/v1'
 
@@ -27,16 +26,16 @@ async function createUser(user) {
 async function logUser(user) {
   return await axios.post(URL.logUser, {
     email: user.email,
-    password: user.password,
+    password: user.password
   })
 }
 
 async function rmUser(userId, token) {
   return axios.delete(URL.deleteUser(userId), {
     headers: {
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`
     }
-  });
+  })
 }
 
 async function createCompetition(competition) {
@@ -52,28 +51,29 @@ async function createCompetition(competition) {
     address: competition.address,
     city: competition.city,
     postalCode: competition.postalCode,
-    categories: competition.categories,
+    categories: competition.categories
   })
 }
 
 function logRequest(request) {
-  console.log('request',
-    request['config']['url'],
-    request['config']['data'],
-    request['status'])
+  console.log(
+    'request',
+    request.config.url,
+    request.config.data,
+    request.status
+  )
 }
 
 async function start_seed() {
-  
-  for(const user of UsersSeed) {
+  for (const user of UsersSeed) {
     const create = await createUser(user)
     logRequest(create)
 
     const login = await logUser(user)
     logRequest(login)
-    //return rmUser(user.data.userId, user.data.token)
+    // return rmUser(user.data.userId, user.data.token)
   }
-  
+
   // for(const user of UsersSeed) {
   //   const login = await logUser(user)
   //   logRequest(login)
@@ -84,7 +84,7 @@ async function start_seed() {
 }
 
 start_seed()
-  .then(response => {
+  .then((response) => {
     // console.log('request',
     //   response['config']['url'],
     //   response['config']['data'],

@@ -5,17 +5,19 @@
     </div>
     <form class="form" @submit.prevent="registerCompetition()">
       <b-field horizontal label="Nom compétition">
-        <b-input v-model="Form.competition.name"
-                 name="subject"
-                 expanded
-                 class="name"/>
+        <b-input
+          v-model="Form.competition.name"
+          name="subject"
+          expanded
+          class="name"
+        />
       </b-field>
 
       <b-field horizontal label="Date">
         <b-field>
           <b-datepicker
-            editable
             v-model="Form.competition.startDate"
+            editable
             placeholder="Date de début"
             icon="calendar-today"
             trap-focus
@@ -24,8 +26,8 @@
         </b-field>
         <b-field>
           <b-datepicker
-            editable
             v-model="Form.competition.endDate"
+            editable
             placeholder="Date de fin"
             icon="calendar-today"
             trap-focus
@@ -35,12 +37,12 @@
       </b-field>
 
       <b-field horizontal label="Compétition open">
-        <b-switch v-model="Form.competition.open" class="status"/>
+        <b-switch v-model="Form.competition.open" class="status" />
       </b-field>
       <b-field horizontal label="Date d'accueil">
         <b-datepicker
-          editable
           v-model="Form.competition.welcomingDate"
+          editable
           placeholder="Date d'accueil"
           icon="calendar-today"
           trap-focus
@@ -66,10 +68,18 @@
 
       <b-field horizontal grouped label="Adresse">
         <b-field>
-          <b-input v-model="Form.competition.address" placeholder="Adresse" class="street"/>
+          <b-input
+            v-model="Form.competition.address"
+            placeholder="Adresse"
+            class="street"
+          />
         </b-field>
         <b-field expanded>
-          <b-input v-model="Form.competition.city" placeholder="Ville" class="city"/>
+          <b-input
+            v-model="Form.competition.city"
+            placeholder="Ville"
+            class="city"
+          />
         </b-field>
         <b-field expanded>
           <b-input
@@ -111,11 +121,19 @@
       </b-field>
 
       <b-field horizontal label="Description">
-        <b-input v-model="Form.competition.description" type="textarea" class="description"/>
+        <b-input
+          v-model="Form.competition.description"
+          type="textarea"
+          class="description"
+        />
       </b-field>
 
       <b-field horizontal label="Agenda">
-        <b-input v-model="Form.competition.agenda" type="textarea" class="agenda"/>
+        <b-input
+          v-model="Form.competition.agenda"
+          type="textarea"
+          class="agenda"
+        />
       </b-field>
 
       <div class="is-pulled-right">
@@ -123,8 +141,8 @@
           type="is-primary"
           tag="button"
           :loading="Form.isLoading"
-          @click="registerCompetition"
           class="create-competition"
+          @click="registerCompetition"
         >
           Valider compétition
         </b-button>
@@ -156,6 +174,7 @@ export default class CreateCompetitionForm extends Vue {
     error: false,
     success: false,
     isLoading: false,
+    isEdition: false,
     competition: {
       name: 'Chalais Savoyard',
       type: TypeCompetition.Bouldering,
