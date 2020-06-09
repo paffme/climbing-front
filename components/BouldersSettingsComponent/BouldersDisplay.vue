@@ -33,9 +33,7 @@
             <li>Catégorie : {{ round.category }}</li>
             <li>Nom : {{ round.name }}</li>
             <li>Quota : {{ round.quota }}</li>
-            <li v-show="round.maxTries">
-              Nombre d'essais : {{ round.maxTries }}
-            </li>
+            <li>Nombre d'essais : {{ round.maxTries || 0 }}</li>
           </ul>
         </div>
       </div>
@@ -94,14 +92,12 @@ export default class BouldersDisplay extends Vue {
   groups: APIBoulderingGroups[] = []
 
   async created() {
-    console.log('round', this.round)
     await this.refreshBouldersGroups()
   }
 
   async getBouldersGroups(competitionId: number, roundId: number) {
     try {
-      const groups = await ApiHelper.GetGroups(competitionId, roundId)
-      console.log('groups', groups)
+      const groups = await ApiHelper.GetBoulderingGroups(competitionId, roundId)
       this.groups = groups.data
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
@@ -110,7 +106,7 @@ export default class BouldersDisplay extends Vue {
 
   async onDelete(group: APIBoulderingGroups) {
     try {
-      await ApiHelper.DeleteGroups(
+      await ApiHelper.DeleteBoulderingGroups(
         this.round.competitionId,
         group.roundId,
         group.id
@@ -127,9 +123,13 @@ export default class BouldersDisplay extends Vue {
 
   async onCreateGroup(name: string) {
     try {
-      await ApiHelper.AddGroup(this.round.competitionId, this.round.id, {
-        name
-      })
+      await ApiHelper.CreateBoulderingGroup(
+        this.round.competitionId,
+        this.round.id,
+        {
+          name
+        }
+      )
       await this.refreshBouldersGroups()
 
       this.$buefy.toast.open({

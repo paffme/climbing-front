@@ -115,11 +115,10 @@
 <script lang="ts">
 import _ from 'lodash'
 import { Component, Vue } from 'vue-property-decorator'
-import UserGestion from '~/components/UserGestion.vue'
 import GoBackBtn from '~/components/Button/GoBackBtn.vue'
 import {
   APIBoulderingRounds,
-  ApiCompetition,
+  APICompetition,
   APIUserCompetitionRoles,
   Competition,
   CompetitionEdit,
@@ -172,7 +171,6 @@ async function fetchCompetition(idCompetition: number): Promise<Competition> {
   middleware: ['isAuth', 'setHeader'],
   components: {
     RolesComponent,
-    UserGestion,
     CompetitionForm,
     BtnDeleteCompetition,
     GoBackBtn,
@@ -218,7 +216,7 @@ async function fetchCompetition(idCompetition: number): Promise<Competition> {
   }
 })
 export default class EditOneCompetition extends Vue {
-  competition: ApiCompetition | null = null
+  competition: APICompetition | null = null
   role: APIUserCompetitionRoles | null = null
   bouldering: APIBoulderingRounds | null = null
 
