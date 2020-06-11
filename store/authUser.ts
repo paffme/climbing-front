@@ -23,8 +23,8 @@ import { AxiosHelper } from '~/utils/axiosHelper'
 })
 export default class AuthUser extends VuexModule {
   @Mutation
-  addTokenToCookies(newTokenCredential: string, expiresIn: number) {
-    createCookie('token', newTokenCredential, expiresIn)
+  addTokenToCookies(newTokenCredential: string) {
+    createCookie('token', newTokenCredential)
   }
 
   @Mutation

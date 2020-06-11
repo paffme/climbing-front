@@ -24,9 +24,26 @@
           </ul>
         </nav>
         <div class="tile is-ancestor">
-          <div class="tile is-parent">
+          <div class="tile is-3 is-parent">
             <div class="tile is-child notification">
-              <CompetitionForm @emit="onCreateCompetition" />
+              <div id="title_notification">
+                <b-icon icon="license" type="is-primary" />
+                <span>Compétitions en cours </span>
+              </div>
+              <div id="content_notification">
+                <ul>
+                  <li>
+                    <nuxt-link to="/competitions/3">
+                      Champigny - Homme
+                    </nuxt-link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="tile is-9 is-parent">
+            <div class="tile is-child notification">
+              <CreateCompetitionForm />
             </div>
           </div>
         </div>
@@ -37,32 +54,25 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import GoBackBtn from '~/components/Button/GoBackBtn.vue'
-import CompetitionForm from '~/components/Form/CompetitionForm.vue'
-import { Competition } from '~/definitions'
-import { ApiHelper } from '~/utils/api_helper/apiHelper'
-import { AxiosHelper } from '~/utils/axiosHelper'
+import GoBackBtn from '~/components/GoBackBtn.vue'
+import CreateCompetitionForm from '~/components/Form/CreateCompetitionForm.vue'
 
 @Component({
-  components: { GoBackBtn, CompetitionForm },
+  components: { GoBackBtn, CreateCompetitionForm },
   middleware: 'isAuth'
 })
-export default class CompetitionCreate extends Vue {
-  async onCreateCompetition(competition: Competition) {
-    console.log('onCreateCompetition', competition)
-    try {
-      const newCompetition = await ApiHelper.CreateCompetition(competition)
-      this.$buefy.toast.open({
-        type: 'is-success',
-        message: 'Compétition créée'
-      })
-      console.log('newCOmpetition', newCompetition.data)
-      this.$router.push(`/competitions/${newCompetition.data.id}`)
-    } catch (err) {
-      AxiosHelper.HandleAxiosError(this, err)
-    }
-  }
-}
+export default class CompetitionCreate extends Vue {}
 </script>
 
-<style scoped></style>
+<style scoped>
+.is-flex .title {
+  margin-left: 10px;
+}
+.breadcrumb {
+  margin: 10px 0;
+}
+#content_notification,
+title_notification {
+  margin: 5px 0;
+}
+</style>
