@@ -5,8 +5,7 @@ import {
   BoulderingRounds,
   CompetitionsRegistrations,
   Competition,
-  ApiCompetition,
-  APIUserCredentials,
+  APICompetition,
   AuthCredentials,
   APIToken,
   APIRankingResponse,
@@ -63,12 +62,23 @@ export const ApiHelper = {
   GetRound: getRound,
   DeleteRound: deleteRound,
   EditRound: editRound,
-  GetGroups: getGroups,
-  DeleteGroups: deleteGroups,
-  AddGroup: addGroup,
+  GetBoulderingGroups: getBoulderingGroups,
+  DeleteBoulderingGroups: deleteBoulderingGroups,
+  CreateBoulderingGroup: createBoulderingGroup,
   AddBoulder: addBoulder,
   AssignJudgeToBoulder: assignJudgeToBoulder,
-  DeleteJudgeToBoulder: deleteJudgeToBoulder
+  DeleteJudgeToBoulder: deleteJudgeToBoulder,
+  UpdateUser: updateUser,
+  DeleteUser: deleteUser,
+  GetRegistrationsByUser: getRegistrationsByUser,
+  GetOrganizations: getOrganizations,
+  GetChiefRouteSettings: getChiefRouteSettings,
+  GetRouteSettings: getRouteSettings,
+  GetJuryPresidencies: getJuryPresidencies,
+  GetTechnicalDelegations: getTechnicalDelegations,
+  GetJudgementsAssignments: getJudgementsAssignments,
+  GetJudgementsAssignmentsByCompetition: getJudgementsAssignmentsByCompetition,
+  GetUserCompetitionsRoles: getUserCompetitionsRoles
 }
 
 async function addUserInCompetition(
@@ -270,14 +280,14 @@ async function getCompetitions(
 
 async function getCompetition(
   idCompetition: number
-): Promise<AxiosResponse<ApiCompetition>> {
+): Promise<AxiosResponse<APICompetition>> {
   return axios.get(API_URL.updateOrGetCompetition(idCompetition))
 }
 
 async function updateCompetition(
   id: number,
   body: CompetitionEdit
-): Promise<AxiosResponse<ApiCompetition>> {
+): Promise<AxiosResponse<APICompetition>> {
   return axios.patch(API_URL.updateOrGetCompetition(id), body)
 }
 
@@ -294,9 +304,7 @@ async function subscribeUser(
   return axios.post('/users', credentials)
 }
 
-async function getUser(
-  userId: number
-): Promise<AxiosResponse<APIUserCredentials>> {
+async function getUser(userId: number): Promise<AxiosResponse<APIUser>> {
   return axios.get(`/users/${userId}`)
 }
 
@@ -340,14 +348,14 @@ async function getCompetitionsPagination(
   return axios.get(API_URL.getCompetitionsPagination(page, perPage))
 }
 
-async function getGroups(
+async function getBoulderingGroups(
   competitionId: number,
   roundId: number
 ): Promise<AxiosResponse<APIBoulderingGroups[]>> {
   return axios.get(API_URL.getBoulderingGroups(competitionId, roundId))
 }
 
-async function deleteGroups(
+async function deleteBoulderingGroups(
   competitionId: number,
   roundId: number,
   groupId: number
@@ -357,7 +365,7 @@ async function deleteGroups(
   )
 }
 
-async function addGroup(
+async function createBoulderingGroup(
   competitionId: number,
   roundId: number,
   body: { name: string }
@@ -365,6 +373,7 @@ async function addGroup(
   return axios.post(API_URL.createBoulderingGroup(competitionId, roundId), body)
 }
 
+// TODO : Faire les tests U
 async function addBoulder(
   competitionId: number,
   roundId: number,
@@ -395,4 +404,79 @@ async function deleteJudgeToBoulder(
   return axios.delete(
     API_URL.judgeToBoulder(competitionId, roundId, groupId, boulderId, userId)
   )
+}
+
+async function deleteUser(userId: number): Promise<AxiosResponse<void>> {
+  return axios.delete(API_URL.userByUserId(userId))
+}
+
+async function updateUser(
+  userId: number,
+  body: {
+    email?: string
+    firstName?: string
+    lastName?: string
+    birthYear?: number
+    password?: string
+    club?: string
+  }
+): Promise<AxiosResponse<APIUser>> {
+  return axios.patch(API_URL.userByUserId(userId), body)
+}
+
+async function getRegistrationsByUser(
+  userId: number
+): Promise<AxiosResponse<APICompetition[]>> {
+  return axios.get(API_URL.getRegistrationsByUser(userId))
+}
+
+async function getOrganizations(
+  userId: number
+): Promise<AxiosResponse<APICompetition[]>> {
+  return axios.get(API_URL.getOrganizations(userId))
+}
+
+async function getChiefRouteSettings(
+  userId: number
+): Promise<AxiosResponse<APICompetition[]>> {
+  return axios.get(API_URL.getChiefRouteSettings(userId))
+}
+
+async function getRouteSettings(
+  userId: number
+): Promise<AxiosResponse<APICompetition[]>> {
+  return axios.get(API_URL.getRouteSettings(userId))
+}
+
+async function getJuryPresidencies(
+  userId: number
+): Promise<AxiosResponse<APICompetition[]>> {
+  return axios.get(API_URL.getJuryPresidencies(userId))
+}
+
+async function getTechnicalDelegations(
+  userId: number
+): Promise<AxiosResponse<APICompetition[]>> {
+  return axios.get(API_URL.getTechnicalDelegations(userId))
+}
+
+async function getJudgementsAssignments(
+  userId: number
+): Promise<AxiosResponse<APICompetition[]>> {
+  return axios.get(API_URL.getJudgementsAssignments(userId))
+}
+
+async function getJudgementsAssignmentsByCompetition(
+  userId: number,
+  competitionId: number
+): Promise<AxiosResponse<APICompetition[]>> {
+  return axios.get(
+    API_URL.getJudgementsAssignmentsByCompetition(userId, competitionId)
+  )
+}
+
+async function getUserCompetitionsRoles(
+  userId: number
+): Promise<AxiosResponse<APICompetition[]>> {
+  return axios.get(API_URL.getUserCompetitionsRoles(userId))
 }

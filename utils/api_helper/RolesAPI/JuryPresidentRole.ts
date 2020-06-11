@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
-import { APIUser } from '~/definitions'
+import { APICompetition, APIUser } from '~/definitions'
 import { RolesAPI } from '~/utils/api_helper/RolesAPI/RolesAPI'
 
 export class JuryPresidentRole implements RolesAPI {
@@ -14,5 +14,11 @@ export class JuryPresidentRole implements RolesAPI {
 
   remove(competitionId: number, userId: number): Promise<AxiosResponse<void>> {
     return ApiHelper.RemoveJuryPresident(competitionId, userId)
+  }
+
+  getCompetitionFromRole(
+    userId: number
+  ): Promise<AxiosResponse<APICompetition[]>> {
+    return ApiHelper.GetJuryPresidencies(userId)
   }
 }

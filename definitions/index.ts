@@ -23,6 +23,15 @@ export enum RoleName {
   Organisateur = 'Organisateurs'
 }
 
+export enum SlugRoleName {
+  President = 'jury-presidencies',
+  Juges = 'judgements',
+  ChefRouteSetter = 'chief-route-settings',
+  RouteSetter = 'route-settings',
+  DelegueTechnique = 'technical-delegations',
+  Organisateur = 'organizations'
+}
+
 export enum RankingType {
   CIRCUIT = 'Circuit',
   UNLIMITED_CONTEST = 'Illimité',
@@ -85,7 +94,7 @@ export type CompetitionEdit = {
   categories?: CompetitionCategories[]
 }
 
-export type ApiCompetition = Competition & {
+export type APICompetition = Competition & {
   createdAt: Date
   updatedAt: Date
 }
@@ -176,7 +185,7 @@ export type APIUser = {
   firstName: string
   lastName: string
   birthYear: number
-  club: string | null
+  club?: string | null
 }
 
 export type User = {

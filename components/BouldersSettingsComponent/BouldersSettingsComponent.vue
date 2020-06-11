@@ -341,7 +341,6 @@ export default class BouldersSettingsComponent extends Vue {
     return {
       maxTries: round.maxTries,
       name: round.name,
-      quota: round.quota,
       rankingType: round.rankingType,
       type: round.type
     }
