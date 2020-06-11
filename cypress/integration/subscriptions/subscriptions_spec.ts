@@ -102,10 +102,8 @@ describe('Test for Subscriptions page features', () => {
     cy.get('.help').contains('Les mots de passe doivent être similaires')
   })
 
-  it('Must not create a new user with the same email', () => {
-    // seedUsers();
-    clearInput()
-
-    completeSub(sex, email, firstName, lastName, club, birthDay, password)
-    completeSub(false, email, "e", "e", "e", birthDay, password)
+  it('Must not create a new user with the same ???', () => {
+    // clearInput()
+    // completeSub(sex, email, firstName, lastName, club, birthDay, password)
+  })
 })

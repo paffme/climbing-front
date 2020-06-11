@@ -1,4 +1,4 @@
 export const NAVBAR_METADATA = [
-  { linkTo: { name: 'user-id' }, icon: 'account' },
+  { linkTo: 'account', icon: 'account' },
   { linkTo: 'logout', icon: 'logout' }
 ]

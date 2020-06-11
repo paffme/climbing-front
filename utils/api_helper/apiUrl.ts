@@ -1,10 +1,7 @@
-import { SlugRoleName } from '~/definitions'
-
 enum RouteName {
   competitions = 'competitions',
   users = 'users'
 }
-
 export default {
   registerOrRemoveUserInCompetition: (
     competitionId: number,
@@ -49,10 +46,8 @@ export default {
     `/${RouteName.competitions}/${competitionId}/organizers`,
   addOrRemoveOrganizers: (competitionId: number, userId: number): string =>
     `/${RouteName.competitions}/${competitionId}/organizers/${userId}`,
-  getOraddRound: (competitionId: number) =>
+  addRound: (competitionId: number) =>
     `/${RouteName.competitions}/${competitionId}/bouldering-rounds`,
-  updateOrRemoveRound: (competitionId: number, roundId: number) =>
-    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}`,
   addBoulderingResult: (
     competitionId: number,
     roundId: number,
@@ -68,52 +63,5 @@ export default {
   getCompetitionRankings: (competitionId: number) =>
     `/${RouteName.competitions}/${competitionId}/rankings`,
   getUserCount: () => '/users/count',
-  getCompetitionsCount: () => `/${RouteName.competitions}/count`,
-  getBoulderingGroups: (competitionId: number, roundId: number) =>
-    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups`,
-  deleteBoulderingGroups: (
-    competitionId: number,
-    roundId: number,
-    groupId: number
-  ) =>
-    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}`,
-  createBoulderingGroup: (competitionId: number, roundId: number) =>
-    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups`,
-  createBoulder: (competitionId: number, roundId: number, groupId: number) =>
-    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders`,
-  judgeToBoulder: (
-    competitionId: number,
-    roundId: number,
-    groupId: number,
-    boulderId: number,
-    userId: number
-  ) =>
-    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders/${boulderId}/judges/${userId}`,
-  userByUserId: (userId: number) => `/${RouteName.users}/${userId}`,
-  getTechnicalDelegations: (userId: number) =>
-    `/${RouteName.users}/${userId}/${SlugRoleName.DelegueTechnique}`,
-  getJuryPresidencies: (userId: number) =>
-    `/${RouteName.users}/${userId}/${SlugRoleName.President}`,
-  getJudgements: (userId: number) =>
-    `/${RouteName.users}/${userId}/${SlugRoleName.Juges}`,
-  getChiefRouteSettings: (userId: number) =>
-    `/${RouteName.users}/${userId}/${SlugRoleName.ChefRouteSetter}`,
-  getRouteSettings: (userId: number) =>
-    `/${RouteName.users}/${userId}/${SlugRoleName.RouteSetter}`,
-  getOrganizations: (userId: number) =>
-    `/${RouteName.users}/${userId}/${SlugRoleName.Organisateur}`,
-  getUserCompetitionsRoles: (userId: number) =>
-    `/${RouteName.users}/${userId}/competitions-roles`,
-  getUserCompetitionsRolesByCompetition: (
-    userId: number,
-    competitionId: number
-  ) => `/${RouteName.users}/${userId}/competitions-roles/${competitionId}`,
-  getJudgementsAssignments: (userId: number) =>
-    `/${RouteName.users}/${userId}/judgements/assignments`,
-  getJudgementsAssignmentsByCompetition: (
-    userId: number,
-    competitionId: number
-  ) => `/${RouteName.users}/${userId}/judgements/assignments/${competitionId}`,
-  getRegistrationsByUser: (userId: number): string =>
-    `/${RouteName.users}/${userId}/registrations`
+  getCompetitionsCount: () => `/${RouteName.competitions}/count`
 }

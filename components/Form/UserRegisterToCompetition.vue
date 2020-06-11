@@ -18,7 +18,7 @@
       <b-button
         type="is-primary"
         :loading="isLoading"
-        @click="$emit('register')"
+        @click="registerUserToACompetition"
       >
         S'inscrire
       </b-button>
@@ -27,18 +27,39 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { ApiHelper } from '~/utils/api_helper/apiHelper'
+import AuthUser from '~/store/authUser'
 
 @Component
 export default class UserRegisterToCompetition extends Vue {
-  @Prop(Boolean) isLoading!: boolean
-  @Prop(Boolean) success!: boolean
-  @Watch('success')
-  onSuccessChanged(newVal: boolean, old: boolean) {
-    // @ts-ignore
-    if (newVal) this.$parent.close()
-    console.log('onSuccessChanged', newVal)
-    console.log('onSuccessChanged', old)
+  @Prop(Number) readonly competitionId?: number
+  isLoading = false
+  // @ts-ignore
+  credentials = AuthUser.getters?.['Credentials']() || false
+  async registerUserToACompetition() {
+    this.isLoading = true
+    if (!this.competitionId) {
+      console.log('Should have a competition id', this.competitionId)
+      this.isLoading = false
+      return
+    }
+
+    try {
+      if (!this.credentials?.id) {
+        throw new Error(
+          `Should specify the id - ${this.credentials} - was found`
+        )
+      }
+      await ApiHelper.AddCompetitor(this.competitionId, this.credentials.id)
+      // @ts-ignore
+      this.$parent.close()
+      this.$emit('registerSuccess')
+      this.isLoading = false
+    } catch (err) {
+      console.log('err', err)
+      this.isLoading = false
+    }
   }
 }
 </script>

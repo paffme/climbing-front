@@ -1,5 +1,3 @@
-import moment from 'moment'
-
 export function getCookies(): Array<Object> {
   const cookies = document.cookie.split(';')
   const allCookies: Array<any> = []
@@ -56,32 +54,14 @@ export function removeCookie(cookieName: string): void {
   document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
 }
 
-export function createCookie(
-  key: string,
-  value: string,
-  expires = 3600,
-  path = '/'
-): void {
-  console.log(
-    'createCookie = ',
-    `${key}=${value}; path=${path}; expires=${formatExpire(expires)}`
-  )
-  document.cookie = `${key}=${value}; path=${path}; expires=${formatExpire(
-    expires
-  )}`
-}
-
-export function formatExpire(expire: number) {
-  return moment().add(expire, 's').toDate().toString()
+export function createCookie(key: string, value: string, path = '/'): void {
+  document.cookie = `${key}=${value}; path=${path}`
 }
 
 export function createCookieFromObject(
   key: string,
   value: object,
-  expires = 3600,
   path = '/'
 ): void {
-  document.cookie = `${key}=${JSON.stringify(
-    value
-  )}; path=${path}; expires=${formatExpire(expires)}`
+  document.cookie = `${key}=${JSON.stringify(value)}; path=${path}`
 }

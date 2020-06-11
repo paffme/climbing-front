@@ -63,17 +63,19 @@ export default class Login extends Vue {
   }
 
   async connectUser(loginEvent: LoginEvent) {
-    try {
-      this.form.message = "Vous allez être redirigé vers la page d'accueil"
-      this.form.success = true
+    this.initForm(loginEvent)
 
+    try {
       const apiToken = await this.fetchToken(loginEvent)
-      this.setToken(apiToken.token, apiToken.expiresIn)
+      this.setToken(apiToken.token)
 
       const user = await this.fetchUser(apiToken.userId)
       this.setUser(user)
 
-      setTimeout(async () => this.$router.push({ name: 'index' }), 1000)
+      this.form.success = true
+      this.form.message = "Vous allez être redirigé vers la page d'accueil"
+
+      await this.$router.push({ name: 'index' })
     } catch (error) {
       console.log('err', error)
       this.form.error = true
@@ -106,13 +108,19 @@ export default class Login extends Vue {
     }
   }
 
-  setToken(token: string, expiresIn: number): void {
-    authUser.addTokenToCookies(token, expiresIn)
+  setToken(token: string): void {
+    authUser.addTokenToCookies(token)
     AxiosHelper.SetHeaderAuthorizationToken(token)
   }
 
   setUser(userCredential: APIUserCredentials) {
     authUser.setUserCredentials(userCredential)
+  }
+
+  initForm(loginEvent: LoginEvent): void {
+    this.form.success = loginEvent.success
+    this.form.error = loginEvent.error
+    this.form.message = loginEvent.message
   }
 }
 </script>

@@ -4,7 +4,6 @@
       :data="internalCompetitions ? internalCompetitions : []"
       :hovered="true"
       paginated
-      hoverable
       backend-pagination
       :total="totalCompetition"
       :per-page="perPage"
@@ -13,8 +12,6 @@
       aria-previous-label="Previous page"
       aria-page-label="Page"
       aria-current-label="Current page"
-      :row-class="() => 'cursor'"
-      @click="goTo"
       @page-change="pageChange"
     >
       <template slot-scope="props">
@@ -22,7 +19,7 @@
           {{ props.row.name }}
         </b-table-column>
 
-        <b-table-column disabled field="type" label="Type" sortable>
+        <b-table-column field="type" label="Type" sortable>
           {{ props.row.type }}
         </b-table-column>
 
@@ -100,16 +97,7 @@ export default class Rank extends Vue {
   pageChange(params: number) {
     this.$emit('page-change', params)
   }
-
-  goTo(row: any) {
-    console.log('goTo', row)
-    this.$router.push('/competitions/' + row.id)
-  }
 }
 </script>
 
-<style>
-.cursor {
-  cursor: pointer;
-}
-</style>
+<style scoped></style>

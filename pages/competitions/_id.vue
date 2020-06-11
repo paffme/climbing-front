@@ -1,164 +1,186 @@
 <template>
-  <div id="one-competition" class="columns is-multiline">
+  <div class="columns">
     <template v-if="competition">
-      <div class="page_header column is-12">
-        <div class="columns">
-          <div class="column is-1">
-            <GoBackBtn />
-          </div>
-          <div class="column is-8">
-            <h1 class="title has-text-centered">
-              {{ competition.name }}
-            </h1>
-          </div>
-          <div class="column is-3">
-            <template v-if="!competition.cancelled && !competitionIsEnded">
-              <BtnEditOrRegisterCompetition
-                :is-loading="editOrRegisterBtn.status.isLoading"
-                :success="editOrRegisterBtn.status.success"
-                :is-already-register="isAlreadyRegister"
-                :competition-id="competition.id"
-                :is-authenticated="isAutenthicated"
-                :user-has-role="userHasRole"
-                @register="onRegisterCompetition"
-              />
-            </template>
-          </div>
+      <div class="column">
+        <div class="page_header">
+          <GoBackBtn />
+          <h1 class="title">
+            {{ competition.name }}
+          </h1>
+          <template v-if="userHasRole">
+            <BtnEditCompetition :competition-id="competition.id" />
+          </template>
+          <template v-else-if="!userHasRole">
+            <BtnRegisterCompetition
+              :competition-id="competition.id"
+              :is-connected="isAutenthicated"
+            />
+          </template>
         </div>
-      </div>
 
-      <div class="column is-12">
-        <b-notification
-          v-if="competitionIsEnded"
-          type="is-warning"
-          :closable="false"
-          has-icon
-        >
-          Cette compétition est terminé
-        </b-notification>
-        <b-notification
-          v-if="competition.cancelled"
-          type="is-danger"
-          :closable="false"
-          has-icon
-        >
-          Cette compétition est annulé
-        </b-notification>
-      </div>
+        <div class="custom_section page_content">
+          <nav class="breadcrumb" aria-label="breadcrumbs">
+            <ul>
+              <li class="is-primary">
+                <nuxt-link to="/">
+                  Compétitions
+                </nuxt-link>
+              </li>
+              <li class="is-active">
+                <a href="#" aria-current="page">{{ competition.name }}</a>
+              </li>
+            </ul>
+          </nav>
 
-      <div class="column is-12">
-        <BreadcrumbComponent :current-page="competition.name" />
-      </div>
-      <div class="custom_section page_content column is-12">
-        <div class="columns is-multiline">
-          <div class="column is-6">
-            <div class="content">
-              <h1 class="title">
-                {{ competition.name }}
-              </h1>
-              <p>
-                {{ competition.description }}
-              </p>
-              <b-tag :type="competition.open ? 'is-success' : 'is-warning'">
-                {{
-                  competition.open ? 'Compétition open' : 'Competition non open'
-                }}
-              </b-tag>
-              <ul id="detail">
-                <li>
-                  Date début :
-                  <b-tag type="is-info">
-                    {{ competition.startDate | formatDate }}
-                  </b-tag>
-                </li>
-                <li>
-                  Date fin :
-                  <b-tag type="is-danger">
-                    {{ competition.endDate | formatDate }}
-                  </b-tag>
-                </li>
-                <li>
-                  Type compétition :
-                  <b-tag>{{ competition.type | capitalize }}</b-tag>
-                </li>
-                <li>
-                  Adresse :
-                  <span
-                    >{{ competition.address }} -
-                    {{ competition.postalCode }}</span
-                  >
-                </li>
-                <li>
-                  Lieu : <b-tag>{{ competition.city | capitalize }}</b-tag>
-                </li>
-                <li>
-                  Heure d'accueil :
-                  <span>{{ competition.welcomingDate | formatDate }}</span>
-                </li>
-                <li>
-                  Catégorie:
-                  <ul class="category-list">
-                    <li
-                      v-for="(categorie, index) in competition.categories"
-                      :key="index"
-                      class="category"
+          <div class="columns">
+            <div class="column is-6">
+              <div class="content">
+                <b-notification
+                  v-if="competition.cancelled"
+                  type="is-danger"
+                  :closable="false"
+                  has-icon
+                >
+                  Cette compétition est annulé
+                </b-notification>
+                <h1 class="title">
+                  {{ competition.name }}
+                </h1>
+                <p>
+                  {{ competition.description }}
+                </p>
+                <b-tag :type="competition.open ? 'is-success' : 'is-danger'">
+                  {{
+                    competition.open
+                      ? 'Compétition Open'
+                      : 'Competition non Open'
+                  }}
+                </b-tag>
+                <ul id="detail">
+                  <li>
+                    Date début :
+                    <b-tag type="is-info">
+                      {{ competition.startDate | formatDate }}
+                    </b-tag>
+                  </li>
+                  <li>
+                    Date fin :
+                    <b-tag type="is-danger">
+                      {{ competition.endDate | formatDate }}
+                    </b-tag>
+                  </li>
+                  <li>
+                    Type compétition :
+                    <b-tag>{{ competition.type | capitalize }}</b-tag>
+                  </li>
+                  <li>
+                    Adresse :
+                    <span
+                      >{{ competition.address }} -
+                      {{ competition.postalCode }}</span
                     >
-                      <b-tag>
-                        <b-icon
-                          size="is-small"
-                          :icon="
-                            categorie.sex === 'female'
-                              ? 'gender-female'
-                              : 'gender-male'
-                          "
-                        >
-                        </b-icon>
-                        {{ categorie.sex === 'female' ? 'Femme' : 'Homme' }} -
-                        {{ categorie.name | capitalize }}
-                      </b-tag>
-                    </li>
-                  </ul>
-                </li>
-                <hr />
-                <li class="detail_text">
-                  <h1 class="subtitle is-size-4">
-                    Programme :
-                  </h1>
-                  <span>
-                    {{ competition.agenda }}
-                  </span>
-                </li>
-              </ul>
+                  </li>
+                  <li>
+                    Lieu : <b-tag>{{ competition.city | capitalize }}</b-tag>
+                  </li>
+                  <li>
+                    Catégorie:
+                    <ul>
+                      <li
+                        v-for="(categorie, index) in competition.categories"
+                        :key="index"
+                      >
+                        {{ categorie.sex }} - {{ categorie.name }}
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    Heure d'accueil :
+                    <span>{{ competition.welcomingDate | formatDate }}</span>
+                  </li>
+                  <hr />
+                  <li class="detail_text">
+                    <h1 class="subtitle is-size-4">
+                      Programme :
+                    </h1>
+                    <span>
+                      {{ competition.agenda }}
+                    </span>
+                  </li>
+                </ul>
 
-              <div
-                v-if="!competition.cancelled && !competitionIsEnded"
-                class="is-pulled-right"
-              >
-                <BtnEditOrRegisterCompetition
-                  :is-loading="editOrRegisterBtn.status.isLoading"
-                  :success="editOrRegisterBtn.status.success"
-                  :is-already-register="isAlreadyRegister"
-                  :competition-id="competition.id"
-                  :is-authenticated="isAutenthicated"
-                  :user-has-role="userHasRole"
-                  @register="onRegisterCompetition"
-                />
+                <div v-if="!competition.cancelled" class="is-pulled-right">
+                  <BtnRegisterCompetition
+                    :competition-id="competition.id"
+                    :is-connected="isAutenthicated"
+                  />
+                </div>
               </div>
             </div>
+            <div class="column is-6">
+              <GmapMap
+                :center="{ lat: maps.lat, lng: maps.lng }"
+                :zoom="15"
+                map-type-id="roadmap"
+                style="width: 100%; height: 100vh;"
+              >
+                <GmapMarker
+                  :position="{ lat: maps.lat, lng: maps.lng }"
+                  :clickable="true"
+                  :draggable="true"
+                />
+              </GmapMap>
+            </div>
           </div>
-          <div class="column is-6">
-            <GmapMap
-              :center="{ lat: maps.lat, lng: maps.lng }"
-              :zoom="15"
-              map-type-id="roadmap"
-              style="width: 100%; height: 100vh;"
-            >
-              <GmapMarker
-                :position="{ lat: maps.lat, lng: maps.lng }"
-                :clickable="true"
-                :draggable="true"
-              />
-            </GmapMap>
+          <hr />
+          <div class="columns">
+            <div class="column is-12">
+              <div class="content">
+                <h4 class="title">
+                  Classement de la compétition
+                </h4>
+                <div class="content">
+                  <div class="subtitle">
+                    Genre
+                  </div>
+                  <b-field position="is-centered">
+                    <template v-for="(sex, index) in sexes">
+                      <b-radio-button
+                        :key="index"
+                        v-model="filter.sex"
+                        :native-value="sex"
+                      >
+                        <b-icon
+                          :icon="
+                            sex === sexes.Male ? 'gender-male' : 'gender-female'
+                          "
+                        />
+                        <span>{{ sex | capitalize }}</span>
+                      </b-radio-button>
+                    </template>
+                  </b-field>
+                  <div class="subtitle">
+                    Catégorie
+                  </div>
+                  <b-field position="is-centered">
+                    <template v-for="(category, index) in categories">
+                      <b-radio-button
+                        :key="index"
+                        v-model="filter.categorie"
+                        :native-value="category"
+                      >
+                        <span>{{ category | capitalize }}</span>
+                      </b-radio-button>
+                    </template>
+                  </b-field>
+                  <RankOneCompetition
+                    :competition-id="competition && competition.id"
+                    :sex="filter.sex"
+                    :categorie="filter.categorie"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -177,9 +199,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
 import moment from 'moment'
-import GoBackBtn from '~/components/Button/GoBackBtn.vue'
+import { Component, Vue } from 'vue-property-decorator'
+import GoBackBtn from '~/components/GoBackBtn.vue'
 import {
   CategoryName,
   Competition,
@@ -189,18 +211,27 @@ import {
 } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { authUser } from '~/utils/store-accessor'
+import RankOneCompetition from '~/components/Table/RankOneCompetition.vue'
+import BtnRegisterCompetition from '~/components/Button/BtnRegisterCompetition.vue'
 import AuthUser from '~/store/authUser'
-import BtnEditOrRegisterCompetition from '~/components/Button/BtnEditOrRegisterCompetition.vue'
-import BreadcrumbComponent from '~/components/BreadcrumbComponent.vue'
-import { AxiosHelper } from '~/utils/axiosHelper'
+import BtnEditCompetition from '~/components/Button/BtnEditCompetition.vue'
 
 @Component({
   components: {
     GoBackBtn,
-    BtnEditOrRegisterCompetition,
-    BreadcrumbComponent
+    RankOneCompetition,
+    BtnRegisterCompetition,
+    BtnEditCompetition
   },
   middleware: ['setHeader'],
+  data() {
+    return {
+      roleNameQueryParams: RoleNameQueryParams,
+      categories: CategoryName,
+      sexes: Sex,
+      AuthUser: authUser
+    }
+  },
   filters: {
     formatDate: (dirtyDate: Date): string => {
       moment.locale('fr')
@@ -213,15 +244,6 @@ import { AxiosHelper } from '~/utils/axiosHelper'
       value = value.toString()
       return value[0].toUpperCase() + value.slice(1)
     }
-  },
-  data() {
-    return {
-      Moment: moment,
-      roleNameQueryParams: RoleNameQueryParams,
-      categories: CategoryName,
-      sexes: Sex,
-      AuthUser: authUser
-    }
   }
 })
 export default class OneCompetition extends Vue {
@@ -233,19 +255,16 @@ export default class OneCompetition extends Vue {
     lng: 12
   }
 
+  filter = {
+    sex: Sex.Male,
+    categorie: CategoryName.Benjamin
+  }
+
   userHasRole: boolean = false
-  competitionIsEnded: boolean = false
   // @ts-ignore
   isAutenthicated = AuthUser.getters?.['Authenticated']() || false
   // @ts-ignore
   credentials = AuthUser.getters?.['Credentials']() || false
-
-  editOrRegisterBtn = {
-    status: {
-      isLoading: false,
-      success: false
-    }
-  }
 
   async created() {
     const competitionId = this.$route.params.id
@@ -267,53 +286,11 @@ export default class OneCompetition extends Vue {
       this.isAlreadyRegister = await this.checkIfUserIsRegisterToCompetition(
         competitionId
       )
-      this.competitionIsEnded = this.checkCompetitionIsEnded(
-        this.competition.endDate
-      )
       this.checkUserRole(competitionId)
       this.isLoading = false
     } catch (err) {
-      AxiosHelper.HandleAxiosError(this, err)
+      console.log(err)
     }
-  }
-
-  beforeUpdate() {
-    console.log('Update !!! - isAutenthicated', this.isAutenthicated)
-    console.log('Update !!! - credentials', this.credentials)
-  }
-
-  async onRegisterCompetition() {
-    try {
-      this.editOrRegisterBtn.status.isLoading = true
-
-      if (!this.competition?.id) {
-        throw new Error(
-          `Should specify the id - ${this.credentials} - was found`
-        )
-      }
-
-      await ApiHelper.AddCompetitor(
-        this.competition.id as number,
-        authUser.Credentials?.id as number
-      )
-      this.editOrRegisterBtn.status.isLoading = false
-      this.editOrRegisterBtn.status.success = true
-      this.isAlreadyRegister = true
-      this.$buefy.toast.open({
-        type: 'is-success',
-        message: 'Vous êtes désormais inscrit à la compétition'
-      })
-    } catch (err) {
-      this.editOrRegisterBtn.status.isLoading = false
-      console.log('err', err)
-      AxiosHelper.HandleAxiosError(this, err)
-    }
-  }
-
-  checkCompetitionIsEnded(endDate?: Date | null): boolean {
-    console.log('endDate', endDate)
-    if (!endDate) return true
-    return moment(moment(endDate).format()).isBefore(moment().format())
   }
 
   async checkIfUserIsRegisterToCompetition(
@@ -333,7 +310,7 @@ export default class OneCompetition extends Vue {
 
       return !!isRegistered
     } catch (err) {
-      AxiosHelper.HandleAxiosError(this, err)
+      console.log(err)
       return false
     }
   }
@@ -366,10 +343,6 @@ export default class OneCompetition extends Vue {
 
       console.log('this.userHasRole', this.userHasRole)
     } catch (err) {
-      if (err.response.status === 401 && this.isAutenthicated) {
-        return this.$router.push('/login')
-      }
-      AxiosHelper.HandleAxiosError(this, err)
       console.log(
         'ERROR - Imposssible de récupérer les roles utilisateurs',
         err
@@ -383,6 +356,7 @@ export default class OneCompetition extends Vue {
         `https://maps.googleapis.com/maps/api/geocode/json?address=${competition.address}+${competition.city}+${competition.postalCode}&key=AIzaSyCYI4Fwja8HZVbqP-Te_sf0FR4I4PeF7mY`
       )
       const data = await response.json()
+      console.log('response latLng', data)
       this.maps.lat = data.results[0].geometry?.location?.lat
       this.maps.lng = data.results[0].geometry?.location?.lng
     } catch (err) {
@@ -409,16 +383,5 @@ ul {
   li.detail_text {
     display: block;
   }
-}
-.category-list {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  flex-wrap: wrap;
-  margin: 0 0 0 10px;
-  padding: 0;
-}
-li.category {
-  margin: 0 0 5px 0;
 }
 </style>

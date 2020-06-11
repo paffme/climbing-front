@@ -23,15 +23,6 @@ export enum RoleName {
   Organisateur = 'Organisateurs'
 }
 
-export enum SlugRoleName {
-  President = 'jury-presidencies',
-  Juges = 'judgements',
-  ChefRouteSetter = 'chief-route-settings',
-  RouteSetter = 'route-settings',
-  DelegueTechnique = 'technical-delegations',
-  Organisateur = 'organizations'
-}
-
 export enum RankingType {
   CIRCUIT = 'Circuit',
   UNLIMITED_CONTEST = 'Illimité',
@@ -42,12 +33,6 @@ export enum TypeBouldering {
   QUALIFIER = 'Qualification',
   SEMI_FINAL = 'Demi-final',
   FINAL = 'Final'
-}
-
-export enum TypeBoulderingRound {
-  QUALIFIER = 'QUALIFIER',
-  SEMI_FINAL = 'SEMI_FINAL',
-  FINAL = 'FINAL'
 }
 
 export enum Sex {
@@ -67,7 +52,7 @@ export type CompetitionCategories = {
 }
 
 export type Competition = {
-  id?: number
+  id?: number | null
   cancelled?: boolean | null
   name: string | null
   description: string | null
@@ -83,18 +68,7 @@ export type Competition = {
   categories: CompetitionCategories[] | null
 }
 
-export type CompetitionEdit = {
-  name?: string
-  type?: TypeCompetition
-  startDate?: Date
-  endDate?: Date
-  address?: string
-  city?: string
-  postalCode?: string
-  categories?: CompetitionCategories[]
-}
-
-export type APICompetition = Competition & {
+export type ApiCompetition = Competition & {
   createdAt: Date
   updatedAt: Date
 }
@@ -103,7 +77,6 @@ export type Form = {
   error: boolean
   success: boolean
   isLoading: boolean
-  isEdition: boolean
 }
 
 export type FormCreateCompetition = Form & {
@@ -113,9 +86,7 @@ export type FormSubscription = Form & {
   message: string
   passwordIsValid?: boolean
 }
-export type FormBoulderingRound = Form & {
-  input: BoulderingRoundInput | BoulderingRoundInputEdit
-}
+export type FormBoulderingRound = Form & { input: BoulderingRoundInput }
 export type BoulderingRoundInput = {
   category?: CategoryName
   sex?: Sex
@@ -126,33 +97,6 @@ export type BoulderingRoundInput = {
   rankingType?: RankingType
   type?: TypeBouldering
   groups?: number
-  maxTries?: number
-}
-
-export type BoulderingRoundInputEdit = BoulderingRoundInput & {
-  id: number
-}
-export enum StateRound {
-  PENDING = 'PENDING',
-  ONGOING = 'ONGOING',
-  ENDED = 'ENDED'
-}
-export type BoulderingLimitedRounds = {
-  id: number
-  competitionId: number
-  name: number
-  quota: number
-  type: string
-  sex: Sex
-  category: CategoryName
-  state: StateRound
-  maxTries: number
-}
-
-export type CategoryDisplay = {
-  qualification: null | BoulderingLimitedRounds
-  semi: null | BoulderingLimitedRounds
-  final: null | BoulderingLimitedRounds
 }
 export type SubscriptionCredentials = {
   email: string
@@ -185,7 +129,7 @@ export type APIUser = {
   firstName: string
   lastName: string
   birthYear: number
-  club?: string | null
+  club: string | null
 }
 
 export type User = {
@@ -229,7 +173,7 @@ export type BoulderingRounds = {
   quota: number
   boulders: number
   rankingType: 'CIRCUIT'
-  type: TypeBoulderingRound.QUALIFIER
+  type: 'QUALIFIER'
 }
 
 export type BoulderingResult = {
@@ -245,27 +189,6 @@ export type APIRankingResponse = {
   }
 }
 
-export type APIBoulderingRounds = {
-  [key: string]: {
-    [key: string]: {
-      [key: string]: BoulderingLimitedRounds
-    }
-  }
-}
-
-export type APIBoulderingGroups = {
-  id: number
-  name: string
-  climbers: number[]
-  boulders: APIBoulders[]
-  roundId: number
-  state: StateRound
-}
-
-export type APIBoulders = {
-  id: number
-  judges: User[]
-}
 export type APIUserCompetitionRoles = {
   organizer: boolean
   juryPresident: boolean
@@ -273,15 +196,6 @@ export type APIUserCompetitionRoles = {
   chiefRouteSetter: boolean
   routeSetter: boolean
   technicalDelegate: boolean
-}
-
-export enum Roles {
-  organizer = 'organizer',
-  juryPresident = 'juryPresident',
-  judge = 'judge',
-  chiefRouteSetter = 'chiefRouteSetter',
-  routeSetter = 'routeSetter',
-  technicalDelegate = 'technicalDelegate'
 }
 
 export type Ranking = {
@@ -292,19 +206,4 @@ export type Ranking = {
     lastName: string
     club: string
   }
-}
-
-export type CategoriesSelect = {
-  genre: Array<Sex>
-  category: CategoryName
-}
-
-export type CurrentCategory = {
-  genre: Sex
-  category: CategoryName
-}
-
-export type TempCategoriesSelect = {
-  genre: Array<Sex>
-  category?: CategoryName
 }

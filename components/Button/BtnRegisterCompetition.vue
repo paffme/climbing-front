@@ -3,9 +3,8 @@
     <template v-if="isConnected">
       <b-button
         type="is-primary"
-        :disabled="isAlreadyRegister"
         :loading="isLoading"
-        @click="isComponentModalActive = true"
+        @click="openRegisterModal"
       >
         {{
           isAlreadyRegister
@@ -20,27 +19,16 @@
           type="is-primary"
           disabled
           :loading="isLoading"
-          @click="isComponentModalActive = true"
+          @click="openRegisterModal"
         >
-          {{ 'Je souhaite participer !' }}
+          {{
+            isAlreadyRegister
+              ? 'Vous êtes déjà inscrit'
+              : 'Je souhaite participer !'
+          }}
         </b-button>
       </b-tooltip>
     </template>
-
-    <b-modal
-      :active.sync="isComponentModalActive"
-      has-modal-card
-      trap-focus
-      :destroy-on-hide="false"
-      aria-role="dialog"
-      aria-modal
-    >
-      <UserRegisterToCompetition
-        :success="success"
-        :is-loading="isLoading"
-        @register="$emit('register')"
-      />
-    </b-modal>
   </div>
 </template>
 
@@ -54,11 +42,24 @@ import UserRegisterToCompetition from '~/components/Form/UserRegisterToCompetiti
 export default class BtnRegisterCompetition extends Vue {
   @Prop(Number) competitionId!: number
   @Prop(Boolean) isConnected!: boolean
-  @Prop(Boolean) isAlreadyRegister!: boolean
-  @Prop(Boolean) isLoading!: boolean
-  @Prop(Boolean) success!: boolean
+  isAlreadyRegister = false
 
-  isComponentModalActive = false
+  openRegisterModal(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      props: {
+        competitionId: this.competitionId
+      },
+      events: {
+        registerSuccess: () => {
+          this.isAlreadyRegister = true
+        }
+      },
+      component: UserRegisterToCompetition,
+      hasModalCard: true,
+      trapFocus: true
+    })
+  }
 }
 </script>
 
