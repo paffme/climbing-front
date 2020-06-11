@@ -20,7 +20,7 @@ describe('Cookie', () => {
   })
 
   test('Should create a new cookie with correct value', () => {
-    createCookie('username', 'test', 3600)
+    createCookie('username', 'test', undefined, 2999)
     expect(getCookie('username')).toEqual({ username: 'test' })
   })
 

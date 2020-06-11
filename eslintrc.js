@@ -14,7 +14,7 @@ module.exports = {
       modules: true
     }
   },
-  ignorePatterns: ['cypress/'],
+  ignorePatterns: ['cypress/', 'scripts/'],
   extends: [
     // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
     // préférer utiliser `plugin:vue/strongly-recommended` ou `plugin:vue/recommended` pour des règles stictes.
