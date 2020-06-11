@@ -14,35 +14,26 @@
       </h1>
 
       <template v-if="isLoading">
-        <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
-        <!--<template v-for="i in sampleMedia">
-          <article :key="i" class="media">
-            <figure class="media-left">
-              <p class="image is-64x64">
-                <b-skeleton width="64px" height="64px"></b-skeleton>
-              </p>
-            </figure>
-            <div class="media-content">
-              <div class="content">
-                <p>
-                  <strong><b-skeleton active></b-skeleton></strong>
-                  <b-skeleton active height="100"></b-skeleton>
-                </p>
-              </div>
-            </div>
-            <div class="media-right">
-              <b-skeleton active width="140" height="40"></b-skeleton>
-            </div>
-          </article>
-        </template>-->
+        <b-loading
+          :is-full-page="false"
+          :active.sync="isLoading"
+          :can-cancel="true"
+        ></b-loading>
       </template>
-      <template v-else-if="!isLoading && competitions && competitions.length === 0">
-        <p class="subtitle">Vous n'avez aucun rôle attribué</p>
+      <template
+        v-else-if="!isLoading && competitions && competitions.length === 0"
+      >
+        <p class="subtitle">
+          Vous n'avez aucun rôle attribué
+        </p>
       </template>
       <template v-else>
         <template v-for="competition in competitions">
-          <nuxt-link :to="`/competitions/${competition.id}`">
-            <article :key="competition.id" class="media competitions">
+          <nuxt-link
+            :key="competition.id"
+            :to="`/competitions/${competition.id}`"
+          >
+            <article class="media competitions">
               <figure class="media-left">
                 <p class="image is-64x64">
                   <img src="https://bulma.io/images/placeholders/128x128.png" />
@@ -79,17 +70,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import moment from 'moment'
-import {
-  APICompetition,
-  CategoryName,
-  RoleName,
-  Sex,
-  TypeCompetition
-} from '~/definitions'
+import { APICompetition, RoleName } from '~/definitions'
 import { AxiosHelper } from '~/utils/axiosHelper'
-import { RolesBuilder } from "~/utils/api_helper/RolesBuilder";
-import AuthUser from "~/store/authUser";
-import { authUser } from "~/utils/store-accessor";
+import { RolesBuilder } from '~/utils/api_helper/RolesBuilder'
+import { authUser } from '~/utils/store-accessor'
 
 @Component({
   filters: {
@@ -102,21 +86,21 @@ import { authUser } from "~/utils/store-accessor";
 export default class UserRolesCompetitions extends Vue {
   roleName = RoleName
   selectedRole = RoleName.Juges
-  sampleMedia = 3
   isLoading = true
   competitions: APICompetition[] | null = null
 
   created() {
     this.getCompetitions(this.selectedRole)
   }
+
   async getCompetitions(role: RoleName) {
-    console.log('input')
     this.isLoading = true
     try {
-      console.log('role', role)
       const rolesAPI = RolesBuilder.getRoles(role)
       if (!rolesAPI) throw new Error('No role has been found')
-      const { data } = await rolesAPI.getCompetitionFromRole(authUser.Credentials!.id as number)
+      const { data } = await rolesAPI.getCompetitionFromRole(
+        authUser.Credentials!.id as number
+      )
       this.competitions = data
       this.isLoading = false
     } catch (err) {
@@ -127,10 +111,6 @@ export default class UserRolesCompetitions extends Vue {
 </script>
 
 <style scoped>
-.competition-info {
-  margin-left: 5px;
-}
-
 strong {
   color: inherit;
 }

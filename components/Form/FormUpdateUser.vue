@@ -81,7 +81,6 @@ import { APIUser } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { authUser } from '~/utils/store-accessor'
 import { AxiosHelper } from '~/utils/axiosHelper'
-import { empty } from "~/.nuxt/utils";
 
 @Component
 export default class FormUpdateUser extends Vue {
@@ -140,7 +139,13 @@ export default class FormUpdateUser extends Vue {
 
   dtoUser(
     user: APIUser
-  ): { firstName: string, lastName: string, email?: string; club?: string; birthYear: number } {
+  ): {
+    firstName: string
+    lastName: string
+    email?: string
+    club?: string
+    birthYear: number
+  } {
     console.log('originalEmail', this.originalEmail)
     console.log('updateed', user.email)
     return {

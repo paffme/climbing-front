@@ -35,7 +35,7 @@ describe('ApiUrl Helper', () => {
     })
     test('addOrRemoveChiefRouteSetters - Should return a correct URL', () => {
       expect(API_URL.addOrRemoveChiefRouteSetters(1, 2)).toEqual(
-        '/competitions/1/chief-route-settings/2'
+        '/competitions/1/chief-route-setters/2'
       )
     })
     test('getRouteSetters - Should return a correct URL', () => {
