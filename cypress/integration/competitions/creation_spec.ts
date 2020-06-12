@@ -1,67 +1,120 @@
-import '../../support'
+import "../../support";
+import { RequestPaffme } from "../../support/request";
+import { Competition } from "../../support/models";
 
 
-describe('Test for Creation of Competition', () => {
-  const email: string = 'admindams@test.com'
-  const password: string = 'admindams@test.com'
+describe("Test for Creation of Competition", () => {
+  const email: string = "admindams@test.com";
+  const password: string = "admindams@test.com";
 
-  class Competition {
-    name: string = 'Test'
-    startDate: Date
-    endDate: Date
-    openStatus: boolean = true
-    welcomeDate: Date
-    type: string = 'bouldering'
-    street: string = 'Test'
-    city: string = 'Test'
-    postalCode: string = 'Test'
-    description: string = 'Test'
-    agenda: string = 'Test'
+  let defaultCompetition: Competition = new Competition(
+    "test",
+    new Date(),
+    new Date(),
+    true,
+    new Date(),
+    "bouldering",
+    "Avenue des Champs-Élysées",
+    "Paris",
+    "75000",
+    ["all"],
+    ["all"],
+    "minimum 10 char",
+    "0123456789"
+  );
 
-    constructor() {
-      let date: Date = new Date()
-      date.setDate(date.getDate() + 1)
-      this.welcomeDate = new Date(date.getTime())
+  before(() => {
+    const res: any = RequestPaffme.createUserReq({
+      email: email,
+      password: password,
+      lastName: "toto",
+      firstName: "toto",
+      sex: "male",
+      club: "FFME",
+      birthYear: new Date().getFullYear() - 18
+    });
 
-      date.setDate(date.getDate() + 1)
-      this.startDate = new Date(date.getTime())
-
-      date.setDate(date.getDate() + 1);
-      this.endDate = new Date(date.getTime());
-    }
-  }
+    defaultCompetition.setDefaultDate();
+  });
 
   beforeEach(() => {
     cy.login(email, password);
     cy.wait(200);
   });
 
-  // it('Must enter the create competition view', () => {
-  //   cy.visit("")
-  //
-  //   cy.get(".page_header > div > .button > :nth-child(1)").click()
-  //
-  //   cy.url().should('equal',
-  //     Cypress.config().baseUrl + 'competitions/create')
-  // })
+  it("Must enter the create competition view", () => {
+    cy.visit("");
 
-  it("Must create a competition", () => {
-    cy.visit("competitions/create");
+    cy.get(".page_header > div > .button > :nth-child(1)").click();
 
     cy.url().should("equal",
       Cypress.config().baseUrl + "competitions/create");
-
-    const compt: Competition = new Competition();
-
-    cy.get(".name > input").clear().type(compt.name);
-    cy.typeDate(".date-start", compt.startDate);
-    cy.typeDate(".date-end", compt.endDate);
-    cy.get(".status").click();
-    cy.typeDate(".date-welcome", compt.welcomeDate);
-    cy.get(".street > input").clear().type(compt.street);
-    cy.get(".city > input").clear().type(compt.city);
-    cy.get(".description > input").clear().type(compt.description);
-    cy.get(".agenda > input").clear().type(compt.agenda);
-    cy.get(".create-competition > input").click();
   });
-})
+
+  it("Must create a competition", () => {
+
+    cy.visit("competitions/create");
+
+    cy.fulFillCompetitionFields(defaultCompetition);
+    cy.get(".create-competition").click();
+
+    cy.url().should(($url) => {
+      console.log("Cypress.config().baseUrl=" + Cypress.config().baseUrl);
+
+      expect($url.replace(Cypress.config().baseUrl as string, ""))
+        .match(new RegExp("competitions/\\d+"));
+    });
+  });
+
+  it("Must not create a competition when empty field", () => {
+
+    cy.visit("competitions/create");
+
+    cy.fulFillCompetitionFields(defaultCompetition);
+
+    const listInput: Array<string[]> = [
+      [defaultCompetition.name, ".name > input"],
+      [defaultCompetition.street, ".street > input"],
+      [defaultCompetition.city, ".city > input"],
+      [defaultCompetition.postalCode, ".postal-code > input"],
+      [defaultCompetition.description, ".description > textarea"],
+      [defaultCompetition.agenda, ".agenda > textarea"]
+    ];
+    listInput.forEach((input) => {
+      cy.get(input[1]).clear();
+      cy.get(".create-competition").click();
+      cy.wait(200);
+
+      cy.url().should("equal", Cypress.config().baseUrl +
+        "competitions/create");
+
+      cy.get(input[1]).type(input[0]);
+    });
+
+    cy.selectCategory(".category-female", "all");
+    cy.selectCategory(".category-male", "all");
+
+    cy.get(".create-competition").click();
+    cy.wait(200);
+
+    cy.url().should("equal", Cypress.config().baseUrl +
+      "competitions/create");
+  });
+
+  it("Must return to the previous page", () => {
+    cy.url().then(($url) => {
+      cy.visit("competitions/create");
+      cy.get(".is-flex > .button").click();
+
+      cy.url().should("equal", $url);
+    });
+  });
+
+  it("Must go to the competitions page", () => {
+    cy.visit("competitions/create");
+    cy.get(".is-primary > .nuxt-link-active").click();
+
+    cy.url().should("equal", Cypress.config().baseUrl +
+      "competitions");
+  });
+});

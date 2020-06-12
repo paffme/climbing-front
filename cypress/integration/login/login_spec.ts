@@ -22,9 +22,9 @@ describe('Test for Login page features', () => {
     cy.get('.media-content').contains('Identifiant / Mot de passe incorrecte')
   })
 
-  it('Must reroute to subscriptions page', () => {
-    cy.get('#subscriptions').click()
+  it("Must steer to subscriptions page", () => {
+    cy.get("#subscriptions").click();
 
-    cy.url().should('equal', Cypress.config().baseUrl + 'subscriptions')
-  })
+    cy.url().should("equal", Cypress.config().baseUrl + "subscriptions");
+  });
 })
