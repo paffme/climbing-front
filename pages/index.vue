@@ -48,7 +48,12 @@
                   <span>Autres compétitions</span>
                 </nuxt-link>
               </div>
-              <Rank :competitions.sync="competitions" />
+              <Rank
+                :competitions.sync="competitions"
+                :total-competition="totalCompetition"
+                :per-page="perPage"
+                @page-change="pageChange"
+              />
             </b-notification>
           </div>
         </div>
@@ -84,10 +89,15 @@ export default class Competitions extends Vue {
     nbClimber: 0,
     nbCompetitions: 0
   }
+  totalCompetition = 0
+  perPage = 5
+  page = 1
 
   async created() {
     try {
       const response = await this.fetchFutureCompetitions()
+      const totalCompetition = await ApiHelper.GetCompetitionsCount()
+      this.totalCompetition = totalCompetition.data.count
       this.dashboardStats.nbClimber = await this.fetchNbClimber()
       this.dashboardStats.nbCompetitions = await this.fetchNbCompetitions()
       this.dashboardStats.futureCompetitions = response.length
@@ -121,7 +131,9 @@ export default class Competitions extends Vue {
 
   async fetchFutureCompetitions(): Promise<Competition[]> {
     try {
-      const axiosResponse = await ApiHelper.GetCompetitions(
+      const axiosResponse = await ApiHelper.GetCompetitionsPagination(
+        this.page,
+        this.perPage,
         futureCompetitions()
       )
       return axiosResponse.data
@@ -129,6 +141,11 @@ export default class Competitions extends Vue {
       console.log('fetchFutureCompetitions - ERR', err)
       throw err
     }
+  }
+
+  async pageChange(pageNumber: number) {
+    this.page = pageNumber
+    this.competitions = await this.fetchFutureCompetitions()
   }
 
   countCompetitions(competitions: Competition[]): number {

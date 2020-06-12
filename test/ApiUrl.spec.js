@@ -116,10 +116,17 @@ describe('ApiUrl Helper', () => {
       expect(API_URL.getCompetitionsCount()).toEqual('/competitions/count')
     })
 
-    test('getCompetitionsPagination - Should return a correct URL', () =>
-      expect(API_URL.getCompetitionsPagination(1, 3)).toEqual(
-        '/competitions?page=1&perPage=3'
-      ))
+    describe('getCompetitionsPagination', () => {
+      test('Should return a correct URL', () =>
+        expect(API_URL.getCompetitionsPagination(1, 3)).toEqual(
+          '/competitions?page=1&perPage=3'
+        ))
+
+      test('Should return a correct URL with pagination', () =>
+        expect(API_URL.getCompetitionsPagination(1, 3, '{"startDate":{"$gte":"2020-05-07T22:00:00.000Z"}}')).toEqual(
+          '/competitions?page=1&perPage=3&q={"startDate":{"$gte":"2020-05-07T22:00:00.000Z"}}'
+        ))
+    })
 
     test('getUsers - Should return a correct URL', () => {
       expect(API_URL.getUsers()).toEqual('/users')
@@ -128,6 +135,66 @@ describe('ApiUrl Helper', () => {
     test('getUsers - Should return a correct URL With Query', () => {
       expect(API_URL.getUsers('{"lastName":{"$re":"Rubz"}}')).toEqual(
         '/users?q={"lastName":{"$re":"Rubz"}}'
+      )
+    })
+
+    test('getRegistrationsByUser - Should return a correct URL', () => {
+      expect(API_URL.getRegistrationsByUser(1)).toEqual(
+        '/users/1/registrations'
+      )
+    })
+
+    test('getJuryPresidencies - Should return a correct URL', () => {
+      expect(API_URL.getJuryPresidencies(1)).toEqual(
+        '/users/1/jury-presidencies'
+      )
+    })
+
+    test('getChiefRouteSettings - Should return a correct URL', () => {
+      expect(API_URL.getChiefRouteSettings(1)).toEqual(
+        '/users/1/chief-route-settings'
+      )
+    })
+
+    test('getRouteSettings - Should return a correct URL', () => {
+      expect(API_URL.getRouteSettings(1)).toEqual('/users/1/route-settings')
+    })
+
+    test('getJudgements - Should return a correct URL', () => {
+      expect(API_URL.getJudgements(1)).toEqual('/users/1/judgements')
+    })
+
+    test('getTechnicalDelegations - Should return a correct URL', () => {
+      expect(API_URL.getTechnicalDelegations(1)).toEqual(
+        '/users/1/technical-delegations'
+      )
+    })
+
+    test('getOrganizations - Should return a correct URL', () => {
+      expect(API_URL.getOrganizations(1)).toEqual('/users/1/organizations')
+    })
+
+    test('getUserCompetitionsRoles - Should return a correct URL', () => {
+      expect(API_URL.getUserCompetitionsRoles(1)).toEqual(
+        '/users/1/competitions-roles'
+      )
+    })
+
+    test('getUserCompetitionsRolesByCompetition - Should return a correct URL', () => {
+      expect(API_URL.getUserCompetitionsRolesByCompetition(1, 2)).toEqual(
+        '/users/1/competitions-roles/2'
+      )
+    })
+
+    test('getJudgementsAssignments - Should return a correct URL', () => {
+      expect(API_URL.getJudgementsAssignments(2)).toEqual(
+        '/users/2/judgements/assignments'
+      )
+    })
+
+    test('getJudgementsAssignmentsByCompetition - Should return a correct URL', () => {
+      expect(API_URL.getJudgementsAssignmentsByCompetition(2, 1)).toEqual(
+        '/users/2/judgements/assignments/1'
       )
     })
   })

@@ -31,8 +31,8 @@
         <b-notification>
           Connecté en tant que {{ displayCurrentRole(role) }}
         </b-notification>
-        <div class="columns">
-          <div class="column">
+        <div class="columns is-multiline">
+          <div class="column is-8">
             <b-notification :closable="false">
               <template v-if="competition">
                 <CompetitionForm
@@ -41,19 +41,21 @@
                 />
               </template>
             </b-notification>
+          </div>
 
+          <div class="column is-4">
             <div
               v-if="competition && competition.id && role"
               id="role-component"
               class="columns is-multiline"
             >
-              <div v-if="role.organizer" class="roles column is-4">
+              <div v-if="role.organizer" class="roles column">
                 <RolesComponent
                   :role-name="role_name.Organisateur"
                   :competition-id="competition.id"
                 />
               </div>
-              <div v-if="role.organizer" class="roles column is-4">
+              <div v-if="role.organizer" class="roles column">
                 <RolesComponent
                   :role-name="role_name.President"
                   :competition-id="competition.id"
@@ -61,7 +63,7 @@
               </div>
               <div
                 v-if="role.organizer || role.juryPresident"
-                class="roles column is-4"
+                class="roles column"
               >
                 <RolesComponent
                   :role-name="role_name.ChefRouteSetter"
@@ -69,27 +71,29 @@
                 />
               </div>
 
-              <div v-if="role.juryPresident" class="roles column is-4">
+              <div v-if="role.juryPresident" class="roles column">
                 <RolesComponent
                   :role-name="role_name.Juges"
                   :competition-id="competition.id"
                 />
               </div>
-              <div v-if="role.juryPresident" class="roles column is-4">
+              <div v-if="role.juryPresident" class="roles column">
                 <RolesComponent
                   :role-name="role_name.DelegueTechnique"
                   :competition-id="competition.id"
                 />
               </div>
 
-              <div v-if="role.chiefRouteSetter" class="roles column is-4">
+              <div v-if="role.chiefRouteSetter" class="roles column">
                 <RolesComponent
                   :role-name="role_name.RouteSetter"
                   :competition-id="competition.id"
                 />
               </div>
             </div>
+          </div>
 
+          <div class="column">
             <div
               v-if="role && role.juryPresident"
               id="boulder-settings"
@@ -101,10 +105,7 @@
                 @loadBouldering="onLoadBouldering"
               />
             </div>
-
-            <div id="delete-competition">
-              <BtnDeleteCompetition />
-            </div>
+          </div>
           </div>
         </div>
       </div>
@@ -115,11 +116,10 @@
 <script lang="ts">
 import _ from 'lodash'
 import { Component, Vue } from 'vue-property-decorator'
-import UserGestion from '~/components/UserGestion.vue'
 import GoBackBtn from '~/components/Button/GoBackBtn.vue'
 import {
   APIBoulderingRounds,
-  ApiCompetition,
+  APICompetition,
   APIUserCompetitionRoles,
   Competition,
   CompetitionEdit,
@@ -172,7 +172,6 @@ async function fetchCompetition(idCompetition: number): Promise<Competition> {
   middleware: ['isAuth', 'setHeader'],
   components: {
     RolesComponent,
-    UserGestion,
     CompetitionForm,
     BtnDeleteCompetition,
     GoBackBtn,
@@ -218,7 +217,7 @@ async function fetchCompetition(idCompetition: number): Promise<Competition> {
   }
 })
 export default class EditOneCompetition extends Vue {
-  competition: ApiCompetition | null = null
+  competition: APICompetition | null = null
   role: APIUserCompetitionRoles | null = null
   bouldering: APIBoulderingRounds | null = null
 
@@ -288,4 +287,8 @@ export default class EditOneCompetition extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+  .title {
+    margin-left: 10px;
+  }
+</style>

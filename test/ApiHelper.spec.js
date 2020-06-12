@@ -362,9 +362,138 @@ describe('ApiHelper', () => {
         axios.get.mockResolvedValue('success')
 
         const result = await ApiHelper.GetCompetitionsPagination(3, 4)
-        expect(spy).toBeCalledWith(3, 4)
+        expect(spy).toBeCalledWith(3, 4, undefined)
         expect(result).toEqual('success')
       })
+
+      test('Should call with query args', async () => {
+        const spy = jest.spyOn(API_URL, 'getCompetitionsPagination')
+        axios.get.mockResolvedValue('success')
+
+        const result = await ApiHelper.GetCompetitionsPagination(3, 4, 'query:{}')
+        expect(spy).toBeCalledWith(3, 4, 'query:{}')
+        expect(result).toEqual('success')
+      })
+    })
+
+    describe('Groups', () => {
+      describe('Get', () => {
+        test('Should call with rights args', async () => {
+          const spy = jest.spyOn(API_URL, 'getBoulderingGroups')
+          axios.get.mockResolvedValue('success')
+
+          const result = await ApiHelper.GetBoulderingGroups(1, 2)
+          expect(spy).toBeCalledWith(1, 2)
+          expect(result).toEqual('success')
+        })
+      })
+
+      describe('Delete', () => {
+        test('Should call with rights args', async () => {
+          const spy = jest.spyOn(API_URL, 'deleteBoulderingGroups')
+          axios.delete.mockResolvedValue('success')
+
+          const result = await ApiHelper.DeleteBoulderingGroups(1, 2, 3)
+          expect(spy).toBeCalledWith(1, 2, 3)
+          expect(result).toEqual('success')
+        })
+      })
+
+      describe('Post', () => {
+        test('Should call with rights args', async () => {
+          const spy = jest.spyOn(API_URL, 'createBoulderingGroup')
+          axios.post.mockResolvedValue('success')
+
+          const result = await ApiHelper.CreateBoulderingGroup(1, 2, {
+            name: 'test'
+          })
+          expect(spy).toBeCalledWith(1, 2)
+          expect(result).toEqual('success')
+        })
+      })
+    })
+
+    describe('getRegistrationsByUser', () => {
+      test('Should call with rights args', async () => {
+        const spy = jest.spyOn(API_URL, 'getRegistrationsByUser')
+        axios.get.mockResolvedValue('success')
+
+        const result = await ApiHelper.GetRegistrationsByUser(1)
+        expect(spy).toBeCalledWith(1)
+        expect(result).toEqual('success')
+      })
+    })
+
+    test('getOrganizations - Should call with rights args', async () => {
+      const spy = jest.spyOn(API_URL, 'getOrganizations')
+      axios.get.mockResolvedValue('success')
+
+      const result = await ApiHelper.GetOrganizations(1)
+      expect(spy).toBeCalledWith(1)
+      expect(result).toEqual('success')
+    })
+
+    test('GetChiefRouteSettings - Should call with rights args', async () => {
+      const spy = jest.spyOn(API_URL, 'getChiefRouteSettings')
+      axios.get.mockResolvedValue('success')
+
+      const result = await ApiHelper.GetChiefRouteSettings(1)
+      expect(spy).toBeCalledWith(1)
+      expect(result).toEqual('success')
+    })
+
+    test('getRouteSettings - Should call with rights args', async () => {
+      const spy = jest.spyOn(API_URL, 'getRouteSettings')
+      axios.get.mockResolvedValue('success')
+
+      const result = await ApiHelper.GetRouteSettings(1)
+      expect(spy).toBeCalledWith(1)
+      expect(result).toEqual('success')
+    })
+
+    test('getJuryPresidencies - Should call with rights args', async () => {
+      const spy = jest.spyOn(API_URL, 'getJuryPresidencies')
+      axios.get.mockResolvedValue('success')
+
+      const result = await ApiHelper.GetJuryPresidencies(1)
+      expect(spy).toBeCalledWith(1)
+      expect(result).toEqual('success')
+    })
+
+    test('getTechnicalDelegations - Should call with rights args', async () => {
+      const spy = jest.spyOn(API_URL, 'getTechnicalDelegations')
+      axios.get.mockResolvedValue('success')
+
+      const result = await ApiHelper.GetTechnicalDelegations(1)
+      expect(spy).toBeCalledWith(1)
+      expect(result).toEqual('success')
+    })
+
+    test('getJudgementsAssignments - Should call with rights args', async () => {
+      const spy = jest.spyOn(API_URL, 'getJudgementsAssignments')
+      axios.get.mockResolvedValue('success')
+
+      const result = await ApiHelper.GetJudgementsAssignments(1)
+      expect(spy).toBeCalledWith(1)
+      expect(result).toEqual('success')
+    })
+
+    test('getJudgementsAssignmentsByCompetition - Should call with rights args', async () => {
+      const spy = jest.spyOn(API_URL, 'getJudgementsAssignmentsByCompetition')
+      axios.get.mockResolvedValue('success')
+
+      const result = await ApiHelper.GetJudgementsAssignmentsByCompetition(1, 2)
+      expect(spy).toBeCalledWith(1, 2)
+      expect(result).toEqual('success')
+    })
+
+    test('getUserCompetitionsRoles - Should call with rights args', async () => {
+      const spy = jest.spyOn(API_URL, 'getUserCompetitionsRoles')
+      axios.get.mockResolvedValue('success')
+
+      const result = await ApiHelper.GetUserCompetitionsRoles(1)
+      expect(spy).toBeCalledWith(1)
+      expect(result).toEqual('success')
     })
   })
 })
