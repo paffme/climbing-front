@@ -362,7 +362,16 @@ describe('ApiHelper', () => {
         axios.get.mockResolvedValue('success')
 
         const result = await ApiHelper.GetCompetitionsPagination(3, 4)
-        expect(spy).toBeCalledWith(3, 4)
+        expect(spy).toBeCalledWith(3, 4, undefined)
+        expect(result).toEqual('success')
+      })
+
+      test('Should call with query args', async () => {
+        const spy = jest.spyOn(API_URL, 'getCompetitionsPagination')
+        axios.get.mockResolvedValue('success')
+
+        const result = await ApiHelper.GetCompetitionsPagination(3, 4, 'query:{}')
+        expect(spy).toBeCalledWith(3, 4, 'query:{}')
         expect(result).toEqual('success')
       })
     })

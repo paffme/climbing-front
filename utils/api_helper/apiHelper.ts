@@ -343,9 +343,10 @@ async function getUserCompetitionRoles(
 
 async function getCompetitionsPagination(
   page: number,
-  perPage: number
+  perPage: number,
+  query?: string
 ): Promise<AxiosResponse<Competition[]>> {
-  return axios.get(API_URL.getCompetitionsPagination(page, perPage))
+  return axios.get(API_URL.getCompetitionsPagination(page, perPage, query))
 }
 
 async function getBoulderingGroups(

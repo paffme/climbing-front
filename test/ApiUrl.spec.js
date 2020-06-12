@@ -116,10 +116,17 @@ describe('ApiUrl Helper', () => {
       expect(API_URL.getCompetitionsCount()).toEqual('/competitions/count')
     })
 
-    test('getCompetitionsPagination - Should return a correct URL', () =>
-      expect(API_URL.getCompetitionsPagination(1, 3)).toEqual(
-        '/competitions?page=1&perPage=3'
-      ))
+    describe('getCompetitionsPagination', () => {
+      test('Should return a correct URL', () =>
+        expect(API_URL.getCompetitionsPagination(1, 3)).toEqual(
+          '/competitions?page=1&perPage=3'
+        ))
+
+      test('Should return a correct URL with pagination', () =>
+        expect(API_URL.getCompetitionsPagination(1, 3, '{"startDate":{"$gte":"2020-05-07T22:00:00.000Z"}}')).toEqual(
+          '/competitions?page=1&perPage=3&q={"startDate":{"$gte":"2020-05-07T22:00:00.000Z"}}'
+        ))
+    })
 
     test('getUsers - Should return a correct URL', () => {
       expect(API_URL.getUsers()).toEqual('/users')

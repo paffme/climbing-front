@@ -61,8 +61,8 @@ export default {
     `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/boulders/${boulderId}/results`,
   createOrGetCompetitions: (query?: string) =>
     `/${RouteName.competitions}${query ? '?q=' + query : ''}`,
-  getCompetitionsPagination: (page: number, perPage: number) =>
-    `/${RouteName.competitions}?page=${page}&perPage=${perPage}`,
+  getCompetitionsPagination: (page: number, perPage: number, query?: string) =>
+    `/${RouteName.competitions}?page=${page}&perPage=${perPage}${query ? '&q=' + query : ''}`,
   updateOrGetCompetition: (competitionId: number) =>
     `/${RouteName.competitions}/${competitionId}`,
   getCompetitionRankings: (competitionId: number) =>

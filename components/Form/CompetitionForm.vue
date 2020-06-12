@@ -55,26 +55,21 @@
       </b-field>
 
       <b-field horizontal grouped label="Adresse">
-        <b-field>
-          <b-input v-model="Form.competition.address" placeholder="Adresse" />
-        </b-field>
-        <b-field expanded>
-          <b-input v-model="Form.competition.city" placeholder="Ville" />
-        </b-field>
-        <b-field expanded>
-          <b-input
-            v-model="Form.competition.postalCode"
-            placeholder="Code postal"
-          />
-        </b-field>
+        <b-input v-model="Form.competition.address" placeholder="Adresse" />
+        <b-input v-model="Form.competition.city" placeholder="Ville" />
+        <b-input
+          v-model="Form.competition.postalCode"
+          placeholder="Code postal"
+          class="low-size"
+        />
       </b-field>
 
       <b-field horizontal label="Catégorie Homme">
         <div class="block">
           <div class="select-all">
-            <b-checkbox v-model="selectMaleCategories">
+            <b-switch v-model="selectMaleCategories">
               Selectionner tout
-            </b-checkbox>
+            </b-switch>
           </div>
           <template v-for="(category, index) in categories">
             <b-checkbox
@@ -92,9 +87,9 @@
       <b-field horizontal label="Catégorie Femme">
         <div class="block">
           <div class="select-all">
-            <b-checkbox v-model="selectFemaleCategories">
+            <b-switch v-model="selectFemaleCategories">
               Selectionner tout
-            </b-checkbox>
+            </b-switch>
           </div>
           <template v-for="(category, index) in categories">
             <b-checkbox
@@ -253,4 +248,7 @@ export default class CompetitionForm extends Vue {
 .category {
   justify-content: flex-end;
 }
+  .low-size {
+    max-width: 100px;
+  }
 </style>
