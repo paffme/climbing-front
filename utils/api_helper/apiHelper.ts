@@ -328,10 +328,10 @@ async function getUserCount(): Promise<AxiosResponse<{ count: number }>> {
   return axios.get(API_URL.getUserCount())
 }
 
-async function getCompetitionsCount(): Promise<
-  AxiosResponse<{ count: number }>
-> {
-  return axios.get(API_URL.getCompetitionsCount())
+async function getCompetitionsCount(
+  query?: string
+): Promise<AxiosResponse<{ count: number }>> {
+  return axios.get(API_URL.getCompetitionsCount(query))
 }
 
 async function getUserCompetitionRoles(

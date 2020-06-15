@@ -30,7 +30,7 @@
           </div>
           <div class="tile is-4 is-parent">
             <StatsBlock
-              :number="dashboardStats.nbCompetitions"
+              :number="dashboardStats.totalCompetitions"
               description="Compétitions totales"
               type="is-danger"
             />
@@ -50,7 +50,7 @@
               </div>
               <Rank
                 :competitions.sync="competitions"
-                :total-competition="totalCompetition"
+                :total-competition="dashboardStats.futureCompetitions"
                 :per-page="perPage"
                 @page-change="pageChange"
               />
@@ -87,21 +87,18 @@ export default class Competitions extends Vue {
   dashboardStats = {
     futureCompetitions: 0,
     nbClimber: 0,
-    nbCompetitions: 0
+    totalCompetitions: 0
   }
-  totalCompetition = 0
+
   perPage = 5
   page = 1
 
   async created() {
     try {
-      const response = await this.fetchFutureCompetitions()
-      const totalCompetition = await ApiHelper.GetCompetitionsCount()
-      this.totalCompetition = totalCompetition.data.count
+      this.competitions = await this.fetchFutureCompetitions()
       this.dashboardStats.nbClimber = await this.fetchNbClimber()
-      this.dashboardStats.nbCompetitions = await this.fetchNbCompetitions()
-      this.dashboardStats.futureCompetitions = response.length
-      this.competitions = response
+      this.dashboardStats.futureCompetitions = await this.countCompetition(true)
+      this.dashboardStats.totalCompetitions = await this.countCompetition()
     } catch (err) {
       console.log('error Created - Index', err)
       this.competitions = []
@@ -114,17 +111,19 @@ export default class Competitions extends Vue {
       const response = await ApiHelper.GetUserCount()
       return response.data.count
     } catch (err) {
-      console.log('fetchFutureCompetitions - ERR', err)
+      console.log('fetchNbClimber - ERR', err)
       throw err
     }
   }
 
-  async fetchNbCompetitions(): Promise<number> {
+  async countCompetition(futurCompetition?: boolean): Promise<number> {
     try {
-      const response = await ApiHelper.GetCompetitionsCount()
+      const response = await ApiHelper.GetCompetitionsCount(
+        futurCompetition ? futureCompetitions() : undefined
+      )
       return response.data.count
     } catch (err) {
-      console.log('fetchFutureCompetitions - ERR', err)
+      console.log('fetchNbCompetitions - ERR', err)
       throw err
     }
   }
@@ -136,6 +135,7 @@ export default class Competitions extends Vue {
         this.perPage,
         futureCompetitions()
       )
+      console.log('axiosResponse', axiosResponse)
       return axiosResponse.data
     } catch (err) {
       console.log('fetchFutureCompetitions - ERR', err)

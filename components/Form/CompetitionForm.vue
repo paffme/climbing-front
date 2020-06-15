@@ -248,7 +248,7 @@ export default class CompetitionForm extends Vue {
 .category {
   justify-content: flex-end;
 }
-  .low-size {
-    max-width: 100px;
-  }
+.low-size {
+  max-width: 100px;
+}
 </style>

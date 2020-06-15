@@ -62,13 +62,16 @@ export default {
   createOrGetCompetitions: (query?: string) =>
     `/${RouteName.competitions}${query ? '?q=' + query : ''}`,
   getCompetitionsPagination: (page: number, perPage: number, query?: string) =>
-    `/${RouteName.competitions}?page=${page}&perPage=${perPage}${query ? '&q=' + query : ''}`,
+    `/${RouteName.competitions}?page=${page}&perPage=${perPage}${
+      query ? '&q=' + query : ''
+    }`,
   updateOrGetCompetition: (competitionId: number) =>
     `/${RouteName.competitions}/${competitionId}`,
   getCompetitionRankings: (competitionId: number) =>
     `/${RouteName.competitions}/${competitionId}/rankings`,
   getUserCount: () => '/users/count',
-  getCompetitionsCount: () => `/${RouteName.competitions}/count`,
+  getCompetitionsCount: (query?: string) =>
+    `/${RouteName.competitions}/count${query ? '?q=' + query : ''}`,
   getBoulderingGroups: (competitionId: number, roundId: number) =>
     `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups`,
   deleteBoulderingGroups: (

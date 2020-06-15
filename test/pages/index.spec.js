@@ -43,7 +43,7 @@ describe('Competitions', () => {
 
   describe('fetchFutureCompetitions', () => {
     test('Should call GetCompetitions with right parameter', async () => {
-      const spy = jest.spyOn(ApiHelper, 'GetCompetitions')
+      const spy = jest.spyOn(ApiHelper, 'GetCompetitionsPagination')
       spy.mockResolvedValue({ data: competitionMock })
       const futureCompetitions = await wrapper.vm.fetchFutureCompetitions()
 
@@ -62,21 +62,34 @@ describe('Competitions', () => {
     })
   })
 
-  describe('fetchNbCompetitions', () => {
+  describe('GetCompetitionsCount', () => {
     test('Should call GetCompetitionsCount with right parameter', async () => {
       const spy = jest.spyOn(ApiHelper, 'GetCompetitionsCount')
       const count = 1992
       spy.mockResolvedValue({ data: { count } })
-      const nbCompetitions = await wrapper.vm.fetchNbCompetitions()
+      const nbCompetitions = await wrapper.vm.countCompetition()
+
+      expect(spy).toHaveBeenCalled()
+
+      expect(nbCompetitions).toEqual(count)
+    })
+
+    test('Should call GetCompetitionsCount in the future', async () => {
+      const spy = jest.spyOn(ApiHelper, 'GetCompetitionsCount')
+      const count = 1992
+      spy.mockResolvedValue({ data: { count } })
+      const nbCompetitions = await wrapper.vm.countCompetition(true)
+
+      expect(spy).toHaveBeenCalled()
 
       expect(nbCompetitions).toEqual(count)
     })
   })
 
   describe('countCompetitions', () => {
-    test('Should call GetCompetitionsCount with right parameter', async () => {
+    test('Should call countCompetitions and return the right length', async () => {
       const competitions = [competitionMock, competitionMock]
-      const nbCompetitions = await wrapper.vm.countCompetitions(competitions)
+      const nbCompetitions = wrapper.vm.countCompetitions(competitions)
 
       expect(nbCompetitions).toEqual(competitions.length)
     })

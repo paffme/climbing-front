@@ -106,7 +106,6 @@
               />
             </div>
           </div>
-          </div>
         </div>
       </div>
     </div>
@@ -288,7 +287,7 @@ export default class EditOneCompetition extends Vue {
 </script>
 
 <style scoped>
-  .title {
-    margin-left: 10px;
-  }
+.title {
+  margin-left: 10px;
+}
 </style>

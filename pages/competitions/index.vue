@@ -92,5 +92,4 @@ export default class IndexCompetitions extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

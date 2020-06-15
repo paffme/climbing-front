@@ -343,6 +343,19 @@ describe('ApiHelper', () => {
         expect(spy).toHaveBeenCalled()
         expect(result).toEqual('success')
       })
+
+      test('Should call with query', async () => {
+        const spy = jest.spyOn(API_URL, 'getCompetitionsCount')
+        axios.get.mockResolvedValue('success')
+
+        const result = await ApiHelper.GetCompetitionsCount(
+          'startDate":{"$gte":"2020-05-07T22:00:00.000Z"}'
+        )
+        expect(spy).toHaveBeenCalledWith(
+          'startDate":{"$gte":"2020-05-07T22:00:00.000Z"}'
+        )
+        expect(result).toEqual('success')
+      })
     })
 
     describe('getUserCompetitionRoles', () => {
@@ -370,7 +383,11 @@ describe('ApiHelper', () => {
         const spy = jest.spyOn(API_URL, 'getCompetitionsPagination')
         axios.get.mockResolvedValue('success')
 
-        const result = await ApiHelper.GetCompetitionsPagination(3, 4, 'query:{}')
+        const result = await ApiHelper.GetCompetitionsPagination(
+          3,
+          4,
+          'query:{}'
+        )
         expect(spy).toBeCalledWith(3, 4, 'query:{}')
         expect(result).toEqual('success')
       })
