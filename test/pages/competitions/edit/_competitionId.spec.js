@@ -1,6 +1,6 @@
 import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
 import Buefy from 'buefy'
-import EditOneCompetition from '@/pages/competitions/edit/_competitionId.vue'
+import EditOneCompetition from '~/pages/competitions/edit/_competitionId.vue'
 
 let localVue
 describe('EditOneCompetition', () => {
@@ -16,7 +16,8 @@ describe('EditOneCompetition', () => {
         $route
       },
       stubs: {
-        NuxtLink: RouterLinkStub
+        NuxtLink: RouterLinkStub,
+        NuxtChild: RouterLinkStub
       }
     })
     expect(wrapper.isVueInstance()).toBe(true)
@@ -31,7 +32,8 @@ describe('EditOneCompetition', () => {
           $route
         },
         stubs: {
-          NuxtLink: RouterLinkStub
+          NuxtLink: RouterLinkStub,
+          NuxtChild: RouterLinkStub
         }
       })
       expect(wrapper.vm.displayCurrentRole({ organizer: true })).toBe(

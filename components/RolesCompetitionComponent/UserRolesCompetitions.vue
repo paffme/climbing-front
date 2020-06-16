@@ -54,9 +54,26 @@
               </div>
               <div class="media-right">
                 <p class="level-item">
-                  <nuxt-link :to="`/competitions/${competition.id}`">
-                    <span class="button is-success">Voir la compétition</span>
-                  </nuxt-link>
+                  <b-tooltip label="Editer la compétition">
+                    <nuxt-link :to="`/competitions/edit/${competition.id}`">
+                      <b-icon
+                        class="icon"
+                        type="is-info"
+                        icon="square-edit-outline"
+                      >
+                      </b-icon>
+                    </nuxt-link>
+                  </b-tooltip>
+                  <b-tooltip label="Aller à la compétition">
+                    <nuxt-link :to="`/competitions/${competition.id}`">
+                      <b-icon
+                        class="icon"
+                        type="is-info"
+                        icon="arrow-right-bold-circle"
+                      >
+                      </b-icon>
+                    </nuxt-link>
+                  </b-tooltip>
                 </p>
               </div>
             </article>
@@ -119,9 +136,16 @@ strong {
 }
 .competitions {
   text-decoration: none;
+  color: black;
 }
 .competitions:hover {
   background-color: #03378c;
+  color: white !important;
+}
+.icon {
+  margin: 0 10px;
+}
+.icon:hover {
   color: white !important;
 }
 </style>

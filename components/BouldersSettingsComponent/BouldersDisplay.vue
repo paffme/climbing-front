@@ -55,8 +55,7 @@
       >
         <BouldersGroups
           :groups="groups"
-          :competition-id="round.competitionId"
-          :round-id="round.id"
+          :round="round"
           @delete="onDelete"
           @create="onCreateGroup"
           @createBloc="onCreateBloc"

@@ -122,6 +122,7 @@ import {
   SubscriptionCredentials
 } from '~/definitions'
 import LogoComponent from '~/components/LogoComponent.vue'
+import { AxiosHelper } from '~/utils/axiosHelper'
 
 @Component({
   layout: 'blank',
@@ -161,6 +162,13 @@ export default class Subscriptions extends Vue {
 
   async subscribeUser(credentials: SubscriptionCredentials): Promise<void> {
     this.form.isLoading = true
+    if (!this.checkPasswordLength(credentials.password)) {
+      this.form.passwordIsValid = false
+      this.form.isLoading = false
+      this.notification('Le mot de passe doit contenir plus de 6 caractères')
+      return
+    }
+
     if (
       !this.checkPassword(
         credentials.password,
@@ -168,15 +176,8 @@ export default class Subscriptions extends Vue {
       )
     ) {
       this.form.passwordIsValid = false
-      this.form.message = 'Les mots de passe doivent être similaires'
       this.form.isLoading = false
-      return
-    }
-
-    if (!this.checkPasswordLength(credentials.password)) {
-      this.form.passwordIsValid = false
-      this.form.message = 'Le mot de passe doit contenir plus de 6 caractères'
-      this.form.isLoading = false
+      this.notification('Les mots de passe doivent être similaires')
       return
     }
 
@@ -185,9 +186,8 @@ export default class Subscriptions extends Vue {
       this.form.isLoading = false
       this.$router.push('login?fromSubscription=true')
     } catch (err) {
-      this.form.error = true
+      AxiosHelper.HandleAxiosError(this, err)
       this.form.isLoading = false
-      this.form.message = "Une erreur s'est produite"
     }
   }
 
@@ -211,6 +211,16 @@ export default class Subscriptions extends Vue {
       club: credentials.club,
       birthYear: credentials.birthDay.getFullYear()
     }
+  }
+
+  notification(message: string) {
+    this.$buefy.snackbar.open({
+      type: 'is-danger',
+      position: 'is-top',
+      message,
+      duration: 5000,
+      indefinite: true
+    })
   }
 }
 </script>

@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios'
 import { Vue } from 'vue-property-decorator'
+import _ from 'lodash'
 
 export const AxiosHelper = {
   SetHeaderAuthorizationToken: setHeaderAuthorizationToken,
@@ -7,7 +8,11 @@ export const AxiosHelper = {
   HandleAxiosError: handleAxiosError
 }
 
-function setHeaderAuthorizationToken(token: string): void {
+function setHeaderAuthorizationToken(token?: string): void {
+  if (!token) {
+    axios.defaults.headers.Authorization = null
+    return
+  }
   axios.defaults.headers = {
     Authorization: `Bearer ${token}`
   }
@@ -21,6 +26,7 @@ function removeHeaderAuthorizationToken(): void {
 
 function handleAxiosError(context: Vue, error: AxiosError): void {
   if (error.response) {
+    const message = buildMessage(error.response.data)
     /*
      * The request was made and the server responded with a
      * status code that falls out of the range of 2xx
@@ -29,10 +35,12 @@ function handleAxiosError(context: Vue, error: AxiosError): void {
     console.log(error.response.status)
     console.log(error.response.headers)
     if (!context || !context.$buefy) return
-    context.$buefy.toast.open({
+    context.$buefy.snackbar.open({
       type: 'is-danger',
-      message: error.response.data.message || "Une erreur s'est produite",
-      duration: 5000
+      position: 'is-top',
+      message: message || "Une erreur s'est produite",
+      duration: 5000,
+      indefinite: true
     })
   } else if (error.request) {
     /*
@@ -46,4 +54,43 @@ function handleAxiosError(context: Vue, error: AxiosError): void {
     console.log('Error', error.message)
   }
   console.log(error)
+}
+
+function buildMessage(data: any) {
+  if (!data) return
+  console.log('AxiosError', data)
+  if (Array.isArray(data) && data.length < 1) {
+    return (
+      '' +
+      '<h1 class="subtitle has-text-white">Erreur de validation</h1>' +
+      '<ul>' +
+      data +
+      ' </ul>'
+    )
+  }
+  if (data.error && !data.errors) {
+    return (
+      '<h1 class="subtitle has-text-white">' +
+      data.error +
+      '</h1>' +
+      '<span>' +
+      data.message +
+      ' </span>'
+    )
+  }
+  const li = data.errors.map((error: any) => {
+    return (
+      '<li> - ' +
+      Object.keys(error.constraints)[0] +
+      ' : ' +
+      _.values(error.constraints)[0] +
+      '</li>'
+    )
+  })
+  return (
+    '<h1 class="subtitle has-text-white">Erreur de validation</h1>' +
+    '<ul>' +
+    li +
+    '</ul>'
+  )
 }

@@ -96,6 +96,12 @@ describe('ApiUrl Helper', () => {
       )
     })
 
+    test('GetBoulderRankings - Should return a correct URL', () => {
+      expect(API_URL.getBoulderRankings(2, 12)).toEqual(
+        '/competitions/2/bouldering-rounds/12/rankings'
+      )
+    })
+
     test('AddCompetitor - Should return a correct URL', () => {
       expect(API_URL.addCompetitor(2, 1)).toEqual(
         '/competitions/2/registrations/1'
@@ -213,6 +219,16 @@ describe('ApiUrl Helper', () => {
     test('getJudgementsAssignmentsByCompetition - Should return a correct URL', () => {
       expect(API_URL.getJudgementsAssignmentsByCompetition(2, 1)).toEqual(
         '/users/2/judgements/assignments/1'
+      )
+    })
+
+    test('Start Competition', () => {
+      expect(API_URL.startFinal(2)).toEqual('/competitions/2/start-finals')
+      expect(API_URL.startQualifier(2)).toEqual(
+        '/competitions/2/start-qualifiers'
+      )
+      expect(API_URL.startSemiFinal(2)).toEqual(
+        '/competitions/2/start-semi-finals'
       )
     })
   })

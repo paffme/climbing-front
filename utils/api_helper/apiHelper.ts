@@ -14,7 +14,10 @@ import {
   DTOSubscriptionCredentials,
   APIBoulderingRounds,
   CompetitionEdit,
-  APIBoulderingGroups
+  APIBoulderingGroups,
+  BoulderingLimitedRounds,
+  TypeBoulderingRound,
+  BoulderingRoundRankingsDto
 } from '~/definitions'
 import { AxiosResponse } from '~/node_modules/axios'
 import API_URL from '~/utils/api_helper/apiUrl'
@@ -79,7 +82,9 @@ export const ApiHelper = {
   GetJudgementsAssignments: getJudgementsAssignments,
   GetJudgements: getJudgements,
   GetJudgementsAssignmentsByCompetition: getJudgementsAssignmentsByCompetition,
-  GetUserCompetitionsRoles: getUserCompetitionsRoles
+  GetUserCompetitionsRoles: getUserCompetitionsRoles,
+  StartCompetition: startCompetition,
+  GetBoulderRankings: getBoulderRankings
 }
 
 async function addUserInCompetition(
@@ -487,4 +492,25 @@ async function getUserCompetitionsRoles(
   userId: number
 ): Promise<AxiosResponse<APICompetition[]>> {
   return axios.get(API_URL.getUserCompetitionsRoles(userId))
+}
+
+async function startCompetition(
+  type: TypeBoulderingRound,
+  competitionId: number
+): Promise<AxiosResponse<BoulderingLimitedRounds>> {
+  switch (type) {
+    case TypeBoulderingRound.FINAL:
+      return axios.patch(API_URL.startFinal(competitionId))
+    case TypeBoulderingRound.SEMI_FINAL:
+      return axios.patch(API_URL.startSemiFinal(competitionId))
+    case TypeBoulderingRound.QUALIFIER:
+      return axios.patch(API_URL.startQualifier(competitionId))
+  }
+}
+
+async function getBoulderRankings(
+  competitionId: number,
+  roundId: number
+): Promise<AxiosResponse<BoulderingRoundRankingsDto>> {
+  return axios.get(API_URL.getBoulderRankings(competitionId, roundId))
 }

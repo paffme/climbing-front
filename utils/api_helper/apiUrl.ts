@@ -69,6 +69,8 @@ export default {
     `/${RouteName.competitions}/${competitionId}`,
   getCompetitionRankings: (competitionId: number) =>
     `/${RouteName.competitions}/${competitionId}/rankings`,
+  getBoulderRankings: (competitionId: number, roundId: number) =>
+    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/rankings`,
   getUserCount: () => '/users/count',
   getCompetitionsCount: (query?: string) =>
     `/${RouteName.competitions}/count${query ? '?q=' + query : ''}`,
@@ -118,5 +120,11 @@ export default {
     competitionId: number
   ) => `/${RouteName.users}/${userId}/judgements/assignments/${competitionId}`,
   getRegistrationsByUser: (userId: number): string =>
-    `/${RouteName.users}/${userId}/registrations`
+    `/${RouteName.users}/${userId}/registrations`,
+  startQualifier: (competitionId: number): string =>
+    `/${RouteName.competitions}/${competitionId}/start-qualifiers`,
+  startSemiFinal: (competitionId: number): string =>
+    `/${RouteName.competitions}/${competitionId}/start-semi-finals`,
+  startFinal: (competitionId: number): string =>
+    `/${RouteName.competitions}/${competitionId}/start-finals`
 }

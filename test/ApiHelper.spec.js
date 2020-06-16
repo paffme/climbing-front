@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import API_URL from '~/utils/api_helper/apiUrl'
+import { TypeBoulderingRound } from '~/definitions'
 
 jest.mock('axios')
 
@@ -519,6 +520,51 @@ describe('ApiHelper', () => {
 
       const result = await ApiHelper.GetUserCompetitionsRoles(1)
       expect(spy).toBeCalledWith(1)
+      expect(result).toEqual('success')
+    })
+
+    describe('Start Competition', () => {
+      test('start qualifier - Should call with rights args', async () => {
+        const spy = jest.spyOn(API_URL, 'startQualifier')
+        axios.patch.mockResolvedValue('success')
+
+        const result = await ApiHelper.StartCompetition(
+          TypeBoulderingRound.QUALIFIER,
+          2
+        )
+        expect(spy).toHaveBeenCalledWith(2)
+        expect(result).toEqual('success')
+      })
+      test('start semi final - Should call with rights args', async () => {
+        const spy = jest.spyOn(API_URL, 'startSemiFinal')
+        axios.patch.mockResolvedValue('success')
+
+        const result = await ApiHelper.StartCompetition(
+          TypeBoulderingRound.SEMI_FINAL,
+          2
+        )
+        expect(spy).toHaveBeenCalledWith(2)
+        expect(result).toEqual('success')
+      })
+      test('start final - Should call with rights args', async () => {
+        const spy = jest.spyOn(API_URL, 'startFinal')
+        axios.patch.mockResolvedValue('success')
+
+        const result = await ApiHelper.StartCompetition(
+          TypeBoulderingRound.FINAL,
+          2
+        )
+        expect(spy).toHaveBeenCalledWith(2)
+        expect(result).toEqual('success')
+      })
+    })
+
+    test('GetBoulderRankings - Should call with rights args', async () => {
+      const spy = jest.spyOn(API_URL, 'getBoulderRankings')
+      axios.get.mockResolvedValue('success')
+
+      const result = await ApiHelper.GetBoulderRankings(1, 19)
+      expect(spy).toHaveBeenCalledWith(1, 19)
       expect(result).toEqual('success')
     })
   })

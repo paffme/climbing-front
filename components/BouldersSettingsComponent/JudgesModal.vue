@@ -41,18 +41,34 @@
               <template v-else>
                 <p>Aucun juges</p>
               </template>
+              {{ boulder }}
               <transition name="fade">
                 <div v-show="searchIsActive">
                   <SearchUser @select="onSelect" />
                 </div>
               </transition>
-              <b-button
-                class="btn"
-                type="is-primary"
-                @click="searchIsActive = true"
-              >
-                Ajouter juges
-              </b-button>
+              <div class="is-flex buttons-actions">
+                <b-button
+                  class="btn"
+                  type="is-primary"
+                  @click="searchIsActive = true"
+                >
+                  Ajouter juges
+                </b-button>
+                <b-button
+                  v-show="round.state === 'ONGOING'"
+                  class="btn"
+                  type="is-warning"
+                  tag="nuxt-link"
+                  :to="{
+                    name: 'competitions-edit-competitionId-notes',
+                    params: { competitionId },
+                    query: { ...currentCompetition }
+                  }"
+                >
+                  Ajouter Notes
+                </b-button>
+              </div>
             </div>
           </div>
         </b-modal>
@@ -63,7 +79,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { User } from '~/definitions'
+import { BoulderingLimitedRounds, User } from '~/definitions'
 import SearchUser from '~/components/Form/SearchUser.vue'
 
 @Component({
@@ -75,14 +91,21 @@ export default class JudgesModal extends Vue {
     judges: User[]
   }
 
-  @Prop(Number) groupId!: number
+  @Prop(Object) round!: BoulderingLimitedRounds
+  @Prop(Number) competitionId!: number
+  @Prop(Object) currentCompetition!: {
+    roundId: number
+    groupId: number
+    boulderId: number
+  }
+
   isActive = false
   searchIsActive = false
 
   async onSelect(user: { id: number; name: string }) {
     const meta = {
       ...user,
-      groupId: this.groupId,
+      groupId: this.currentCompetition.groupId,
       boulder: this.boulder
     }
     this.$emit('select', meta)
@@ -97,7 +120,7 @@ export default class JudgesModal extends Vue {
         const meta = {
           boulderId,
           userId: judgeId,
-          groupId: this.groupId
+          groupId: this.currentCompetition.groupId
         }
         this.$emit('delete', meta)
       }
@@ -150,5 +173,8 @@ li:hover {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+.buttons-actions .btn:first-child {
+  margin-right: 10px;
 }
 </style>

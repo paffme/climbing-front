@@ -4,7 +4,7 @@
       <b-input
         v-model="groupName"
         placeholder="Nom du groupe"
-        required
+        expanded
       ></b-input>
       <p class="control">
         <b-button

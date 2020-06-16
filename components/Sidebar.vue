@@ -107,7 +107,8 @@ export default class Sidebar extends Vue {
 
   disconnectUser() {
     authUser.disconnectUser()
-    AxiosHelper.RemoveHeaderAuthorizationToken()
+    console.log('disconnect - ', authUser.Authenticated)
+    AxiosHelper.SetHeaderAuthorizationToken()
     this.$router.push('/login')
   }
 }

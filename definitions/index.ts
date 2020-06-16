@@ -142,7 +142,7 @@ export type BoulderingLimitedRounds = {
   competitionId: number
   name: number
   quota: number
-  type: string
+  type: TypeBoulderingRound
   sex: Sex
   category: CategoryName
   state: StateRound
@@ -236,7 +236,7 @@ export type BoulderingResult = {
   climberId: number
   top: boolean
   zone: boolean
-  try: boolean
+  try: number
 }
 
 export type APIRankingResponse = {
@@ -257,6 +257,15 @@ export type APIBoulderingGroups = {
   id: number
   name: string
   climbers: number[]
+  boulders: APIBoulders[]
+  roundId: number
+  state: StateRound
+}
+
+export type APIBoulderingGroupsClimbers = {
+  id: number
+  name: string
+  climbers: User
   boulders: APIBoulders[]
   roundId: number
   state: StateRound
@@ -286,12 +295,14 @@ export enum Roles {
 
 export type Ranking = {
   ranking: 0
-  climber: {
-    id: 0
-    firstName: string
-    lastName: string
-    club: string
-  }
+  climber: defaultClimber
+}
+
+export type defaultClimber = {
+  id: 0
+  firstName: string
+  lastName: string
+  club: string
 }
 
 export type CategoriesSelect = {
@@ -307,4 +318,38 @@ export type CurrentCategory = {
 export type TempCategoriesSelect = {
   genre: Array<Sex>
   category?: CategoryName
+}
+
+export type BoulderingRoundRankingsDto = {
+  type: TypeBoulderingRound
+  groups: UnlimitedContestGroup | LimitedContestGroup | CircuitGroup
+}
+
+export type UnlimitedContestGroup = {
+  id: number
+  bouldersPoints: number
+  rankings: Array<BaseRoundRanking>
+}
+export type LimitedContestGroup = {
+  id: number
+  rankings: CountedRanking
+}
+export type CircuitGroup = {
+  id: number
+  ranking: CountedRanking
+}
+
+export type BaseRoundRanking = {
+  ranking: number
+  tops: number
+  climber: defaultClimber
+}
+
+export type CountedRanking = {
+  ranking: number
+  climber: defaultClimber
+  tops: boolean
+  topsInTries: boolean
+  zones: boolean
+  zoneInTries: boolean
 }

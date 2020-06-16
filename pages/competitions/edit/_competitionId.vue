@@ -28,110 +28,30 @@
             </li>
           </ul>
         </nav>
-        <b-notification>
-          Connecté en tant que {{ displayCurrentRole(role) }}
-        </b-notification>
-        <div class="columns is-multiline">
-          <div class="column is-8">
-            <b-notification :closable="false">
-              <template v-if="competition">
-                <CompetitionForm
-                  :competition="competition"
-                  @emit="onEditCompetition"
-                />
-              </template>
-            </b-notification>
-          </div>
-
-          <div class="column is-4">
-            <div
-              v-if="competition && competition.id && role"
-              id="role-component"
-              class="columns is-multiline"
-            >
-              <div v-if="role.organizer" class="roles column">
-                <RolesComponent
-                  :role-name="role_name.Organisateur"
-                  :competition-id="competition.id"
-                />
-              </div>
-              <div v-if="role.organizer" class="roles column">
-                <RolesComponent
-                  :role-name="role_name.President"
-                  :competition-id="competition.id"
-                />
-              </div>
-              <div
-                v-if="role.organizer || role.juryPresident"
-                class="roles column"
-              >
-                <RolesComponent
-                  :role-name="role_name.ChefRouteSetter"
-                  :competition-id="competition.id"
-                />
-              </div>
-
-              <div v-if="role.juryPresident" class="roles column">
-                <RolesComponent
-                  :role-name="role_name.Juges"
-                  :competition-id="competition.id"
-                />
-              </div>
-              <div v-if="role.juryPresident" class="roles column">
-                <RolesComponent
-                  :role-name="role_name.DelegueTechnique"
-                  :competition-id="competition.id"
-                />
-              </div>
-
-              <div v-if="role.chiefRouteSetter" class="roles column">
-                <RolesComponent
-                  :role-name="role_name.RouteSetter"
-                  :competition-id="competition.id"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div class="column">
-            <div
-              v-if="role && role.juryPresident"
-              id="boulder-settings"
-              class="notification"
-            >
-              <BouldersSettingsComponent
-                :competition-id="competition.id"
-                :bouldering="bouldering"
-                @loadBouldering="onLoadBouldering"
-              />
-            </div>
-          </div>
-        </div>
+        <nuxt-child
+          :competition="competition"
+          :role="role"
+          :bouldering="bouldering"
+          @onFetchCompetition="loadCompetition"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
 import { Component, Vue } from 'vue-property-decorator'
-import GoBackBtn from '~/components/Button/GoBackBtn.vue'
+import _ from 'lodash'
 import {
   APIBoulderingRounds,
   APICompetition,
   APIUserCompetitionRoles,
-  Competition,
-  CompetitionEdit,
-  RoleName,
   Roles
 } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
-import { authUser } from '~/utils/store-accessor'
-import RolesComponent from '~/components/RolesComponent/RolesComponent.vue'
-import BouldersSettingsComponent from '~/components/BouldersSettingsComponent/BouldersSettingsComponent.vue'
-import CompetitionForm from '~/components/Form/CompetitionForm.vue'
-import BtnDeleteCompetition from '~/components/Button/BtnDeleteCompetition.vue'
 import { AxiosHelper } from '~/utils/axiosHelper'
+import { authUser } from '~/utils/store-accessor'
+import GoBackBtn from '~/components/Button/GoBackBtn.vue'
 
 async function fetchRole(
   competitionId?: number,
@@ -155,7 +75,9 @@ async function fetchBouldering(
   return _.isEmpty(response.data) ? null : response.data
 }
 
-async function fetchCompetition(idCompetition: number): Promise<Competition> {
+async function fetchCompetition(
+  idCompetition: number
+): Promise<APICompetition> {
   const result = await ApiHelper.GetCompetition(idCompetition)
   return {
     ...result.data,
@@ -166,24 +88,7 @@ async function fetchCompetition(idCompetition: number): Promise<Competition> {
       : null
   }
 }
-
 @Component({
-  middleware: ['isAuth', 'setHeader'],
-  components: {
-    RolesComponent,
-    CompetitionForm,
-    BtnDeleteCompetition,
-    GoBackBtn,
-    BouldersSettingsComponent
-  },
-  validate({ params }: any) {
-    const competitionId = parseInt(params.competitionId, 10)
-    if (!competitionId) {
-      throw new Error('ID de compétition non valide')
-    }
-
-    return true
-  },
   async asyncData(ctx) {
     const idCompetition = parseInt(ctx.params.competitionId, 10)
 
@@ -207,47 +112,12 @@ async function fetchCompetition(idCompetition: number): Promise<Competition> {
       }
     }
   },
-  data() {
-    return {
-      role_name: RoleName,
-      idCompetition: undefined,
-      competition: null
-    }
-  }
+  components: { GoBackBtn }
 })
-export default class EditOneCompetition extends Vue {
+export default class EditOneCompetitionPage extends Vue {
   competition: APICompetition | null = null
   role: APIUserCompetitionRoles | null = null
   bouldering: APIBoulderingRounds | null = null
-
-  async onLoadBouldering() {
-    if (!this.competition?.id) return
-    this.bouldering = await fetchBouldering(this.competition.id)
-  }
-
-  async onEditCompetition(competition: Competition) {
-    try {
-      if (!this.competition?.id) throw new Error('No id has been found')
-      const newCompetition = await ApiHelper.UpdateCompetition(
-        this.competition.id,
-        this.editCompetitionDTO(competition)
-      )
-      this.$buefy.toast.open({
-        type: 'is-success',
-        message: 'Compétition créée'
-      })
-      console.log('newCOmpetition', newCompetition.data)
-      this.competition = newCompetition.data
-    } catch (err) {
-      AxiosHelper.HandleAxiosError(this, err)
-      this.$buefy.toast.open({
-        type: 'is-danger',
-        message: "Une erreur s'est produite"
-      })
-    }
-  }
-
-  async onDeleteCompetition() {}
 
   displayCurrentRole(role?: APIUserCompetitionRoles | null): string | null {
     if (!role) return null
@@ -271,17 +141,8 @@ export default class EditOneCompetition extends Vue {
     return currentRole
   }
 
-  editCompetitionDTO(competition: Competition): CompetitionEdit {
-    return {
-      name: competition.name || undefined,
-      type: competition.type || undefined,
-      startDate: competition.startDate || undefined,
-      endDate: competition.endDate || undefined,
-      address: competition.address || undefined,
-      city: competition.city || undefined,
-      postalCode: competition.postalCode || undefined,
-      categories: competition.categories || undefined
-    }
+  async loadCompetition() {
+    this.competition = await fetchCompetition(this.competition!.id as number)
   }
 }
 </script>

@@ -4,19 +4,34 @@
       <div class="column">
         <h1 class="title">
           Gestion des groupes et blocs
+          <b-tag type="is-info">
+            {{ round.state }}
+          </b-tag>
         </h1>
+        <div class="is-pulled-right">
+          <b-button :disabled="round.state !== 'PENDING'" @click="startRound">
+            {{
+              round.state === 'PENDING' ? 'Démarrer le round' : 'Round en cours'
+            }}
+          </b-button>
+        </div>
       </div>
     </div>
     <div
       v-if="groups && Array.isArray(groups) && groups.length > 0"
       class="columns"
     >
-      <div class="column is-4 is-offset-4">
+      <div class="column is-12">
         <FormCreateBoulderingGroup @create="onCreate" />
       </div>
     </div>
     <div class="columns is-multiline">
       <template v-if="groups && Array.isArray(groups) && groups.length > 0">
+        <div class="column is-12">
+          <p class="subtitle">
+            Apercu des groupes
+          </p>
+        </div>
         <div v-for="(group, index) in groups" :key="index" class="column">
           <div class="card">
             <div class="card-content">
@@ -30,7 +45,7 @@
                 <ul>
                   <li>
                     <div class="line">
-                      <span>Grimpeur : </span>
+                      <span>Grimpeur :</span>
                       <template
                         v-if="
                           group.climbers &&
@@ -71,8 +86,14 @@
                             :key="index"
                           >
                             <JudgesModal
-                              :group-id="group.id"
                               :boulder="boulder"
+                              :round="round"
+                              :current-competition="{
+                                roundId: round.id,
+                                groupId: group.id,
+                                boulderId: boulder.id
+                              }"
+                              :competition-id="round.competitionId"
                               @select="addJudge"
                               @delete="onDeleteBloc"
                             />
@@ -130,7 +151,11 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { APIBoulderingGroups, APIBoulders } from '~/definitions'
+import {
+  APIBoulderingGroups,
+  APIBoulders,
+  BoulderingLimitedRounds
+} from '~/definitions'
 import FormCreateBoulderingGroup from '~/components/Form/FormCreateBoulderingGroup.vue'
 import RolesModalComponent from '~/components/RolesComponent/RolesModalComponent.vue'
 import JudgesModal from '~/components/BouldersSettingsComponent/JudgesModal.vue'
@@ -142,19 +167,16 @@ import { ApiHelper } from '~/utils/api_helper/apiHelper'
 })
 export default class BouldersGroups extends Vue {
   @Prop(Array) groups!: APIBoulderingGroups[]
-  @Prop(Number) roundId!: number
-  @Prop(Number) competitionId!: number
+  @Prop(Object) round!: BoulderingLimitedRounds
   @Prop(Number) boulderId!: number
 
   createGroup = false
 
   onCreate(name: string) {
-    console.log('onCreate', name)
     this.$emit('create', name)
   }
 
   async addBoulder(groupId: number) {
-    console.log('coucou', groupId)
     this.$emit('createBloc', groupId)
   }
 
@@ -166,8 +188,8 @@ export default class BouldersGroups extends Vue {
   }) {
     try {
       await ApiHelper.AssignJudgeToBoulder(
-        this.competitionId,
-        this.roundId,
+        this.round.competitionId,
+        this.round.id,
         meta.groupId,
         meta.boulder.id,
         meta.id
@@ -185,13 +207,29 @@ export default class BouldersGroups extends Vue {
   }) {
     try {
       await ApiHelper.DeleteJudgeToBoulder(
-        this.competitionId,
-        this.roundId,
+        this.round.competitionId,
+        this.round.id,
         meta.groupId,
         meta.boulderId,
         meta.userId
       )
       this.$emit('deleteJudge')
+    } catch (err) {
+      AxiosHelper.HandleAxiosError(this, err)
+    }
+  }
+
+  async startRound() {
+    try {
+      await ApiHelper.StartCompetition(
+        this.round.type,
+        this.round.competitionId
+      )
+      this.$buefy.toast.open({
+        type: 'is-success',
+        message: 'La compétition à démarré'
+      })
+      this.$emit('createJudge')
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
     }
