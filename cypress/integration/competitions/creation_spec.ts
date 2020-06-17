@@ -45,7 +45,7 @@ describe("Test for Creation of Competition", () => {
   it("Must enter the create competition view", () => {
     cy.visit("");
 
-    cy.get(".page_header > div > .button > :nth-child(1)").click();
+    cy.get(".create-competition").click();
 
     cy.url().should("equal",
       Cypress.config().baseUrl + "competitions/create");

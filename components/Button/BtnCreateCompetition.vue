@@ -2,10 +2,11 @@
   <div>
     <template v-if="isConnected">
       <b-button
-        type="is-success"
-        icon-right="license"
-        tag="router-link"
-        :to="'/competitions/create'"
+              type="is-success"
+              icon-right="license"
+              tag="router-link"
+              :to="'/competitions/create'"
+              class="create-competition"
       >
         Créer une compétition
       </b-button>
