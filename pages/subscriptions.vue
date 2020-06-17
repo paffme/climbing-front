@@ -56,13 +56,14 @@
               <b-field label="Date de naissance">
                 <b-datepicker
                   v-model="credentials.birthDay"
-                  editable
-                  placeholder="Cliquer pour selectionner"
-                  icon="calendar-today"
-                  trap-focus
+                  :date-formatter="dateFormatter"
                   :max-date="maxDate"
                   :min-date="minDate"
                   class="birth-date"
+                  editable
+                  icon="calendar-today"
+                  placeholder="Cliquer pour selectionner"
+                  trap-focus
                 >
                 </b-datepicker>
               </b-field>
@@ -131,6 +132,15 @@ import { AxiosHelper } from '~/utils/axiosHelper'
   data() {
     return {
       Sex
+    }
+  },
+  methods: {
+    dateFormatter(dt) {
+      return dt.toLocaleDateString('fr', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })
     }
   }
 })
