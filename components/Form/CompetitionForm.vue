@@ -5,43 +5,48 @@
     </div>
     <form class="form" @submit.prevent="registerCompetition()">
       <b-field horizontal label="Nom compétition">
-        <b-input class="name" expanded name="subject" v-model="Form.competition.name"/>
+        <b-input
+          v-model="Form.competition.name"
+          class="name"
+          expanded
+          name="subject"
+        />
       </b-field>
 
       <b-field horizontal label="Date début / Date fin">
         <b-field>
           <b-datepicker
-                  v-model="Form.competition.startDate"
-                  class="date-start"
-                  placeholder="Date de début"
-                  icon="calendar-today"
-                  trap-focus
-                  editable
+            v-model="Form.competition.startDate"
+            class="date-start"
+            placeholder="Date de début"
+            icon="calendar-today"
+            trap-focus
+            editable
           />
         </b-field>
         <b-field>
           <b-datepicker
-                  v-model="Form.competition.endDate"
-                  class="date-end"
-                  placeholder="Date de fin"
-                  icon="calendar-today"
-                  trap-focus
-                  editable
+            v-model="Form.competition.endDate"
+            class="date-end"
+            placeholder="Date de fin"
+            icon="calendar-today"
+            trap-focus
+            editable
           />
         </b-field>
       </b-field>
 
       <b-field horizontal label="Compétition open">
-        <b-switch class="status" v-model="Form.competition.open"/>
+        <b-switch v-model="Form.competition.open" class="status" />
       </b-field>
       <b-field horizontal label="Date d'accueil">
         <b-datepicker
-                v-model="Form.competition.welcomingDate"
-                class="date-welcome"
-                placeholder="Date d'accueil"
-                icon="calendar-today"
-                trap-focus
-                editable
+          v-model="Form.competition.welcomingDate"
+          class="date-welcome"
+          placeholder="Date d'accueil"
+          icon="calendar-today"
+          trap-focus
+          editable
         />
       </b-field>
 
@@ -61,14 +66,22 @@
       </b-field>
 
       <b-field horizontal grouped label="Adresse">
-        <b-input v-model="Form.competition.address" placeholder="Adresse"  class="street"/>
-        <b-input v-model="Form.competition.city" placeholder="Ville" class="city"/>
+        <b-input
+          v-model="Form.competition.address"
+          placeholder="Adresse"
+          class="street"
+        />
+        <b-input
+          v-model="Form.competition.city"
+          placeholder="Ville"
+          class="city"
+        />
         <b-input
           v-model="Form.competition.postalCode"
           placeholder="Code postal"
           class="low-size postal-code"
+        />
       </b-field>
-
       <b-field class="category-male" horizontal label="Catégorie Homme">
         <div class="block">
           <div class="select-all">
@@ -78,8 +91,8 @@
           </div>
           <template v-for="(category, index) in categories">
             <b-checkbox
-                    :key="index"
-                    v-model="maleCategories"
+              :key="index"
+              v-model="maleCategories"
               :disabled="selectMaleCategories"
               :native-value="category"
             >
@@ -98,8 +111,8 @@
           </div>
           <template v-for="(category, index) in categories">
             <b-checkbox
-                    :key="index"
-                    v-model="femaleCategories"
+              :key="index"
+              v-model="femaleCategories"
               :disabled="selectFemaleCategories"
               :native-value="category"
             >
@@ -110,20 +123,28 @@
       </b-field>
 
       <b-field horizontal label="Description">
-        <b-input class="description" type="textarea" v-model="Form.competition.description"/>
+        <b-input
+          v-model="Form.competition.description"
+          class="description"
+          type="textarea"
+        />
       </b-field>
 
       <b-field horizontal label="Agenda">
-        <b-input class="agenda" type="textarea" v-model="Form.competition.agenda"/>
+        <b-input
+          v-model="Form.competition.agenda"
+          class="agenda"
+          type="textarea"
+        />
       </b-field>
 
       <div class="is-pulled-right">
         <b-button
-                type="is-primary"
-                tag="button"
-                :loading="Form.isLoading"
-                class="create-competition"
-                @click="registerCompetition"
+          type="is-primary"
+          tag="button"
+          :loading="Form.isLoading"
+          class="create-competition"
+          @click="registerCompetition"
         >
           Valider compétition
         </b-button>
@@ -254,6 +275,7 @@ export default class CompetitionForm extends Vue {
 .category {
   justify-content: flex-end;
 }
+
 .low-size {
   max-width: 100px;
 }
