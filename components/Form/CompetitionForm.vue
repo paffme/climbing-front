@@ -17,21 +17,23 @@
         <b-field>
           <b-datepicker
             v-model="Form.competition.startDate"
+            :date-formatter="dateFormatter"
             class="date-start"
-            placeholder="Date de début"
-            icon="calendar-today"
-            trap-focus
             editable
+            icon="calendar-today"
+            placeholder="Date de début"
+            trap-focus
           />
         </b-field>
         <b-field>
           <b-datepicker
             v-model="Form.competition.endDate"
+            :date-formatter="dateFormatter"
             class="date-end"
-            placeholder="Date de fin"
-            icon="calendar-today"
-            trap-focus
             editable
+            icon="calendar-today"
+            placeholder="Date de fin"
+            trap-focus
           />
         </b-field>
       </b-field>
@@ -42,11 +44,12 @@
       <b-field horizontal label="Date d'accueil">
         <b-datepicker
           v-model="Form.competition.welcomingDate"
+          :date-formatter="dateFormatter"
           class="date-welcome"
-          placeholder="Date d'accueil"
-          icon="calendar-today"
-          trap-focus
           editable
+          icon="calendar-today"
+          placeholder="Date d'accueil"
+          trap-focus
         />
       </b-field>
 
@@ -171,7 +174,16 @@ import FormCompetitionCategories from '~/components/Form/FormCompetitionCategori
       categories: CategoryName
     }
   },
-  components: { FormCompetitionCategories }
+  components: { FormCompetitionCategories },
+  methods: {
+    dateFormatter(dt: Date) {
+      return dt.toLocaleDateString('fr', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })
+    }
+  }
 })
 export default class CompetitionForm extends Vue {
   @Prop(Object) competition!: Competition
