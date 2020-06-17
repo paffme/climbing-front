@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
-import { APIUser } from '~/definitions'
+import { APICompetition, APIUser } from '~/definitions'
 import { RolesAPI } from '~/utils/api_helper/RolesAPI/RolesAPI'
 
 export class RouteSettersRole implements RolesAPI {
@@ -14,5 +14,11 @@ export class RouteSettersRole implements RolesAPI {
 
   remove(competitionId: number, userId: number): Promise<AxiosResponse<void>> {
     return ApiHelper.RemoveRouteSetters(competitionId, userId)
+  }
+
+  getCompetitionFromRole(
+    userId: number
+  ): Promise<AxiosResponse<APICompetition[]>> {
+    return ApiHelper.GetRouteSettings(userId)
   }
 }

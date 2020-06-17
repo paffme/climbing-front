@@ -4,7 +4,7 @@
       <b-icon icon="alert-circle has-text-danger"></b-icon>
       <span class="subtitle">Danger zone</span>
     </div>
-    <b-button type="is-danger" expanded>
+    <b-button type="is-gray" expanded>
       Supprimer cette compétition
     </b-button>
   </b-notification>

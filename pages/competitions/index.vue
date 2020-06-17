@@ -93,7 +93,4 @@ export default class IndexCompetitions extends Vue {
 </script>
 
 <style scoped>
-.little-margin {
-  margin-right: 20px;
-}
 </style>
