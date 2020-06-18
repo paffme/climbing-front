@@ -495,6 +495,15 @@ describe('ApiHelper', () => {
       expect(result).toEqual('success')
     })
 
+    test('getJudgements - Should call with rights args', async () => {
+      const spy = jest.spyOn(API_URL, 'getJudgements')
+      axios.get.mockResolvedValue('success')
+
+      const result = await ApiHelper.GetJudgements(1)
+      expect(spy).toBeCalledWith(1)
+      expect(result).toEqual('success')
+    })
+
     test('getJudgementsAssignmentsByCompetition - Should call with rights args', async () => {
       const spy = jest.spyOn(API_URL, 'getJudgementsAssignmentsByCompetition')
       axios.get.mockResolvedValue('success')

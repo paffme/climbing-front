@@ -77,6 +77,7 @@ export const ApiHelper = {
   GetJuryPresidencies: getJuryPresidencies,
   GetTechnicalDelegations: getTechnicalDelegations,
   GetJudgementsAssignments: getJudgementsAssignments,
+  GetJudgements: getJudgements,
   GetJudgementsAssignmentsByCompetition: getJudgementsAssignmentsByCompetition,
   GetUserCompetitionsRoles: getUserCompetitionsRoles
 }
@@ -465,6 +466,12 @@ async function getJudgementsAssignments(
   userId: number
 ): Promise<AxiosResponse<APICompetition[]>> {
   return axios.get(API_URL.getJudgementsAssignments(userId))
+}
+
+async function getJudgements(
+  userId: number
+): Promise<AxiosResponse<APICompetition[]>> {
+  return axios.get(API_URL.getJudgements(userId))
 }
 
 async function getJudgementsAssignmentsByCompetition(

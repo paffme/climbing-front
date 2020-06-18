@@ -81,6 +81,7 @@ import { APIUser } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { authUser } from '~/utils/store-accessor'
 import { AxiosHelper } from '~/utils/axiosHelper'
+import AuthUser from '~/store/authUser'
 
 @Component
 export default class FormUpdateUser extends Vue {
@@ -97,19 +98,22 @@ export default class FormUpdateUser extends Vue {
     passwordIsValid: true
   }
 
-  mounted() {
-    this.originalEmail = this.user?.email
+  created() {
+    // @ts-ignore
+    this.originalEmail = AuthUser.getters?.['Credentials']().email
   }
 
   async updateCredentials() {
-    const id = authUser.Credentials?.id
-    if (!id) return
     try {
-      await ApiHelper.UpdateUser(id, this.dtoUser(this.user))
+      const user = await ApiHelper.UpdateUser(
+        this.user.id,
+        this.dtoUser(this.user)
+      )
       this.$buefy.toast.open({
         type: 'is-success',
         message: 'Profil mis a jours'
       })
+      authUser.setUserCredentials(user.data)
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
     }
@@ -120,11 +124,9 @@ export default class FormUpdateUser extends Vue {
       this.credentials.passwordIsValid = false
       return
     }
-    const id = authUser.Credentials?.id
-    if (!id) return
 
     try {
-      await ApiHelper.UpdateUser(id, {
+      await ApiHelper.UpdateUser(this.user.id, {
         password: (this.credentials.newPassword as unknown) as string
       })
       this.$buefy.toast.open({

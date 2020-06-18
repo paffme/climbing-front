@@ -68,12 +68,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import moment from 'moment'
 import { APICompetition, RoleName } from '~/definitions'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import { RolesBuilder } from '~/utils/api_helper/RolesBuilder'
-import { authUser } from '~/utils/store-accessor'
 
 @Component({
   filters: {
@@ -84,6 +83,7 @@ import { authUser } from '~/utils/store-accessor'
   }
 })
 export default class UserRolesCompetitions extends Vue {
+  @Prop(Number) userId!: number
   roleName = RoleName
   selectedRole = RoleName.Juges
   isLoading = true
@@ -98,9 +98,8 @@ export default class UserRolesCompetitions extends Vue {
     try {
       const rolesAPI = RolesBuilder.getRoles(role)
       if (!rolesAPI) throw new Error('No role has been found')
-      const { data } = await rolesAPI.getCompetitionFromRole(
-        authUser.Credentials!.id as number
-      )
+      const { data } = await rolesAPI.getCompetitionFromRole(this.userId)
+      console.log('role', data)
       this.competitions = data
       this.isLoading = false
     } catch (err) {
@@ -118,7 +117,9 @@ strong {
 .media {
   padding: 10px;
 }
-
+.competitions {
+  text-decoration: none;
+}
 .competitions:hover {
   background-color: #03378c;
   color: white !important;

@@ -45,7 +45,7 @@
                               :key="index"
                               :value="climber.id"
                             >
-                              {{ climber.name }}
+                              {{ `${climber.firstName} ${climber.lastName}` }}
                             </option>
                           </b-select>
                         </b-field>

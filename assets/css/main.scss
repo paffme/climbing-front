@@ -42,6 +42,10 @@ li {
   color: $white;
 }
 
+.notification a:not(.button):not(.dropdown-item) {
+  text-decoration: none !important;
+}
+
 @media screen and (max-width: 1023px) {
   .b-sidebar {
     .sidebar-content {
