@@ -96,8 +96,6 @@ export default class Sidebar extends Vue {
   fullwidth = false
   mobile = 'reduce'
 
-  mounted() {}
-
   disconnectUser() {
     authUser.disconnectUser()
     AxiosHelper.RemoveHeaderAuthorizationToken()
