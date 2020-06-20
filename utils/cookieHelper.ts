@@ -28,8 +28,8 @@ export function getCookie(name: string): null | {} {
   return finalCookie
 }
 
-export function getCookieFromObject(name: string): any | undefined {
-  let finalResult
+export function getCookieFromObject(name: string): any | null {
+  let finalResult = null
   // On supprime les espaces vides pour bien checker la clé de l'objet
   const cookies = document.cookie.replace('; ', ';').split(';')
   cookies.forEach((cookie) => {

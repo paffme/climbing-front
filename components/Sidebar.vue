@@ -23,15 +23,24 @@
       <hr />
       <b-menu>
         <b-menu-list label="Menu">
-          <template v-for="(item, index) of items">
-            <b-menu-item
-              :key="index"
-              :icon="item.icon"
-              :label="item.title"
-              tag="nuxt-link"
-              :to="item.to"
-            />
-          </template>
+          <b-menu-item
+            icon="home"
+            label="Tableau de bord"
+            tag="nuxt-link"
+            :to="{ name: 'index' }"
+          />
+          <b-menu-item
+            icon="account"
+            label="Mon profile"
+            tag="nuxt-link"
+            :to="{ name: 'user' }"
+          />
+          <b-menu-item
+            icon="alert-octagon-outline"
+            label="Mes rôles"
+            tag="nuxt-link"
+            :to="{ name: 'user-roles' }"
+          />
           <b-menu-list label="Actions">
             <template v-if="isConnected">
               <b-menu-item

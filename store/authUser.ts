@@ -3,8 +3,7 @@ import {
   APIUser,
   AuthCredentials,
   DTOSubscriptionCredentials,
-  APIToken,
-  APIUserCredentials
+  APIToken
 } from '~/definitions'
 import {
   createCookie,
@@ -28,7 +27,7 @@ export default class AuthUser extends VuexModule {
   }
 
   @Mutation
-  setUserCredentials(newUserCredential: APIUserCredentials) {
+  setUserCredentials(newUserCredential: APIUser) {
     createCookieFromObject('credentials', newUserCredential)
   }
 
@@ -47,7 +46,9 @@ export default class AuthUser extends VuexModule {
   }
 
   get Credentials(): APIUser | undefined {
-    return getCookieFromObject('credentials')
+    const object = getCookieFromObject('credentials')
+    console.log('credentials call', object)
+    return object
   }
 
   @Action({ rawError: true }) // Use to get a detailled errors
@@ -58,7 +59,7 @@ export default class AuthUser extends VuexModule {
   }
 
   @Action({ rawError: true }) // Use to get a detailled errors
-  async fetchUser(userId: number): Promise<AxiosResponse<APIUserCredentials>> {
+  async fetchUser(userId: number): Promise<AxiosResponse<APIUser>> {
     return ApiHelper.GetUser(userId)
   }
 

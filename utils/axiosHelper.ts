@@ -28,6 +28,7 @@ function handleAxiosError(context: Vue, error: AxiosError): void {
     console.log(error.response.data)
     console.log(error.response.status)
     console.log(error.response.headers)
+    if (!context || !context.$buefy) return
     context.$buefy.toast.open({
       type: 'is-danger',
       message: error.response.data.message || "Une erreur s'est produite",

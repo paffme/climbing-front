@@ -38,7 +38,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import { authUser } from '~/store'
 import LoginForm from '~/components/Form/LoginForm.vue'
 import { FormEvent, LoginEvent } from '~/definitions/FormEvent'
-import { APIToken, APIUserCredentials } from '~/definitions'
+import { APIToken, APIUser } from '~/definitions'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import Message from '~/definitions/fr'
 import LogoComponent from '~/components/LogoComponent.vue'
@@ -68,9 +68,11 @@ export default class Login extends Vue {
       this.form.success = true
 
       const apiToken = await this.fetchToken(loginEvent)
+      if (!apiToken) throw new Error('No Token was found')
       this.setToken(apiToken.token, apiToken.expiresIn)
 
       const user = await this.fetchUser(apiToken.userId)
+      if (!user) throw new Error('No user was found')
       this.setUser(user)
 
       setTimeout(async () => this.$router.push({ name: 'index' }), 1000)
@@ -81,8 +83,9 @@ export default class Login extends Vue {
     }
   }
 
-  async fetchToken(loginEvent: LoginEvent): Promise<APIToken> {
+  async fetchToken(loginEvent: LoginEvent): Promise<APIToken | null> {
     try {
+      console.log('authUser', authUser)
       const response = await authUser.fetchToken({
         email: loginEvent.data.email,
         password: loginEvent.data.password
@@ -90,19 +93,19 @@ export default class Login extends Vue {
 
       return response.data
     } catch (err) {
-      console.log('fetchToken - Error', err)
-      throw err
+      AxiosHelper.HandleAxiosError(this, err)
+      return null
     }
   }
 
-  async fetchUser(userId: number): Promise<APIUserCredentials> {
+  async fetchUser(userId: number): Promise<APIUser | null> {
     try {
       const response = await authUser.fetchUser(userId)
 
       return response.data
     } catch (err) {
-      console.log('fetchToken - Error', err)
-      throw err
+      AxiosHelper.HandleAxiosError(this, err)
+      return null
     }
   }
 
@@ -111,7 +114,7 @@ export default class Login extends Vue {
     AxiosHelper.SetHeaderAuthorizationToken(token)
   }
 
-  setUser(userCredential: APIUserCredentials) {
+  setUser(userCredential: APIUser) {
     authUser.setUserCredentials(userCredential)
   }
 }
