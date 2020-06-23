@@ -29,18 +29,20 @@
             tag="nuxt-link"
             :to="{ name: 'index' }"
           />
-          <b-menu-item
-            icon="account"
-            label="Mon profile"
-            tag="nuxt-link"
-            :to="{ name: 'user' }"
-          />
-          <b-menu-item
-            icon="alert-octagon-outline"
-            label="Mes rôles"
-            tag="nuxt-link"
-            :to="{ name: 'user-roles' }"
-          />
+          <b-menu-list v-if="isConnected" label="Gestion">
+            <b-menu-item
+              icon="account"
+              label="Mon profil"
+              tag="nuxt-link"
+              :to="{ name: 'user' }"
+            />
+            <b-menu-item
+              icon="alert-octagon-outline"
+              label="Mes rôles"
+              tag="nuxt-link"
+              :to="{ name: 'user-roles' }"
+            />
+          </b-menu-list>
           <b-menu-list label="Actions">
             <template v-if="isConnected">
               <b-menu-item
@@ -72,7 +74,6 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { authUser } from '~/store'
-import { AxiosHelper } from '~/utils/axiosHelper'
 import AuthUser from '~/store/authUser'
 
 @Component({
@@ -107,8 +108,6 @@ export default class Sidebar extends Vue {
 
   disconnectUser() {
     authUser.disconnectUser()
-    console.log('disconnect - ', authUser.Authenticated)
-    AxiosHelper.SetHeaderAuthorizationToken()
     this.$router.push('/login')
   }
 }

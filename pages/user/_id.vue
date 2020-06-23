@@ -33,12 +33,14 @@ import FormUpdateUser from '~/components/Form/FormUpdateUser.vue'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { APIUser } from '~/definitions'
 import UserRolesCompetitions from '~/components/RolesCompetitionComponent/UserRolesCompetitions.vue'
+import AuthUser from '~/store/authUser'
 
 @Component({
   middleware: ['isAuth', 'setHeader'],
   components: { FormUpdateUser, UserRolesCompetitions },
-  validate({ params }: any) {
-    const userId = parseInt(params.id, 10)
+  validate() {
+    // @ts-ignore
+    const userId = AuthUser.getters?.['Credentials']().id
     if (!userId) {
       throw new Error('ID utilisateur nécessaire')
     }
@@ -55,7 +57,7 @@ import UserRolesCompetitions from '~/components/RolesCompetitionComponent/UserRo
     }
   }
 })
-export default class UserId extends Vue {
+export default class User extends Vue {
   user: APIUser | null = null
 }
 </script>

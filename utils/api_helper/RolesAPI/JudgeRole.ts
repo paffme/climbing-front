@@ -19,6 +19,6 @@ export class JudgeRole implements RolesAPI {
   getCompetitionFromRole(
     userId: number
   ): Promise<AxiosResponse<APICompetition[]>> {
-    return ApiHelper.GetJudgementsAssignments(userId)
+    return ApiHelper.GetJudgements(userId)
   }
 }

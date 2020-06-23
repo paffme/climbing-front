@@ -37,6 +37,11 @@ export enum RankingType {
   UNLIMITED_CONTEST = 'Illimité',
   LIMITED_CONTEST = 'Limité'
 }
+export enum RawRankingType {
+  CIRCUIT = 'CIRCUIT',
+  UNLIMITED_CONTEST = 'UNLIMITED_CONTEST',
+  LIMITED_CONTEST = 'LIMITED_CONTEST'
+}
 
 export enum TypeBouldering {
   QUALIFIER = 'Qualification',
@@ -56,9 +61,7 @@ export enum Sex {
 }
 
 export enum TypeCompetition {
-  Bouldering = 'bouldering',
-  Lead = 'lead',
-  Speed = 'speed'
+  Bouldering = 'bouldering'
 }
 
 export type CompetitionCategories = {
@@ -123,10 +126,21 @@ export type BoulderingRoundInput = {
   name?: string
   quota?: number
   boulders?: number
-  rankingType?: RankingType
-  type?: TypeBouldering
+  rankingType?: RawRankingType
+  type?: TypeBoulderingRound
   groups?: number
   maxTries?: number
+}
+
+export type BoulderingRoundCreateInput = {
+  category: CategoryName
+  sex: Sex
+  name: string
+  boulders: number
+  rankingType: RawRankingType
+  type: TypeBoulderingRound
+  groups: number
+  maxTries: number
 }
 
 export type BoulderingRoundInputEdit = BoulderingRoundInput & {
@@ -239,6 +253,12 @@ export type BoulderingResult = {
   try: number
 }
 
+export type BoulderingResultWithCredentials = BoulderingResult & {
+  groupId: number
+  blocId: number
+  roundId: number
+}
+
 export type APIRankingResponse = {
   [key: string]: {
     [key: string]: Array<Ranking>
@@ -265,7 +285,7 @@ export type APIBoulderingGroups = {
 export type APIBoulderingGroupsClimbers = {
   id: number
   name: string
-  climbers: User
+  climbers: User[]
   boulders: APIBoulders[]
   roundId: number
   state: StateRound
@@ -323,6 +343,19 @@ export type TempCategoriesSelect = {
 export type BoulderingRoundRankingsDto = {
   type: TypeBoulderingRound
   groups: UnlimitedContestGroup | LimitedContestGroup | CircuitGroup
+}
+
+export type CompetitionBoulderingResult = {
+  id: number
+  climberId: number
+  competitionId: number
+  roundId: number
+  boulderId: number
+  top: boolean
+  topInTries: number
+  zone: boolean
+  zoneInTries: number
+  tries: number
 }
 
 export type UnlimitedContestGroup = {

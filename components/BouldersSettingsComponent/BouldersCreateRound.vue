@@ -19,22 +19,7 @@ import FormRoundCompetition from '~/components/Form/FormRoundCompetition.vue'
 import { CategoryName, Sex } from '~/definitions'
 
 @Component({
-  components: { FormRoundCompetition },
-  data() {
-    return {
-      round: {
-        category: 'microbe',
-        sex: 'male',
-        maxTries: 0,
-        name: 'string',
-        quota: 0,
-        boulders: 0,
-        rankingType: 'CIRCUIT',
-        type: 'QUALIFIER',
-        groups: 0
-      }
-    }
-  }
+  components: { FormRoundCompetition }
 })
 export default class BouldersCreateRound extends Vue {
   @Prop(String) genre?: Sex

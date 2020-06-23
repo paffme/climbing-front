@@ -1,12 +1,10 @@
 <template>
-  <b-notification :closable="false">
-    <div class="content is-flex alert">
-      <span class="subtitle">Aucun round</span>
-      <b-button type="is-info" @click="$emit('createRound')">
-        Ajouter round
-      </b-button>
-    </div>
-  </b-notification>
+  <div class="content is-flex alert">
+    <span class="subtitle">Aucun round</span>
+    <b-button type="is-info" @click="$emit('createRound')">
+      Ajouter round
+    </b-button>
+  </div>
 </template>
 
 <script lang="ts">

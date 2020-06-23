@@ -117,6 +117,7 @@ export default class RolesComponent extends Vue {
         type: 'is-success',
         message: 'Role ajouté'
       })
+      this.$emit('onSelect')
     } catch (err) {
       if (err.response.status === 409) {
         this.$buefy.toast.open({

@@ -28,10 +28,14 @@
             </li>
           </ul>
         </nav>
+        <b-notification v-if="currentRole">
+          Vous êtes connecté en tant que {{ currentRole.toLocaleLowerCase() }}
+        </b-notification>
         <nuxt-child
           :competition="competition"
           :role="role"
-          :bouldering="bouldering"
+          :rounds="rounds"
+          @onFetchRole="loadRoles"
           @onFetchCompetition="loadCompetition"
         />
       </div>
@@ -46,12 +50,13 @@ import {
   APIBoulderingRounds,
   APICompetition,
   APIUserCompetitionRoles,
+  RoleName,
   Roles
 } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { AxiosHelper } from '~/utils/axiosHelper'
-import { authUser } from '~/utils/store-accessor'
 import GoBackBtn from '~/components/Button/GoBackBtn.vue'
+import AuthUser from '~/store/authUser'
 
 async function fetchRole(
   competitionId?: number,
@@ -63,10 +68,12 @@ async function fetchRole(
     userId as number
   )
 
+  console.log()
+
   return response.data
 }
 
-async function fetchBouldering(
+async function fetchRounds(
   competitionId: number
 ): Promise<APIBoulderingRounds> {
   const response = await ApiHelper.GetRound(competitionId)
@@ -95,14 +102,20 @@ async function fetchCompetition(
     try {
       const competition = await fetchCompetition(idCompetition)
 
-      const bouldering = await fetchBouldering(idCompetition)
+      const rounds = await fetchRounds(idCompetition)
 
-      const role = await fetchRole(idCompetition, authUser.Credentials?.id)
+      const role = await fetchRole(
+        idCompetition,
+        // @ts-ignore
+        AuthUser.getters?.['Credentials']().id
+      )
+
+      console.log('role', role)
 
       return {
         competition,
         role,
-        bouldering
+        rounds
       }
     } catch (err) {
       if (err.response.status === 401) {
@@ -117,25 +130,43 @@ async function fetchCompetition(
 export default class EditOneCompetitionPage extends Vue {
   competition: APICompetition | null = null
   role: APIUserCompetitionRoles | null = null
-  bouldering: APIBoulderingRounds | null = null
+  rounds: APIBoulderingRounds | null = null
+  currentRole: string | null = null
+
+  created() {
+    if (!this.role) {
+      return
+    }
+    const hasRole = Object.keys(this.role!).find((roleName) => {
+      // @ts-ignore
+      return this.role![roleName]
+    })
+
+    if (!hasRole) {
+      return this.$nuxt.error({
+        statusCode: 404,
+        message: 'Page introuvable (pas de role)'
+      })
+    }
+
+    this.currentRole = this.displayCurrentRole(this.role)
+  }
 
   displayCurrentRole(role?: APIUserCompetitionRoles | null): string | null {
     if (!role) return null
-    let currentRole: Roles | null = null
+    let currentRole: RoleName | null = null
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
     for (const [roleName, bool] of Object.entries(role)) {
       if (bool) {
         if (roleName === Roles.chiefRouteSetter)
-          currentRole = Roles.chiefRouteSetter
-        if (roleName === Roles.organizer) currentRole = Roles.organizer
-        if (roleName === Roles.routeSetter) currentRole = Roles.routeSetter
-        if (roleName === Roles.juryPresident) currentRole = Roles.juryPresident
-        if (roleName === Roles.judge) currentRole = Roles.judge
-        if (roleName === Roles.chiefRouteSetter)
-          currentRole = Roles.chiefRouteSetter
+          currentRole = RoleName.ChefRouteSetter
+        if (roleName === Roles.organizer) currentRole = RoleName.Organisateur
+        if (roleName === Roles.routeSetter) currentRole = RoleName.RouteSetter
+        if (roleName === Roles.juryPresident) currentRole = RoleName.President
+        if (roleName === Roles.judge) currentRole = RoleName.Juges
         if (roleName === Roles.technicalDelegate)
-          currentRole = Roles.technicalDelegate
+          currentRole = RoleName.DelegueTechnique
       }
     }
     return currentRole
@@ -143,6 +174,14 @@ export default class EditOneCompetitionPage extends Vue {
 
   async loadCompetition() {
     this.competition = await fetchCompetition(this.competition!.id as number)
+  }
+
+  async loadRoles() {
+    this.role = await fetchRole(
+      this.competition!.id as number,
+      // @ts-ignore
+      AuthUser.getters?.['Credentials']().id
+    )
   }
 }
 </script>

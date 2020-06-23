@@ -20,7 +20,7 @@ describe('NotesCompetitions', () => {
   })
 
   // TODO: WIP
-  /*test('getCurrentRoundConfiguration', () => {
+  /* test('getCurrentRoundConfiguration', () => {
     const bouldering = {
       cadet: {
         male: {
@@ -109,5 +109,5 @@ describe('NotesCompetitions', () => {
     expect(wrapper.isVueInstance()).toBe(true)
     expect(wrapper.vm.getCurrentRoundConfiguration()).toBe(false)
     expect(wrapper.vm.getCurrentRoundConfiguration(bouldering)).toBe(false)
-  })*/
+  }) */
 })

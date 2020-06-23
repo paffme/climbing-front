@@ -30,7 +30,7 @@ import UserRolesCompetitions from '~/components/RolesCompetitionComponent/UserRo
   middleware: 'isAuth',
   components: { FormUpdateUser, UserRolesCompetitions }
 })
-export default class UserId extends Vue {
+export default class UserPage extends Vue {
   @Prop(Object) userCredentials!: APIUser
 }
 </script>

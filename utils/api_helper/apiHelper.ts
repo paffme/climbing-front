@@ -14,10 +14,13 @@ import {
   DTOSubscriptionCredentials,
   APIBoulderingRounds,
   CompetitionEdit,
-  APIBoulderingGroups,
   BoulderingLimitedRounds,
   TypeBoulderingRound,
-  BoulderingRoundRankingsDto
+  BoulderingRoundRankingsDto,
+  BoulderingRoundCreateInput,
+  APIBoulderingGroupsClimbers,
+  APIBoulders,
+  CompetitionBoulderingResult
 } from '~/definitions'
 import { AxiosResponse } from '~/node_modules/axios'
 import API_URL from '~/utils/api_helper/apiUrl'
@@ -84,7 +87,9 @@ export const ApiHelper = {
   GetJudgementsAssignmentsByCompetition: getJudgementsAssignmentsByCompetition,
   GetUserCompetitionsRoles: getUserCompetitionsRoles,
   StartCompetition: startCompetition,
-  GetBoulderRankings: getBoulderRankings
+  GetBoulderRankings: getBoulderRankings,
+  GetBoulder: getBoulder,
+  GetResultClimber: getResultClimber
 }
 
 async function addUserInCompetition(
@@ -235,7 +240,7 @@ async function removeOrganizers(
 
 async function addRound(
   competitionId: number,
-  body: BoulderingRoundInput
+  body: BoulderingRoundCreateInput
 ): Promise<BoulderingRounds> {
   return axios.post(API_URL.getOraddRound(competitionId), body)
 }
@@ -264,10 +269,11 @@ async function addBoulderingResult(
   body: BoulderingResult,
   competitionId: number,
   roundId: number,
+  groupId: number,
   boulderId: number
 ): Promise<AxiosResponse<void>> {
   return axios.post(
-    API_URL.addBoulderingResult(competitionId, roundId, boulderId),
+    API_URL.addBoulderingResult(competitionId, roundId, groupId, boulderId),
     body
   )
 }
@@ -358,7 +364,7 @@ async function getCompetitionsPagination(
 async function getBoulderingGroups(
   competitionId: number,
   roundId: number
-): Promise<AxiosResponse<APIBoulderingGroups[]>> {
+): Promise<AxiosResponse<APIBoulderingGroupsClimbers[]>> {
   return axios.get(API_URL.getBoulderingGroups(competitionId, roundId))
 }
 
@@ -386,7 +392,15 @@ async function addBoulder(
   roundId: number,
   groupId: number
 ): Promise<AxiosResponse<void>> {
-  return axios.post(API_URL.createBoulder(competitionId, roundId, groupId))
+  return axios.post(API_URL.createOrGetBoulder(competitionId, roundId, groupId))
+}
+
+async function getBoulder(
+  competitionId: number,
+  roundId: number,
+  groupId: number
+): Promise<AxiosResponse<APIBoulders[]>> {
+  return axios.get(API_URL.createOrGetBoulder(competitionId, roundId, groupId))
 }
 
 async function assignJudgeToBoulder(
@@ -513,4 +527,22 @@ async function getBoulderRankings(
   roundId: number
 ): Promise<AxiosResponse<BoulderingRoundRankingsDto>> {
   return axios.get(API_URL.getBoulderRankings(competitionId, roundId))
+}
+
+async function getResultClimber(
+  competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number,
+  climberId: number
+): Promise<AxiosResponse<CompetitionBoulderingResult>> {
+  return axios.get(
+    API_URL.getResultClimber(
+      competitionId,
+      roundId,
+      groupId,
+      boulderId,
+      climberId
+    )
+  )
 }

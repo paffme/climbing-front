@@ -34,17 +34,17 @@ export default {
         {
           title: 'Tableau de bord',
           icon: 'home',
-          to: { firstName: 'dashboard' }
+          to: { name: 'dashboard' }
         },
         {
           title: 'Compétitions',
           icon: 'lightbulb',
-          to: { firstName: 'competitions' }
+          to: { name: 'competitions' }
         },
         {
-          title: 'Mon profile',
+          title: 'Mon profil',
           icon: 'account',
-          to: { firstName: 'user-id' }
+          to: { name: 'user-id' }
         }
       ]
     }

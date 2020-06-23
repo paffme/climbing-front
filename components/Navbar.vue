@@ -10,19 +10,30 @@
 
     <template slot="end">
       <b-navbar-item tag="div">
-        <div v-if="isConnected && userCredentials">
+        <div v-if="isConnected && userCredentials" class="text">
           Connecté en tant que : {{ userCredentials.firstName }}
           {{ userCredentials.lastName }}
         </div>
-        <template v-for="(item, key) of itemNavbars">
-          <template v-if="item.linkTo === 'logout'">
-            <b-button :key="key" :icon-left="item.icon" @click="disconnect" />
-          </template>
-          <template v-else>
-            <nuxt-link :key="key" :to="item.linkTo" class="end-icon-link">
-              <b-icon :key="key" :icon="item.icon" />
-            </nuxt-link>
-          </template>
+        <template v-if="isConnected">
+          <nuxt-link :to="{ name: 'user' }">
+            <b-icon icon="account" type="is-white" class="end-icon-link" />
+          </nuxt-link>
+          <b-icon
+            icon="logout"
+            type="is-white"
+            class="end-icon-link"
+            @click.native="disconnect"
+          />
+        </template>
+        <template v-else>
+          <b-button
+            type="is-primary"
+            icon-left="login"
+            tag="nuxt-link"
+            :to="{ name: 'login' }"
+          >
+            Se connecter
+          </b-button>
         </template>
       </b-navbar-item>
     </template>
@@ -37,6 +48,7 @@ import AuthUser from '~/store/authUser'
 type NavbarItem = {
   linkTo: string
   icon: string
+  isConnected: boolean
 }
 
 @Component
@@ -74,7 +86,12 @@ export default class Navbar extends Vue {
 </script>
 
 <style scoped>
+.text {
+  margin-right: 15px;
+}
 .end-icon-link {
   margin: 0 15px;
+  color: black;
+  cursor: pointer;
 }
 </style>

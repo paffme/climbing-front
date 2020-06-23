@@ -59,6 +59,12 @@ function handleAxiosError(context: Vue, error: AxiosError): void {
 function buildMessage(data: any) {
   if (!data) return
   console.log('AxiosError', data)
+  if (data.statusCode === 500) {
+    return (
+      '<h1 class="subtitle has-text-white">Erreur</h1>' +
+      "<ul><li>Une erreur s'est produite</li></ul>"
+    )
+  }
   if (Array.isArray(data) && data.length < 1) {
     return (
       '' +

@@ -9,7 +9,7 @@
           <div class="columns">
             <div
               v-if="userCredentials && userCredentials.id"
-              class="column is-12 notification"
+              class="column is-12"
             >
               <UserRolesCompetitions :user-id="userCredentials.id" />
             </div>

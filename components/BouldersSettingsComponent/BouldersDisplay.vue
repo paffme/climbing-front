@@ -59,7 +59,7 @@
           @delete="onDelete"
           @create="onCreateGroup"
           @createBloc="onCreateBloc"
-          @createJudge="refreshBouldersGroups"
+          @roundStart="refreshRound"
           @deleteJudge="refreshBouldersGroups"
         />
       </b-modal>
@@ -74,6 +74,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import {
   APIBoulderingGroups,
+  APIBoulderingGroupsClimbers,
   BoulderingLimitedRounds,
   TypeBoulderingRound
 } from '~/definitions'
@@ -88,7 +89,7 @@ export default class BouldersDisplay extends Vue {
   @Prop(String) qualificationRound!: TypeBoulderingRound
   @Prop(Object) round!: BoulderingLimitedRounds
   modalIsActive = false
-  groups: APIBoulderingGroups[] = []
+  groups: APIBoulderingGroupsClimbers[] = []
 
   async created() {
     await this.refreshBouldersGroups()
@@ -96,6 +97,7 @@ export default class BouldersDisplay extends Vue {
 
   async getBouldersGroups(competitionId: number, roundId: number) {
     try {
+      console.log('roundId', roundId)
       const groups = await ApiHelper.GetBoulderingGroups(competitionId, roundId)
       this.groups = groups.data
     } catch (err) {
@@ -152,6 +154,10 @@ export default class BouldersDisplay extends Vue {
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
     }
+  }
+
+  refreshRound() {
+    this.$emit('refreshRound')
   }
 
   async refreshBouldersGroups() {

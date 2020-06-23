@@ -1,56 +1,48 @@
-import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
+import { shallowMount, createLocalVue } from '@vue/test-utils'
 import Buefy from 'buefy'
+import VueRouter from 'vue-router'
 import EditOneCompetition from '~/pages/competitions/edit/_competitionId.vue'
 
 let localVue
 describe('EditOneCompetition', () => {
+  let router
   beforeAll(() => {
     localVue = createLocalVue()
     localVue.use(Buefy)
+    localVue.use(VueRouter)
+    router = new VueRouter()
   })
   test('is a Vue instance', () => {
-    const $route = { params: {} }
     const wrapper = shallowMount(EditOneCompetition, {
       localVue,
-      mocks: {
-        $route
-      },
-      stubs: {
-        NuxtLink: RouterLinkStub,
-        NuxtChild: RouterLinkStub
-      }
+      router,
+      stubs: ['nuxt-link', 'nuxt-child']
     })
     expect(wrapper.isVueInstance()).toBe(true)
   })
 
   describe('displayCurrentRole', () => {
     test('Should return roles', () => {
-      const $route = { params: { competitionId: 1 } }
       const wrapper = shallowMount(EditOneCompetition, {
         localVue,
-        mocks: {
-          $route
-        },
-        stubs: {
-          NuxtLink: RouterLinkStub,
-          NuxtChild: RouterLinkStub
-        }
+        router,
+        stubs: ['nuxt-link', 'nuxt-child']
       })
       expect(wrapper.vm.displayCurrentRole({ organizer: true })).toBe(
-        'organizer'
+        'Organisateurs'
       )
       expect(wrapper.vm.displayCurrentRole({ juryPresident: true })).toBe(
-        'juryPresident'
+        'Président'
       )
-      expect(wrapper.vm.displayCurrentRole({ judge: true })).toBe('judge')
+      expect(wrapper.vm.displayCurrentRole({ judge: true })).toBe('Juges')
       expect(wrapper.vm.displayCurrentRole({ chiefRouteSetter: true })).toBe(
-        'chiefRouteSetter'
+        'Chef routes setters'
       )
       expect(wrapper.vm.displayCurrentRole({ routeSetter: true })).toBe(
-        'routeSetter'
+        'Routes setters'
       )
       expect(wrapper.vm.displayCurrentRole({ technicalDelegate: true })).toBe(
-        'technicalDelegate'
+        'Délégués techniques'
       )
       expect(wrapper.vm.displayCurrentRole({ technicalDelegate: null })).toBe(
         null

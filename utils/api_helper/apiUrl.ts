@@ -56,9 +56,10 @@ export default {
   addBoulderingResult: (
     competitionId: number,
     roundId: number,
+    groupId: number,
     boulderId: number
   ) =>
-    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/boulders/${boulderId}/results`,
+    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders/${boulderId}/results`,
   createOrGetCompetitions: (query?: string) =>
     `/${RouteName.competitions}${query ? '?q=' + query : ''}`,
   getCompetitionsPagination: (page: number, perPage: number, query?: string) =>
@@ -84,7 +85,11 @@ export default {
     `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}`,
   createBoulderingGroup: (competitionId: number, roundId: number) =>
     `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups`,
-  createBoulder: (competitionId: number, roundId: number, groupId: number) =>
+  createOrGetBoulder: (
+    competitionId: number,
+    roundId: number,
+    groupId: number
+  ) =>
     `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders`,
   judgeToBoulder: (
     competitionId: number,
@@ -126,5 +131,13 @@ export default {
   startSemiFinal: (competitionId: number): string =>
     `/${RouteName.competitions}/${competitionId}/start-semi-finals`,
   startFinal: (competitionId: number): string =>
-    `/${RouteName.competitions}/${competitionId}/start-finals`
+    `/${RouteName.competitions}/${competitionId}/start-finals`,
+  getResultClimber: (
+    competitionId: number,
+    roundId: number,
+    groupId: number,
+    boulderId: number,
+    climberId: number
+  ): string =>
+    `/competitions/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders/${boulderId}/results/${climberId}`
 }

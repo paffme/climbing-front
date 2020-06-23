@@ -5,7 +5,7 @@
     </h1>
     <div id="bouldering">
       <!-- Aucune qualification on affiche le template approprié -->
-      <template v-if="!bouldering">
+      <template v-if="!rounds">
         <div class="columns">
           <div class="column is-one-thirds">
             <BouldersEmpty @createRound="onOpenModalRound" />
@@ -55,6 +55,7 @@
               <BouldersDisplay
                 :qualification-round="typeBoulderingRound.SEMI_FINAL"
                 :round="categoriesDisplayed.semi"
+                @refreshRound="$emit('loadBouldering')"
                 @edit="onOpenModalEditRound"
                 @delete="onDeleteRound"
               />
@@ -111,7 +112,10 @@ import {
   CategoryName,
   Sex,
   CurrentCategory,
-  BoulderingRoundInputEdit
+  BoulderingRoundInputEdit,
+  BoulderingRoundCreateInput,
+  BoulderingRoundInput,
+  RawRankingType
 } from '~/definitions'
 import BouldersEmpty from '~/components/BouldersSettingsComponent/BouldersEmpty.vue'
 import BouldersDisplayEmpty from '~/components/BouldersSettingsComponent/BouldersDisplayEmpty.vue'
@@ -134,21 +138,21 @@ import { AxiosHelper } from '~/utils/axiosHelper'
   }
 })
 export default class BouldersSettingsComponent extends Vue {
-  @Prop(Object) bouldering!: APIBoulderingRounds
   @Prop(Number) competitionId!: number
-  @Watch('bouldering', { immediate: true, deep: true })
+  @Prop(Object) rounds!: APIBoulderingRounds
+  @Watch('rounds', { immediate: true, deep: true })
   onBoulderingChange(
     boulderingRounds: APIBoulderingRounds,
     oldBoulderingRounds: APIBoulderingRounds
   ) {
+    // Use to display all category that already exist in this Rounds
     if (!boulderingRounds) return
     this.categoriesCanBeSelected = this.extractCategoryGenre(boulderingRounds)
-    let diff: APIBoulderingRounds | undefined
     if (oldBoulderingRounds) {
-      diff = this.difference(boulderingRounds, oldBoulderingRounds)
+      const diff = this.difference(boulderingRounds, oldBoulderingRounds)
       const extracted: CategoriesSelect[] = this.extractCategoryGenre(diff)
 
-      // Il n'y plus aucune catégorie
+      // Il n'y a aucune différence de catégorie on prend la premiere catégorie
       if (extracted.length === 0) {
         this.updateDisplayedCategories({
           category: this.categoriesCanBeSelected[0].category,
@@ -156,16 +160,14 @@ export default class BouldersSettingsComponent extends Vue {
         })
         return
       }
+      // Il y a une différence de catégorie on prend la premiere catégorie des
       this.updateDisplayedCategories({
         category: extracted[0].category,
         genre: extracted[0].genre[0]
       })
       return
     }
-    this.updateDisplayedCategories({
-      category: this.categoriesCanBeSelected[0].category,
-      genre: this.categoriesCanBeSelected[0].genre[0]
-    })
+    this.updateDisplayedCategories()
   }
 
   // .DATA
@@ -184,8 +186,10 @@ export default class BouldersSettingsComponent extends Vue {
   // .PERSO FUNCTION
   async onCreateRound(value: any) {
     try {
-      delete value.quota
-      await ApiHelper.AddRound(this.competitionId, value)
+      const data = this.roundCreateDto(value)
+      console.log('data', data)
+      if (!data) throw new Error('Des champs sont manquants')
+      await ApiHelper.AddRound(this.competitionId, data)
       this.$buefy.toast.open({
         type: 'is-success',
         message: 'Round ajouté'
@@ -271,25 +275,29 @@ export default class BouldersSettingsComponent extends Vue {
   }
 
   updateDisplayedCategories(categories?: CurrentCategory): void {
-    if (!this.bouldering) {
+    if (!this.rounds) {
       console.log('No boulder has been found')
       return
     }
 
-    if (!categories) categories = this.currentCategoryDisplay as CurrentCategory
+    if (!categories)
+      categories = {
+        category: this.categoriesCanBeSelected![0].category,
+        genre: this.categoriesCanBeSelected![0].genre[0]
+      }
     // @ts-ignore
     const genre = categories.genre === 'homme' ? 'male' : 'female'
 
     this.categoriesDisplayed.qualification =
-      this.bouldering?.[categories.category][genre]?.[
+      this.rounds?.[categories.category][genre]?.[
         TypeBoulderingRound.QUALIFIER
       ] || undefined
-    this.categoriesDisplayed.semi = this.bouldering[categories.category][genre][
+    this.categoriesDisplayed.semi = this.rounds[categories.category][genre][
       TypeBoulderingRound.SEMI_FINAL || undefined
     ]
-    this.categoriesDisplayed.final = this.bouldering[categories.category][
-      genre
-    ][TypeBoulderingRound.FINAL]
+    this.categoriesDisplayed.final = this.rounds[categories.category][genre][
+      TypeBoulderingRound.FINAL
+    ]
   }
 
   extractCategoryGenre(data: APIBoulderingRounds): CategoriesSelect[] {
@@ -343,6 +351,34 @@ export default class BouldersSettingsComponent extends Vue {
       name: round.name,
       rankingType: round.rankingType,
       type: round.type
+    }
+  }
+
+  roundCreateDto(
+    round: BoulderingRoundInput
+  ): BoulderingRoundCreateInput | undefined {
+    console.log('round', round)
+    if (
+      !round.name ||
+      !round.rankingType ||
+      !round.category ||
+      !round.maxTries ||
+      !round.boulders ||
+      !round.groups ||
+      !round.boulders ||
+      !round.sex ||
+      !round.type
+    )
+      return
+    return {
+      name: round.name,
+      sex: round.sex,
+      type: TypeBoulderingRound[round.type],
+      rankingType: RawRankingType[round.rankingType],
+      category: round.category,
+      maxTries: round.maxTries,
+      boulders: round.boulders,
+      groups: round.groups
     }
   }
 }

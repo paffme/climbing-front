@@ -6,6 +6,7 @@
           Gestion des groupes et blocs
           <b-tag type="is-info">
             {{ round.state }}
+            ({{ round.id }})
           </b-tag>
         </h1>
         <div class="is-pulled-right">
@@ -229,7 +230,7 @@ export default class BouldersGroups extends Vue {
         type: 'is-success',
         message: 'La compétition à démarré'
       })
-      this.$emit('createJudge')
+      this.$emit('roundStart')
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
     }

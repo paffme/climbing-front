@@ -1,14 +1,16 @@
 <template>
   <div id="roles" class="columns">
     <div class="column is-3">
-      <p>Voir mon profile en tant que :</p>
+      <p class="_title">
+        Voir mon profile en tant que :
+      </p>
       <b-select v-model="selectedRole" expanded @input="getCompetitions">
         <option v-for="(role, index) in roleName" :key="index" :value="role">
           {{ role }}
         </option>
       </b-select>
     </div>
-    <div class="column is-9">
+    <div id="content" class="column is-9">
       <h1 class="title">
         {{ selectedRole }}
       </h1>
@@ -147,5 +149,11 @@ strong {
 }
 .icon:hover {
   color: white !important;
+}
+._title {
+  margin-bottom: 15px;
+}
+#content {
+  height: 100vh;
 }
 </style>

@@ -277,11 +277,6 @@ export default class OneCompetition extends Vue {
     }
   }
 
-  beforeUpdate() {
-    console.log('Update !!! - isAutenthicated', this.isAutenthicated)
-    console.log('Update !!! - credentials', this.credentials)
-  }
-
   async onRegisterCompetition() {
     try {
       this.editOrRegisterBtn.status.isLoading = true

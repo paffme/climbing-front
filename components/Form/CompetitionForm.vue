@@ -60,7 +60,7 @@
             :key="index"
             :value="type"
           >
-            {{ type }}
+            {{ type === typeCompetiton.Bouldering ? 'Bloc' : type }}
           </option>
         </b-select>
       </b-field>

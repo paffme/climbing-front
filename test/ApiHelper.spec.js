@@ -254,8 +254,8 @@ describe('ApiHelper', () => {
         const spy = jest.spyOn(API_URL, 'addBoulderingResult')
         axios.post.mockResolvedValue('success')
 
-        const result = await ApiHelper.AddBoulderingResult({}, 1, 2, 3)
-        expect(spy).toHaveBeenCalledWith(1, 2, 3)
+        const result = await ApiHelper.AddBoulderingResult({}, 1, 4, 2, 3)
+        expect(spy).toHaveBeenCalledWith(1, 4, 2, 3)
         expect(result).toEqual('success')
       })
     })
@@ -565,6 +565,15 @@ describe('ApiHelper', () => {
 
       const result = await ApiHelper.GetBoulderRankings(1, 19)
       expect(spy).toHaveBeenCalledWith(1, 19)
+      expect(result).toEqual('success')
+    })
+
+    test('GetResultClimber - Should call with rights args', async () => {
+      const spy = jest.spyOn(API_URL, 'getResultClimber')
+      axios.get.mockResolvedValue('success')
+
+      const result = await ApiHelper.GetResultClimber(1, 2, 3, 4, 5)
+      expect(spy).toHaveBeenCalledWith(1, 2, 3, 4, 5)
       expect(result).toEqual('success')
     })
   })

@@ -1,12 +1,9 @@
 <template>
   <div>
-    <p class="subtitle">
-      {{ title }}
-    </p>
     <div class="content">
       <b-field>
         <b-radio-button
-          v-model="data"
+          v-model="syncedName"
           :native-value="false"
           type="is-danger"
           @input="$emit('onSelect', false)"
@@ -14,7 +11,7 @@
           <b-icon icon="close"></b-icon>
         </b-radio-button>
         <b-radio-button
-          v-model="data"
+          v-model="syncedName"
           :native-value="true"
           type="is-success"
           @input="$emit('onSelect', true)"
@@ -27,12 +24,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, PropSync } from 'vue-property-decorator'
 
 @Component
 export default class FormClimberRadio extends Vue {
-  @Prop(String) title!: string
-  data: boolean = false
+  @PropSync('data', { type: Boolean }) syncedName!: string
 }
 </script>
 

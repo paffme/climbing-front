@@ -41,7 +41,6 @@
               <template v-else>
                 <p>Aucun juges</p>
               </template>
-              {{ boulder }}
               <transition name="fade">
                 <div v-show="searchIsActive">
                   <SearchUser @select="onSelect" />

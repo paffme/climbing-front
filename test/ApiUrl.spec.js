@@ -72,8 +72,8 @@ describe('ApiUrl Helper', () => {
       )
     })
     test('addBoulderingResult - Should return a correct URL', () => {
-      expect(API_URL.addBoulderingResult(2, 2, 3)).toEqual(
-        '/competitions/2/bouldering-rounds/2/boulders/3/results'
+      expect(API_URL.addBoulderingResult(1, 2, 3, 4)).toEqual(
+        '/competitions/1/bouldering-rounds/2/groups/3/boulders/4/results'
       )
     })
     test('createOrGetCompetitions - Should return a correct URL', () => {
@@ -229,6 +229,12 @@ describe('ApiUrl Helper', () => {
       )
       expect(API_URL.startSemiFinal(2)).toEqual(
         '/competitions/2/start-semi-finals'
+      )
+    })
+
+    test('getResultClimber - Should return a correct URL', () => {
+      expect(API_URL.getResultClimber(1, 2, 3, 4, 5)).toEqual(
+        '/competitions/1/bouldering-rounds/2/groups/3/boulders/4/results/5'
       )
     })
   })

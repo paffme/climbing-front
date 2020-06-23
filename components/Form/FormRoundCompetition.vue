@@ -48,7 +48,12 @@
       label="Type"
       :label-position="labelPosition"
     >
-      <b-select v-model="Form.input.type" required expanded>
+      <b-select
+        v-model="Form.input.type"
+        required
+        expanded
+        @input="updateMaxGroups"
+      >
         <option
           v-for="(typeBouldering, key, index) in typesBouldering"
           :key="index"
@@ -59,13 +64,20 @@
       </b-select>
     </b-field>
 
-    <b-field label="Quota" :label-position="labelPosition">
-      <b-numberinput
-        v-model="Form.input.quota"
-        :min="boulderingRules.quota.min"
-      />
+    <b-field label="Groupe" :label-position="labelPosition">
+      <b-select
+        v-model="Form.input.groups"
+        required
+        expanded
+        :disabled="maxGroups === 1"
+      >
+        <option v-for="numGroup in maxGroups" :key="numGroup" :value="numGroup">
+          {{ numGroup }}
+        </option>
+      </b-select>
     </b-field>
-    <b-field label="Boulders" :label-position="labelPosition">
+
+    <b-field label="Bloc" :label-position="labelPosition">
       <b-numberinput
         v-model="Form.input.boulders"
         :min="boulderingRules.boulders.min"
@@ -82,15 +94,17 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import {
   BoulderingRoundInput,
   BoulderingRoundInputEdit,
   CategoryName,
   FormBoulderingRound,
   RankingType,
+  RawRankingType,
   Sex,
-  TypeBouldering
+  TypeBouldering,
+  TypeBoulderingRound
 } from '~/definitions'
 
 @Component
@@ -104,6 +118,7 @@ export default class FormRoundCompetition extends Vue {
   rankingtypes = RankingType
   typesBouldering = TypeBouldering
   sex = Sex
+  maxGroups = 2
   competitionId: null | string = null
   boulderingRules = {
     quota: {
@@ -126,17 +141,24 @@ export default class FormRoundCompetition extends Vue {
       category: this.category || this.round?.category,
       sex: this.genre || this.round?.sex,
       name: this.round?.name,
-      quota: this.round?.quota || this.boulderingRules.quota.default,
       boulders: this.round?.boulders || this.boulderingRules.boulders.default,
       maxTries: this.round?.maxTries,
-      rankingType: this.round?.rankingType || RankingType.CIRCUIT,
-      type: this.round?.type || TypeBouldering.FINAL,
+      rankingType: this.round?.rankingType || RawRankingType.CIRCUIT,
+      type: this.round?.type || TypeBoulderingRound.QUALIFIER,
       groups: 1
     }
   }
 
   mounted() {
     this.competitionId = this.$route.params.competitionId
+  }
+
+  updateMaxGroups() {
+    console.log('this.Form.input.type', this.Form.input.type)
+    this.maxGroups =
+      this.Form.input.type === TypeBoulderingRound.QUALIFIER ? 2 : 1
+    this.Form.input.groups = 1
+    console.log('this.maxGroups', this.maxGroups)
   }
 }
 </script>

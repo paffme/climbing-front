@@ -14,6 +14,7 @@ import {
 } from '~/utils/cookieHelper'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { AxiosResponse } from '~/node_modules/axios'
+import { AxiosHelper } from '~/utils/axiosHelper'
 
 @Module({
   name: 'authUser',
@@ -35,6 +36,7 @@ export default class AuthUser extends VuexModule {
   disconnectUser(): void {
     removeCookie('token')
     removeCookie('credentials')
+    AxiosHelper.SetHeaderAuthorizationToken()
   }
 
   get Token() {
