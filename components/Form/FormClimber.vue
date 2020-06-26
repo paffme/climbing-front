@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { BoulderingResultWithCredentials, User } from '~/definitions'
 import FormClimberRadio from '~/components/Form/FormClimberRadio.vue'
 

@@ -160,20 +160,7 @@
               </div>
             </div>
           </div>
-          <div class="column is-6">
-            <GmapMap
-              :center="{ lat: maps.lat, lng: maps.lng }"
-              :zoom="15"
-              map-type-id="roadmap"
-              style="width: 100%; height: 100vh;"
-            >
-              <GmapMarker
-                :position="{ lat: maps.lat, lng: maps.lng }"
-                :clickable="true"
-                :draggable="true"
-              />
-            </GmapMap>
-          </div>
+          <div class="column is-6"></div>
         </div>
       </div>
     </template>
@@ -242,10 +229,6 @@ export default class OneCompetition extends Vue {
   competition: Competition | null = null
   isAlreadyRegister: boolean = false
   isLoading = true
-  maps = {
-    lat: 10,
-    lng: 12
-  }
 
   userHasRole: boolean = false
   competitionIsEnded: boolean = false
@@ -277,7 +260,6 @@ export default class OneCompetition extends Vue {
     try {
       const result = await ApiHelper.GetCompetition(competitionId)
       this.competition = result.data
-      await this.getLatLng(this.competition)
       this.isAlreadyRegister = await this.checkIfUserIsRegisterToCompetition(
         competitionId
       )
@@ -382,19 +364,6 @@ export default class OneCompetition extends Vue {
         'ERROR - Imposssible de récupérer les roles utilisateurs',
         err
       )
-    }
-  }
-
-  async getLatLng(competition: Competition) {
-    try {
-      const response: any = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${competition.address}+${competition.city}+${competition.postalCode}&key=AIzaSyCYI4Fwja8HZVbqP-Te_sf0FR4I4PeF7mY`
-      )
-      const data = await response.json()
-      this.maps.lat = data.results[0].geometry?.location?.lat
-      this.maps.lng = data.results[0].geometry?.location?.lng
-    } catch (err) {
-      console.log('getLatLng ERROR', err)
     }
   }
 }
