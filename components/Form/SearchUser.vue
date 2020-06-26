@@ -5,7 +5,7 @@
       class="userInput"
       rounded
       icon="magnify"
-      placeholder="Jean Valjean"
+      placeholder="Nom du juges (ex. Valjean)"
       :data="suggestedUsers || []"
       field="name"
       @typing="fetchSuggestedUsers(name)"

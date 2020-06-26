@@ -32,7 +32,7 @@
     <b-tag rounded type="is-success">
       Compétition actuelle : <b>{{ totalCompetition }}</b>
     </b-tag>
-    <Rank
+    <TableCompetition
       :competitions.sync="competitions"
       :total-competition="totalCompetition"
       :per-page="perPage"
@@ -45,10 +45,10 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { Competition } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
-import Rank from '~/components/Rank.vue'
+import TableCompetition from '~/components/Rank.vue'
 
 @Component({
-  components: { Rank }
+  components: { TableCompetition }
 })
 export default class IndexCompetitions extends Vue {
   competitions?: Competition[] | null = null

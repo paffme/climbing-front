@@ -23,7 +23,7 @@
         </b-table-column>
 
         <b-table-column disabled field="type" label="Type" sortable>
-          {{ props.row.type }}
+          {{ type[props.row.type] }}
         </b-table-column>
 
         <b-table-column field="startDate" label="Date début" sortable>
@@ -64,10 +64,10 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, PropSync } from 'vue-property-decorator'
-import { Competition } from '~/definitions'
+import { Competition, FRTypeCompetition } from '~/definitions'
 
 @Component
-export default class Rank extends Vue {
+export default class TableCompetition extends Vue {
   @PropSync('competitions', { type: Array })
   internalCompetitions!: Competition[]
 
@@ -96,6 +96,8 @@ export default class Rank extends Vue {
       label: 'Ville'
     }
   ]
+
+  type = FRTypeCompetition
 
   pageChange(params: number) {
     this.$emit('page-change', params)

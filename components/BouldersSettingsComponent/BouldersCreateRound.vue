@@ -7,6 +7,7 @@
       <FormRoundCompetition
         :genre="genre"
         :category="category"
+        :type="type"
         @createRound="onCreateRound"
       />
     </div>
@@ -16,7 +17,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import FormRoundCompetition from '~/components/Form/FormRoundCompetition.vue'
-import { CategoryName, Sex } from '~/definitions'
+import { CategoryName, Sex, TypeBoulderingRound } from '~/definitions'
 
 @Component({
   components: { FormRoundCompetition }
@@ -24,6 +25,7 @@ import { CategoryName, Sex } from '~/definitions'
 export default class BouldersCreateRound extends Vue {
   @Prop(String) genre?: Sex
   @Prop(String) category?: CategoryName
+  @Prop(String) type?: TypeBoulderingRound
   onCreateRound(value: any) {
     this.$emit('createRound', value)
     this.$emit('close')

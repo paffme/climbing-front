@@ -1,8 +1,8 @@
 <template>
   <div>
-    <b-tag class="tag" @click.native="isActive = !isActive">
+    <b-button size="is-small" @click.native="isActive = !isActive">
       {{ boulder.id }}
-    </b-tag>
+    </b-button>
     <div class="judges-list">
       <div class="judges">
         <b-modal :has-modal-card="true" :active.sync="isActive">
@@ -14,6 +14,9 @@
               </h1>
             </div>
             <div class="card-content content-judge">
+              <div class="content">
+                <SearchUser @select="onSelect" />
+              </div>
               <template
                 v-if="
                   boulder.judges &&
@@ -21,51 +24,30 @@
                   boulder.judges.length > 0
                 "
               >
-                <ul>
-                  <li
-                    v-for="(judge, index) in boulder.judges"
-                    :key="index"
-                    @click="deleteBloc(judge.id, boulder.id)"
-                  >
-                    <span
-                      >{{ judge.firstName }} {{ judge.lastName }}#{{
-                        judge.id
-                      }}</span
+                <p>Listes des juges du bloc</p>
+                <b-field>
+                  <b-select v-model="selectedJudge" multiple native-size="4">
+                    <option
+                      v-for="judge in boulder.judges"
+                      :key="judge.id"
+                      :value="judge.id"
                     >
-                    <span>
-                      <b-icon class="icon" type="is-white" icon="delete" />
-                    </span>
-                  </li>
-                </ul>
+                      {{ judge.firstName }} {{ judge.lastName }}#{{ judge.id }}
+                    </option>
+                  </b-select>
+                </b-field>
               </template>
               <template v-else>
                 <p>Aucun juges</p>
               </template>
-              <transition name="fade">
-                <div v-show="searchIsActive">
-                  <SearchUser @select="onSelect" />
-                </div>
-              </transition>
               <div class="is-flex buttons-actions">
                 <b-button
+                  v-show="selectedJudge"
                   class="btn"
-                  type="is-primary"
-                  @click="searchIsActive = true"
+                  type="is-danger"
+                  @click="deleteJudge"
                 >
-                  Ajouter juges
-                </b-button>
-                <b-button
-                  v-show="round.state === 'ONGOING'"
-                  class="btn"
-                  type="is-warning"
-                  tag="nuxt-link"
-                  :to="{
-                    name: 'competitions-edit-competitionId-notes',
-                    params: { competitionId },
-                    query: { ...currentCompetition }
-                  }"
-                >
-                  Ajouter Notes
+                  Supprimer juge
                 </b-button>
               </div>
             </div>
@@ -98,8 +80,8 @@ export default class JudgesModal extends Vue {
     boulderId: number
   }
 
+  selectedJudge: User | null = null
   isActive = false
-  searchIsActive = false
 
   async onSelect(user: { id: number; name: string }) {
     const meta = {
@@ -110,15 +92,14 @@ export default class JudgesModal extends Vue {
     this.$emit('select', meta)
   }
 
-  async deleteBloc(judgeId: number, boulderId: number) {
+  async deleteJudge() {
     this.$buefy.dialog.confirm({
       type: 'is-info',
       message: 'Voulez-vous vraiment supprimé ce juge ?',
       onConfirm: () => {
-        console.log('coucou')
         const meta = {
-          boulderId,
-          userId: judgeId,
+          boulderId: this.currentCompetition.boulderId,
+          userId: this.selectedJudge,
           groupId: this.currentCompetition.groupId
         }
         this.$emit('delete', meta)
@@ -128,10 +109,18 @@ export default class JudgesModal extends Vue {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '~/assets/css/bulma_customize.scss';
+
 .tag {
   cursor: pointer;
 }
+
+.tag:hover {
+  background-color: $primary;
+  color: white;
+}
+
 .judges-list {
   position: relative;
 }
@@ -142,6 +131,7 @@ export default class JudgesModal extends Vue {
   bottom: 25px;
   right: -520px;
 }
+
 .content-judge {
   display: flex;
   flex-direction: column;
@@ -161,6 +151,7 @@ li {
   cursor: pointer;
   border-radius: 5px;
 }
+
 li:hover {
   background-color: #03378c;
   color: white;
@@ -170,10 +161,16 @@ li:hover {
 .fade-leave-active {
   transition: opacity 0.5s;
 }
+
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
+
 .buttons-actions .btn:first-child {
   margin-right: 10px;
+}
+
+ul {
+  margin: 0 !important;
 }
 </style>

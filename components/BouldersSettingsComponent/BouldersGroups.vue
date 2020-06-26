@@ -1,28 +1,32 @@
 <template>
   <div class="notification">
-    <div class="columns">
-      <div class="column">
-        <h1 class="title">
-          Gestion des groupes et blocs
-          <b-tag type="is-info">
-            {{ round.state }}
-            ({{ round.id }})
-          </b-tag>
-        </h1>
-        <div class="is-pulled-right">
-          <b-button :disabled="round.state !== 'PENDING'" @click="startRound">
+    <div class="columns is-multiline">
+      <div class="column is-12">
+        <div class="header">
+          <h1 class="title">
+            Gestion des groupes et blocs
+          </h1>
+          <LabelState :round-id="round.id" :state="round.state"></LabelState>
+        </div>
+        <div v-if="round.state !== rawStateRound.ENDED" class="is-pulled-right">
+          <b-button
+            class="btn2"
+            :disabled="round.state !== rawStateRound.PENDING"
+            @click="startRound"
+          >
             {{
-              round.state === 'PENDING' ? 'Démarrer le round' : 'Round en cours'
+              round.state === rawStateRound.PENDING
+                ? 'Démarrer le round'
+                : 'Round en cours'
             }}
           </b-button>
         </div>
       </div>
-    </div>
-    <div
-      v-if="groups && Array.isArray(groups) && groups.length > 0"
-      class="columns"
-    >
-      <div class="column is-12">
+      <div
+        v-if="groups && Array.isArray(groups) && groups.length > 0"
+        class="column is-12"
+      >
+        <p>Créer un nouveau groupe :</p>
         <FormCreateBoulderingGroup @create="onCreate" />
       </div>
     </div>
@@ -33,20 +37,66 @@
             Apercu des groupes
           </p>
         </div>
-        <div v-for="(group, index) in groups" :key="index" class="column">
+        <div v-for="(group, index) in groups" :key="index" class="column is-6">
           <div class="card">
             <div class="card-content">
               <div class="content">
                 <div class="meta meta-1 is-flex">
                   <b-tag rounded> ID : {{ group.id }} </b-tag>
-                  <b-tag rounded>
-                    {{ group.state }}
-                  </b-tag>
+                  <LabelState
+                    :round-id="group.id"
+                    :state="group.state"
+                  ></LabelState>
                 </div>
-                <ul>
-                  <li>
-                    <div class="line">
-                      <span>Grimpeur :</span>
+                <div class="columns">
+                  <div class="column is-6">
+                    <ul>
+                      <li>
+                        <div class="line">
+                          <p>Bloc :</p>
+                          <template
+                            v-if="
+                              group.boulders &&
+                              Array.isArray(group.boulders) &&
+                              group.boulders.length > 0
+                            "
+                          >
+                            <ul id="boulder-list">
+                              <li
+                                v-for="(boulder, index) in group.boulders"
+                                :key="index"
+                              >
+                                <JudgesModal
+                                  :boulder="boulder"
+                                  :round="round"
+                                  :current-competition="{
+                                    roundId: round.id,
+                                    groupId: group.id,
+                                    boulderId: boulder.id
+                                  }"
+                                  :competition-id="round.competitionId"
+                                  @select="addJudge"
+                                  @delete="onDeleteJudge"
+                                />
+                              </li>
+                            </ul>
+                          </template>
+                          <template v-else>
+                            <span>Aucun bloc</span>
+                          </template>
+                          <b-icon
+                            class="btn"
+                            icon="plus-circle"
+                            @click.native="addBloc(group.id)"
+                          ></b-icon>
+                        </div>
+                      </li>
+                      <li>Nom : {{ group.name }}</li>
+                    </ul>
+                  </div>
+                  <div class="column is-6">
+                    <div>
+                      <p>Liste des grimpeurs</p>
                       <template
                         v-if="
                           group.climbers &&
@@ -55,10 +105,14 @@
                         "
                       >
                         <b-field>
-                          <b-select>
+                          <b-select
+                            v-model="selectedUser"
+                            multiple
+                            native-size="4"
+                          >
                             <option
-                              v-for="(climber, index) in group.climbers"
-                              :key="index"
+                              v-for="climber in group.climbers"
+                              :key="climber.id"
                               :value="climber.id"
                             >
                               {{ `${climber.firstName} ${climber.lastName}` }}
@@ -70,49 +124,8 @@
                         <span>Aucun grimpeur</span>
                       </template>
                     </div>
-                  </li>
-                  <li>
-                    <div class="line">
-                      <p>Bloc</p>
-                      <template
-                        v-if="
-                          group.boulders &&
-                          Array.isArray(group.boulders) &&
-                          group.boulders.length > 0
-                        "
-                      >
-                        <ul id="boulder-list">
-                          <li
-                            v-for="(boulder, index) in group.boulders"
-                            :key="index"
-                          >
-                            <JudgesModal
-                              :boulder="boulder"
-                              :round="round"
-                              :current-competition="{
-                                roundId: round.id,
-                                groupId: group.id,
-                                boulderId: boulder.id
-                              }"
-                              :competition-id="round.competitionId"
-                              @select="addJudge"
-                              @delete="onDeleteBloc"
-                            />
-                          </li>
-                        </ul>
-                      </template>
-                      <template v-else>
-                        <span>Aucun bloc</span>
-                      </template>
-                      <b-icon
-                        class="btn"
-                        icon="plus-circle"
-                        @click.native="addBoulder(group.id)"
-                      ></b-icon>
-                    </div>
-                  </li>
-                  <li>Nom : {{ group.name }}</li>
-                </ul>
+                  </div>
+                </div>
               </div>
             </div>
             <footer class="card-footer">
@@ -155,16 +168,23 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import {
   APIBoulderingGroups,
   APIBoulders,
-  BoulderingLimitedRounds
+  BoulderingLimitedRounds,
+  RawStateRound
 } from '~/definitions'
 import FormCreateBoulderingGroup from '~/components/Form/FormCreateBoulderingGroup.vue'
 import RolesModalComponent from '~/components/RolesComponent/RolesModalComponent.vue'
 import JudgesModal from '~/components/BouldersSettingsComponent/JudgesModal.vue'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
+import LabelState from '~/components/LabelState.vue'
 
 @Component({
-  components: { FormCreateBoulderingGroup, RolesModalComponent, JudgesModal }
+  components: {
+    FormCreateBoulderingGroup,
+    RolesModalComponent,
+    JudgesModal,
+    LabelState
+  }
 })
 export default class BouldersGroups extends Vue {
   @Prop(Array) groups!: APIBoulderingGroups[]
@@ -172,13 +192,20 @@ export default class BouldersGroups extends Vue {
   @Prop(Number) boulderId!: number
 
   createGroup = false
+  rawStateRound = RawStateRound
+  selectedUser = []
 
   onCreate(name: string) {
     this.$emit('create', name)
   }
 
-  async addBoulder(groupId: number) {
-    this.$emit('createBloc', groupId)
+  async addBloc(groupId: number) {
+    this.$buefy.dialog.confirm({
+      message: 'Voulez-vous créer un nouveau bloc ?',
+      onConfirm: () => {
+        this.$emit('createBloc', groupId)
+      }
+    })
   }
 
   async addJudge(meta: {
@@ -196,12 +223,16 @@ export default class BouldersGroups extends Vue {
         meta.id
       )
       this.$emit('createJudge')
+      this.$buefy.toast.open({
+        type: 'is-success',
+        message: 'Juge ajouté'
+      })
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
     }
   }
 
-  async onDeleteBloc(meta: {
+  async onDeleteJudge(meta: {
     boulderId: number
     groupId: number
     userId: number
@@ -214,6 +245,10 @@ export default class BouldersGroups extends Vue {
         meta.boulderId,
         meta.userId
       )
+      this.$buefy.toast.open({
+        type: 'is-success',
+        message: 'Juge supprimé'
+      })
       this.$emit('deleteJudge')
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
@@ -242,19 +277,26 @@ export default class BouldersGroups extends Vue {
 .control {
   display: inline;
 }
+
 .line {
   display: flex;
   align-items: center;
 }
+
 .line > * {
-  margin-right: 5px;
+  margin: 0px;
+}
+.line ul .line p {
+  margin: 0;
 }
 .line > .btn:hover {
   cursor: pointer;
 }
+
 .meta {
   justify-content: space-between;
 }
+
 .groupe-creation > * {
   margin: 3px;
 }
@@ -264,15 +306,41 @@ export default class BouldersGroups extends Vue {
   align-items: center;
 }
 
+ul {
+  margin: 0;
+}
+
 ul#boulder-list {
   display: flex;
   flex-direction: row;
+  margin: 0;
 }
-.content #boulder-list li + li {
-  margin-top: 0;
+
+ul#boulder-list li {
+  margin: 0;
+  padding: 2px;
 }
+
 li {
   list-style-type: none;
-  margin: 0 2px;
+  margin: 10px 2px;
+}
+
+.bloc:hover {
+  background-color: red;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+}
+
+.btn2 {
+  margin: 10px 0;
 }
 </style>

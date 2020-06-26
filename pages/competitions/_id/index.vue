@@ -49,6 +49,7 @@
       <div class="column is-12">
         <BreadcrumbComponent :current-page="competition.name" />
       </div>
+
       <div class="custom_section page_content column is-12">
         <div class="columns is-multiline">
           <div class="column is-6">
@@ -130,19 +131,32 @@
                 </li>
               </ul>
 
-              <div
-                v-if="!competition.cancelled && !competitionIsEnded"
-                class="is-pulled-right"
-              >
-                <BtnEditOrRegisterCompetition
-                  :is-loading="editOrRegisterBtn.status.isLoading"
-                  :success="editOrRegisterBtn.status.success"
-                  :is-already-register="isAlreadyRegister"
-                  :competition-id="competition.id"
-                  :is-authenticated="isAutenthicated"
-                  :user-has-role="userHasRole"
-                  @register="onRegisterCompetition"
-                />
+              <div>
+                <div class="is-pulled-left">
+                  <b-button
+                    tag="nuxt-link"
+                    :to="{
+                      name: 'competitions-id-rank',
+                      params: { id: competition.id }
+                    }"
+                  >
+                    Voir classement
+                  </b-button>
+                </div>
+                <div
+                  v-if="!competition.cancelled && !competitionIsEnded"
+                  class="is-pulled-right"
+                >
+                  <BtnEditOrRegisterCompetition
+                    :is-loading="editOrRegisterBtn.status.isLoading"
+                    :success="editOrRegisterBtn.status.success"
+                    :is-already-register="isAlreadyRegister"
+                    :competition-id="competition.id"
+                    :is-authenticated="isAutenthicated"
+                    :user-has-role="userHasRole"
+                    @register="onRegisterCompetition"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -247,7 +261,7 @@ export default class OneCompetition extends Vue {
     }
   }
 
-  async created() {
+  async mounted() {
     const competitionId = this.$route.params.id
       ? parseInt(this.$route.params.id)
       : undefined
@@ -267,10 +281,11 @@ export default class OneCompetition extends Vue {
       this.isAlreadyRegister = await this.checkIfUserIsRegisterToCompetition(
         competitionId
       )
+      console.log('this.isAlreadyRegister', this.isAlreadyRegister)
       this.competitionIsEnded = this.checkCompetitionIsEnded(
         this.competition.endDate
       )
-      this.checkUserRole(competitionId)
+      await this.checkUserRole(competitionId)
       this.isLoading = false
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
@@ -289,7 +304,7 @@ export default class OneCompetition extends Vue {
 
       await ApiHelper.AddCompetitor(
         this.competition.id as number,
-        authUser.Credentials?.id as number
+        this.credentials.id as number
       )
       this.editOrRegisterBtn.status.isLoading = false
       this.editOrRegisterBtn.status.success = true
@@ -300,13 +315,11 @@ export default class OneCompetition extends Vue {
       })
     } catch (err) {
       this.editOrRegisterBtn.status.isLoading = false
-      console.log('err', err)
       AxiosHelper.HandleAxiosError(this, err)
     }
   }
 
   checkCompetitionIsEnded(endDate?: Date | null): boolean {
-    console.log('endDate', endDate)
     if (!endDate) return true
     return moment(moment(endDate).format()).isBefore(moment().format())
   }
@@ -322,7 +335,7 @@ export default class OneCompetition extends Vue {
 
       const isRegistered = registrations.find(
         (registration: CompetitionsRegistrations) => {
-          return registration.userId === authUser.Credentials?.id
+          return registration.userId === this.credentials.id
         }
       )
 

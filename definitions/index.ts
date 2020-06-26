@@ -14,6 +14,7 @@ export enum RoleNameQueryParams {
   organisateur = 'organisateur',
   juge = 'juge'
 }
+
 export enum RoleName {
   Juges = 'Juges',
   President = 'Président',
@@ -37,6 +38,7 @@ export enum RankingType {
   UNLIMITED_CONTEST = 'Illimité',
   LIMITED_CONTEST = 'Limité'
 }
+
 export enum RawRankingType {
   CIRCUIT = 'CIRCUIT',
   UNLIMITED_CONTEST = 'UNLIMITED_CONTEST',
@@ -62,6 +64,10 @@ export enum Sex {
 
 export enum TypeCompetition {
   Bouldering = 'bouldering'
+}
+
+export enum FRTypeCompetition {
+  bouldering = 'Bloc'
 }
 
 export type CompetitionCategories = {
@@ -140,17 +146,25 @@ export type BoulderingRoundCreateInput = {
   rankingType: RawRankingType
   type: TypeBoulderingRound
   groups: number
-  maxTries: number
+  maxTries?: number
 }
 
 export type BoulderingRoundInputEdit = BoulderingRoundInput & {
   id: number
 }
-export enum StateRound {
+
+export enum RawStateRound {
   PENDING = 'PENDING',
   ONGOING = 'ONGOING',
   ENDED = 'ENDED'
 }
+
+export enum StateRound {
+  PENDING = 'En attente',
+  ONGOING = 'En cours',
+  ENDED = 'Terminée'
+}
+
 export type BoulderingLimitedRounds = {
   id: number
   competitionId: number
@@ -159,7 +173,7 @@ export type BoulderingLimitedRounds = {
   type: TypeBoulderingRound
   sex: Sex
   category: CategoryName
-  state: StateRound
+  state: RawStateRound
   maxTries: number
 }
 
@@ -248,15 +262,14 @@ export type BoulderingRounds = {
 
 export type BoulderingResult = {
   climberId: number
-  top: boolean
-  zone: boolean
+  top?: boolean
+  zone?: boolean
   try: number
 }
 
 export type BoulderingResultWithCredentials = BoulderingResult & {
   groupId: number
   blocId: number
-  roundId: number
 }
 
 export type APIRankingResponse = {
@@ -279,7 +292,7 @@ export type APIBoulderingGroups = {
   climbers: number[]
   boulders: APIBoulders[]
   roundId: number
-  state: StateRound
+  state: RawStateRound
 }
 
 export type APIBoulderingGroupsClimbers = {
@@ -288,7 +301,7 @@ export type APIBoulderingGroupsClimbers = {
   climbers: User[]
   boulders: APIBoulders[]
   roundId: number
-  state: StateRound
+  state: RawStateRound
 }
 
 export type APIBoulders = {
@@ -319,7 +332,7 @@ export type Ranking = {
 }
 
 export type defaultClimber = {
-  id: 0
+  id: number
   firstName: string
   lastName: string
   club: string
@@ -345,7 +358,7 @@ export type BoulderingRoundRankingsDto = {
   groups: UnlimitedContestGroup | LimitedContestGroup | CircuitGroup
 }
 
-export type CompetitionBoulderingResult = {
+export type BoulderingResultDto = {
   id: number
   climberId: number
   competitionId: number
@@ -358,6 +371,23 @@ export type CompetitionBoulderingResult = {
   tries: number
 }
 
+export type LimitedContestResult = {
+  boulderId: number
+  climberId: number
+  type: string
+  topInTries: number
+  zoneInTries: number
+}
+
+export type CircuitResult = LimitedContestResult
+
+export type UnlimitedContestResult = {
+  climberId: number
+  boulderId: number
+  top: boolean
+  type: string
+}
+
 export type UnlimitedContestGroup = {
   id: number
   bouldersPoints: number
@@ -365,11 +395,11 @@ export type UnlimitedContestGroup = {
 }
 export type LimitedContestGroup = {
   id: number
-  rankings: CountedRanking
+  rankings: CountedRankings
 }
 export type CircuitGroup = {
   id: number
-  ranking: CountedRanking
+  ranking: CountedRankings
 }
 
 export type BaseRoundRanking = {
@@ -378,11 +408,58 @@ export type BaseRoundRanking = {
   climber: defaultClimber
 }
 
+export type CountedRankings = {
+  ranking: number
+  climber: defaultClimber
+  tops: Array<boolean>
+  topsInTries: Array<number>
+  zones: Array<boolean>
+  zonesInTries: Array<number>
+}
+
+export type RawCountedRankingWithType = RawCountedRanking & {
+  type: RawRankingType
+}
+export type RawCountedRanking = {
+  ranking: number | null
+  climber: defaultClimber | null
+  top: boolean | null
+  topInTry: number | null
+  zone: boolean | null
+  zoneInTry: number | null
+}
 export type CountedRanking = {
   ranking: number
   climber: defaultClimber
-  tops: boolean
-  topsInTries: boolean
-  zones: boolean
-  zoneInTries: boolean
+  top: boolean
+  topInTry: number
+  zone: boolean
+  zoneInTry: number
 }
+
+export type PropsBulkResult = RawPropsBulkResult & {
+  groupId: number
+  roundId: number
+  boulderId: number
+  competitionId: number
+}
+
+export type RawPropsBulkResult = {
+  index: number
+  row: RawCountedRankingWithType
+}
+
+export type APIGroupRanking = {
+  type: RawRankingType
+  data: {
+    boulders: Array<number>
+    rankings: Array<CountedRankings>
+  }
+}
+
+export type APIRoundRanking = {
+  type: RawRankingType
+  data: Array<CountedRankings>
+}
+
+export type UserChoice = { genre?: string; type?: string; category?: string }
