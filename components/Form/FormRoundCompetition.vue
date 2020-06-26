@@ -83,11 +83,19 @@
         :min="boulderingRules.boulders.min"
       />
     </b-field>
-    <b-field label="Nombre d'essais maximum" :label-position="labelPosition">
-      <b-numberinput v-model="Form.input.maxTries" />
+    <b-field
+      v-show="Form.input.rankingType === rawRankingType.LIMITED_CONTEST"
+      label="Nombre d'essais maximum"
+      :label-position="labelPosition"
+    >
+      <b-numberinput v-model="Form.input.maxTries" :min="1" />
     </b-field>
 
-    <b-button native-type="submit" type="is-success">
+    <b-button
+      native-type="submit"
+      :disabled="Form.input.maxTries === 0"
+      type="is-success"
+    >
       {{ Form.isEdition ? 'Modifier le round' : 'Créer un round' }}
     </b-button>
   </form>
@@ -112,11 +120,13 @@ export default class FormRoundCompetition extends Vue {
   @Prop(String) genre!: Sex
   @Prop(String) category!: CategoryName
   @Prop(Object) round!: BoulderingRoundInput | BoulderingRoundInputEdit
+  @Prop(String) type!: TypeBoulderingRound
 
   labelPosition = 'on-border'
   categoriesName = CategoryName
   rankingtypes = RankingType
   typesBouldering = TypeBouldering
+  rawRankingType = RawRankingType
   sex = Sex
   maxGroups = 2
   competitionId: null | string = null
@@ -142,9 +152,9 @@ export default class FormRoundCompetition extends Vue {
       sex: this.genre || this.round?.sex,
       name: this.round?.name,
       boulders: this.round?.boulders || this.boulderingRules.boulders.default,
-      maxTries: this.round?.maxTries,
+      maxTries: this.round?.maxTries || 3,
       rankingType: this.round?.rankingType || RawRankingType.CIRCUIT,
-      type: this.round?.type || TypeBoulderingRound.QUALIFIER,
+      type: this.round?.type || this.type || TypeBoulderingRound.QUALIFIER,
       groups: 1
     }
   }

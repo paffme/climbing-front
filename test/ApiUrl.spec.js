@@ -76,6 +76,11 @@ describe('ApiUrl Helper', () => {
         '/competitions/1/bouldering-rounds/2/groups/3/boulders/4/results'
       )
     })
+    test('addBulkResult - Should return a correct URL', () => {
+      expect(API_URL.addBulkResult(1, 2, 3)).toEqual(
+        '/competitions/1/bouldering-rounds/2/groups/3/bulk-results'
+      )
+    })
     test('createOrGetCompetitions - Should return a correct URL', () => {
       expect(API_URL.createOrGetCompetitions()).toEqual('/competitions')
     })
@@ -99,6 +104,12 @@ describe('ApiUrl Helper', () => {
     test('GetBoulderRankings - Should return a correct URL', () => {
       expect(API_URL.getBoulderRankings(2, 12)).toEqual(
         '/competitions/2/bouldering-rounds/12/rankings'
+      )
+    })
+
+    test('GetGroupRankings - Should return a correct URL', () => {
+      expect(API_URL.getGroupRankings(2, 12, 99)).toEqual(
+        '/competitions/2/bouldering-rounds/12/groups/99/rankings'
       )
     })
 

@@ -10,7 +10,7 @@
         <b-button
           type="is-success"
           native-type="submit"
-          :disabled="groupName && groupName.length === 0"
+          :disabled="groupName.length === 0"
         >
           Ajouter
         </b-button>
@@ -24,7 +24,7 @@ import { Vue, Component } from 'vue-property-decorator'
 
 @Component
 export default class FormCreateBoulderingGroup extends Vue {
-  groupName: string | null = null
+  groupName: string = ''
 }
 </script>
 

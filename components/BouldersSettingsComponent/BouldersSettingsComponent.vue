@@ -34,6 +34,7 @@
               <BouldersDisplay
                 :qualification-round="typeBoulderingRound.QUALIFIER"
                 :round="categoriesDisplayed.qualification"
+                @refreshRound="$emit('loadBouldering')"
                 @edit="onOpenModalEditRound"
                 @delete="onDeleteRound"
               />
@@ -42,8 +43,10 @@
               <BouldersDisplayEmpty
                 @openModalRound="
                   onOpenModalRound(
-                    categoriesDisplayed.qualification.category,
-                    categoriesDisplayed.qualification.sex
+                    categoriesDisplayed.qualification &&
+                      categoriesDisplayed.qualification.category,
+                    categoriesDisplayed.qualification &&
+                      categoriesDisplayed.qualification.sex
                   )
                 "
               />
@@ -65,7 +68,8 @@
                 @openModalRound="
                   onOpenModalRound(
                     categoriesDisplayed.qualification.category,
-                    categoriesDisplayed.qualification.sex
+                    categoriesDisplayed.qualification.sex,
+                    typeBoulderingRound.SEMI_FINAL
                   )
                 "
               />
@@ -77,6 +81,7 @@
               <BouldersDisplay
                 :qualification-round="typeBoulderingRound.FINAL"
                 :round="categoriesDisplayed.final"
+                @refreshRound="$emit('loadBouldering')"
                 @edit="onOpenModalEditRound"
                 @delete="onDeleteRound"
               />
@@ -86,7 +91,8 @@
                 @openModalRound="
                   onOpenModalRound(
                     categoriesDisplayed.qualification.category,
-                    categoriesDisplayed.qualification.sex
+                    categoriesDisplayed.qualification.sex,
+                    typeBoulderingRound.FINAL
                   )
                 "
               />
@@ -231,14 +237,19 @@ export default class BouldersSettingsComponent extends Vue {
     this.updateDisplayedCategories(categories)
   }
 
-  onOpenModalRound(category?: CategoryName, genre?: Sex) {
+  onOpenModalRound(
+    category?: CategoryName,
+    genre?: Sex,
+    type?: TypeBoulderingRound
+  ) {
     // Permet de savoir si le paramètre "category" est celui qu'on a passer en param ou si égal à EventMouse
-    const haveCategory = typeof category !== 'string'
+    const haveCategory = category && typeof category !== 'string'
     this.$buefy.modal.open({
       parent: this,
       props: {
         category: haveCategory ? undefined : category,
-        genre: genre || undefined
+        genre: genre || undefined,
+        type: type || undefined
       },
       component: BouldersCreateRound,
       events: {
@@ -347,7 +358,10 @@ export default class BouldersSettingsComponent extends Vue {
 
   roundEditDto(round: BoulderingRoundInputEdit): any {
     return {
-      maxTries: round.maxTries,
+      maxTries:
+        round.rankingType !== RawRankingType.UNLIMITED_CONTEST
+          ? round.maxTries
+          : undefined,
       name: round.name,
       rankingType: round.rankingType,
       type: round.type
@@ -362,7 +376,6 @@ export default class BouldersSettingsComponent extends Vue {
       !round.name ||
       !round.rankingType ||
       !round.category ||
-      !round.maxTries ||
       !round.boulders ||
       !round.groups ||
       !round.boulders ||
@@ -376,7 +389,10 @@ export default class BouldersSettingsComponent extends Vue {
       type: TypeBoulderingRound[round.type],
       rankingType: RawRankingType[round.rankingType],
       category: round.category,
-      maxTries: round.maxTries,
+      maxTries:
+        round.rankingType === RawRankingType.LIMITED_CONTEST
+          ? round.maxTries
+          : undefined,
       boulders: round.boulders,
       groups: round.groups
     }

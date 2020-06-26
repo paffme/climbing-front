@@ -59,44 +59,48 @@ function handleAxiosError(context: Vue, error: AxiosError): void {
 function buildMessage(data: any) {
   if (!data) return
   console.log('AxiosError', data)
-  if (data.statusCode === 500) {
+  try {
+    if (data.statusCode === 500) {
+      return (
+        '<h1 class="subtitle has-text-white">Erreur</h1>' +
+        "<ul><li>Une erreur s'est produite</li></ul>"
+      )
+    }
+    if (Array.isArray(data) && data.length < 1) {
+      return (
+        '' +
+        '<h1 class="subtitle has-text-white">Erreur de validation</h1>' +
+        '<ul>' +
+        data +
+        ' </ul>'
+      )
+    }
+    if (data.error && !data.errors) {
+      return (
+        '<h1 class="subtitle has-text-white">' +
+        data.error +
+        '</h1>' +
+        '<span>' +
+        data.message +
+        ' </span>'
+      )
+    }
+    const li = data.errors.map((error: any) => {
+      return (
+        '<li> - ' +
+        Object.keys(error.constraints)[0] +
+        ' : ' +
+        _.values(error.constraints)[0] +
+        '</li>'
+      )
+    })
     return (
-      '<h1 class="subtitle has-text-white">Erreur</h1>' +
-      "<ul><li>Une erreur s'est produite</li></ul>"
-    )
-  }
-  if (Array.isArray(data) && data.length < 1) {
-    return (
-      '' +
       '<h1 class="subtitle has-text-white">Erreur de validation</h1>' +
       '<ul>' +
-      data +
-      ' </ul>'
+      li +
+      '</ul>'
     )
+  } catch (err) {
+    console.error(err)
   }
-  if (data.error && !data.errors) {
-    return (
-      '<h1 class="subtitle has-text-white">' +
-      data.error +
-      '</h1>' +
-      '<span>' +
-      data.message +
-      ' </span>'
-    )
-  }
-  const li = data.errors.map((error: any) => {
-    return (
-      '<li> - ' +
-      Object.keys(error.constraints)[0] +
-      ' : ' +
-      _.values(error.constraints)[0] +
-      '</li>'
-    )
-  })
-  return (
-    '<h1 class="subtitle has-text-white">Erreur de validation</h1>' +
-    '<ul>' +
-    li +
-    '</ul>'
-  )
 }

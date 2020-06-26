@@ -260,6 +260,17 @@ describe('ApiHelper', () => {
       })
     })
 
+    describe('AddBulkResult', () => {
+      test('Should call with right args', async () => {
+        const spy = jest.spyOn(API_URL, 'addBulkResult')
+        axios.post.mockResolvedValue('success')
+
+        const result = await ApiHelper.AddBulkResult({}, 1, 4, 2)
+        expect(spy).toHaveBeenCalledWith(1, 4, 2)
+        expect(result).toEqual('success')
+      })
+    })
+
     describe('CreateCompetition', () => {
       test('Should call with right args', async () => {
         const spy = jest.spyOn(API_URL, 'createOrGetCompetitions')
@@ -563,8 +574,17 @@ describe('ApiHelper', () => {
       const spy = jest.spyOn(API_URL, 'getBoulderRankings')
       axios.get.mockResolvedValue('success')
 
-      const result = await ApiHelper.GetBoulderRankings(1, 19)
+      const result = await ApiHelper.GetBoulderRoundRankings(1, 19)
       expect(spy).toHaveBeenCalledWith(1, 19)
+      expect(result).toEqual('success')
+    })
+
+    test('GetGroupRankings - Should call with rights args', async () => {
+      const spy = jest.spyOn(API_URL, 'getGroupRankings')
+      axios.get.mockResolvedValue('success')
+
+      const result = await ApiHelper.GetGroupRankings(1, 19, 22)
+      expect(spy).toHaveBeenCalledWith(1, 19, 22)
       expect(result).toEqual('success')
     })
 

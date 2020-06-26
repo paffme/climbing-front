@@ -60,6 +60,8 @@ export default {
     boulderId: number
   ) =>
     `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders/${boulderId}/results`,
+  addBulkResult: (competitionId: number, roundId: number, groupId: number) =>
+    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/bulk-results`,
   createOrGetCompetitions: (query?: string) =>
     `/${RouteName.competitions}${query ? '?q=' + query : ''}`,
   getCompetitionsPagination: (page: number, perPage: number, query?: string) =>
@@ -72,6 +74,8 @@ export default {
     `/${RouteName.competitions}/${competitionId}/rankings`,
   getBoulderRankings: (competitionId: number, roundId: number) =>
     `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/rankings`,
+  getGroupRankings: (competitionId: number, roundId: number, groupId: number) =>
+    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/rankings`,
   getUserCount: () => '/users/count',
   getCompetitionsCount: (query?: string) =>
     `/${RouteName.competitions}/count${query ? '?q=' + query : ''}`,

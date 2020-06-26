@@ -28,14 +28,18 @@
             </li>
           </ul>
         </nav>
-        <b-notification v-if="currentRole">
-          Vous êtes connecté en tant que {{ currentRole.toLocaleLowerCase() }}
+        <b-notification v-if="currentRoles">
+          Vous êtes connecté en tant que
+          <template v-for="role in currentRoles">
+            {{ role.toLocaleLowerCase() }},
+          </template>
         </b-notification>
         <nuxt-child
           :competition="competition"
           :role="role"
           :rounds="rounds"
           @onFetchRole="loadRoles"
+          @onFetchRound="loadRounds"
           @onFetchCompetition="loadCompetition"
         />
       </div>
@@ -131,7 +135,7 @@ export default class EditOneCompetitionPage extends Vue {
   competition: APICompetition | null = null
   role: APIUserCompetitionRoles | null = null
   rounds: APIBoulderingRounds | null = null
-  currentRole: string | null = null
+  currentRoles: RoleName[] | null = null
 
   created() {
     if (!this.role) {
@@ -149,31 +153,40 @@ export default class EditOneCompetitionPage extends Vue {
       })
     }
 
-    this.currentRole = this.displayCurrentRole(this.role)
+    this.currentRoles = this.displayCurrentRole(this.role)
   }
 
-  displayCurrentRole(role?: APIUserCompetitionRoles | null): string | null {
+  displayCurrentRole(role?: APIUserCompetitionRoles | null): RoleName[] | null {
     if (!role) return null
-    let currentRole: RoleName | null = null
+    const currentRole: RoleName[] = []
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
     for (const [roleName, bool] of Object.entries(role)) {
       if (bool) {
         if (roleName === Roles.chiefRouteSetter)
-          currentRole = RoleName.ChefRouteSetter
-        if (roleName === Roles.organizer) currentRole = RoleName.Organisateur
-        if (roleName === Roles.routeSetter) currentRole = RoleName.RouteSetter
-        if (roleName === Roles.juryPresident) currentRole = RoleName.President
-        if (roleName === Roles.judge) currentRole = RoleName.Juges
+          currentRole.push(RoleName.ChefRouteSetter)
+        if (roleName === Roles.organizer)
+          currentRole.push(RoleName.Organisateur)
+        if (roleName === Roles.routeSetter)
+          currentRole.push(RoleName.RouteSetter)
+        if (roleName === Roles.juryPresident)
+          currentRole.push(RoleName.President)
+        if (roleName === Roles.judge) currentRole.push(RoleName.Juges)
         if (roleName === Roles.technicalDelegate)
-          currentRole = RoleName.DelegueTechnique
+          currentRole.push(RoleName.DelegueTechnique)
       }
     }
+    if (currentRole.length === 0) return null
+
     return currentRole
   }
 
   async loadCompetition() {
     this.competition = await fetchCompetition(this.competition!.id as number)
+  }
+
+  async loadRounds() {
+    this.rounds = await fetchRounds(this.competition!.id as number)
   }
 
   async loadRoles() {

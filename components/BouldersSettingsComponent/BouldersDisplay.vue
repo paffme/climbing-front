@@ -9,7 +9,7 @@
           @click.native="$emit('edit', round)"
         ></b-icon>
         <p class="card-header-title">
-          {{ qualificationRound }}
+          {{ typeBouldering[qualificationRound] }}
         </p>
         <b-icon
           icon="delete"
@@ -22,18 +22,29 @@
         <div class="content">
           <div class="meta meta-1 is-flex">
             <b-tag rounded>
-              {{ round.type }}
+              {{ typeBouldering[qualificationRound] }}
             </b-tag>
-            <b-tag rounded>
-              {{ round.state }}
+            <b-tag
+              rounded
+              :type="
+                round.state === rawStateRound.ONGOING
+                  ? 'is-primary'
+                  : 'is-warning'
+              "
+            >
+              {{ stateRound[round.state] }}
             </b-tag>
           </div>
           <ul>
-            <li>Sex : {{ round.sex }}</li>
-            <li>Catégorie : {{ round.category }}</li>
-            <li>Nom : {{ round.name }}</li>
-            <li>Quota : {{ round.quota }}</li>
-            <li>Nombre d'essais : {{ round.maxTries || 0 }}</li>
+            <li><b>Nom :</b> {{ round.name }}</li>
+            <li>
+              <b>Genre :</b> {{ round.sex === 'male' ? 'Homme' : 'Femme' }}
+            </li>
+            <li><b>Catégorie :</b> {{ round.category }}</li>
+            <li><b>Quota :</b> {{ round.quota }}</li>
+            <li v-show="round.maxTries">
+              <b>Nombre d'essais :</b> {{ round.maxTries || 0 }}
+            </li>
           </ul>
         </div>
       </div>
@@ -60,6 +71,7 @@
           @create="onCreateGroup"
           @createBloc="onCreateBloc"
           @roundStart="refreshRound"
+          @createJudge="refreshBouldersGroups"
           @deleteJudge="refreshBouldersGroups"
         />
       </b-modal>
@@ -76,6 +88,9 @@ import {
   APIBoulderingGroups,
   APIBoulderingGroupsClimbers,
   BoulderingLimitedRounds,
+  RawStateRound,
+  StateRound,
+  TypeBouldering,
   TypeBoulderingRound
 } from '~/definitions'
 import BouldersGroups from '~/components/BouldersSettingsComponent/BouldersGroups.vue'
@@ -90,6 +105,9 @@ export default class BouldersDisplay extends Vue {
   @Prop(Object) round!: BoulderingLimitedRounds
   modalIsActive = false
   groups: APIBoulderingGroupsClimbers[] = []
+  typeBouldering = TypeBouldering
+  stateRound = StateRound
+  rawStateRound = RawStateRound
 
   async created() {
     await this.refreshBouldersGroups()
@@ -97,9 +115,9 @@ export default class BouldersDisplay extends Vue {
 
   async getBouldersGroups(competitionId: number, roundId: number) {
     try {
-      console.log('roundId', roundId)
       const groups = await ApiHelper.GetBoulderingGroups(competitionId, roundId)
       this.groups = groups.data
+      console.log('groups', this.groups)
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
     }
@@ -158,9 +176,11 @@ export default class BouldersDisplay extends Vue {
 
   refreshRound() {
     this.$emit('refreshRound')
+    this.refreshBouldersGroups()
   }
 
   async refreshBouldersGroups() {
+    console.log('refresh')
     await this.getBouldersGroups(this.round.competitionId, this.round.id)
   }
 }

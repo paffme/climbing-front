@@ -48,7 +48,7 @@
                   <span>Autres compétitions</span>
                 </nuxt-link>
               </div>
-              <Rank
+              <TableCompetition
                 :competitions.sync="competitions"
                 :total-competition="dashboardStats.futureCompetitions"
                 :per-page="perPage"
@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import Rank from '~/components/Rank.vue'
+import TableCompetition from '~/components/Rank.vue'
 import StatsBlock from '~/components/StatsBlock.vue'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { Competition } from '~/definitions'
@@ -80,7 +80,7 @@ import { AxiosHelper } from '~/utils/axiosHelper'
       isConnected: AuthUser.getters?.['Authenticated']() || false
     }
   },
-  components: { Rank, StatsBlock, BtnCreateCompetition }
+  components: { TableCompetition, StatsBlock, BtnCreateCompetition }
 })
 export default class Competitions extends Vue {
   competitions?: Competition[] = []

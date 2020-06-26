@@ -28,22 +28,32 @@ describe('EditOneCompetition', () => {
         router,
         stubs: ['nuxt-link', 'nuxt-child']
       })
-      expect(wrapper.vm.displayCurrentRole({ organizer: true })).toBe(
+      expect(wrapper.vm.displayCurrentRole({ organizer: true })).toStrictEqual([
         'Organisateurs'
-      )
-      expect(wrapper.vm.displayCurrentRole({ juryPresident: true })).toBe(
-        'Président'
-      )
-      expect(wrapper.vm.displayCurrentRole({ judge: true })).toBe('Juges')
-      expect(wrapper.vm.displayCurrentRole({ chiefRouteSetter: true })).toBe(
-        'Chef routes setters'
-      )
-      expect(wrapper.vm.displayCurrentRole({ routeSetter: true })).toBe(
-        'Routes setters'
-      )
-      expect(wrapper.vm.displayCurrentRole({ technicalDelegate: true })).toBe(
-        'Délégués techniques'
-      )
+      ])
+      expect(
+        wrapper.vm.displayCurrentRole({ juryPresident: true })
+      ).toStrictEqual(['Président'])
+      expect(wrapper.vm.displayCurrentRole({ judge: true })).toStrictEqual([
+        'Juges'
+      ])
+      expect(
+        wrapper.vm.displayCurrentRole({ chiefRouteSetter: true })
+      ).toStrictEqual(['Chef routes setters'])
+      expect(
+        wrapper.vm.displayCurrentRole({ routeSetter: true })
+      ).toStrictEqual(['Routes setters'])
+      expect(
+        wrapper.vm.displayCurrentRole({ technicalDelegate: true })
+      ).toStrictEqual(['Délégués techniques'])
+
+      expect(
+        wrapper.vm.displayCurrentRole({
+          technicalDelegate: true,
+          routeSetter: true
+        })
+      ).toStrictEqual(['Délégués techniques', 'Routes setters'])
+
       expect(wrapper.vm.displayCurrentRole({ technicalDelegate: null })).toBe(
         null
       )
