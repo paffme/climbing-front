@@ -34,34 +34,36 @@ module.exports = {
       }
 
       axiosResponse.data.forEach((competition) => {
-        routesToGenerate.push('/competitions/' + competition.id)
-        routesToGenerate.push('/competitions/edit/' + competition.id)
+        routesToGenerate.push("/competitions/" + competition.id);
+        routesToGenerate.push("/competitions/edit/" + competition.id);
       })
-
-      return routesToGenerate
+  
+      return routesToGenerate;
     }
   },
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#fff' },
+  loading: { color: "#fff" },
   /*
    ** Global CSS
    */
-  css: ['@/assets/css/main.scss', '@/assets/css/bulma_customize.scss'],
+  css: ["@/assets/css/main.scss", "@/assets/css/bulma_customize.scss"],
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/google-map.ts'],
+  plugins: ["~/plugins/google-map.ts",
+    { src: "~/plugins/vue-gallery.js", ssr: false }
+  ],
   pwa: {
     manifest: {
-      name: 'PAFFME-App',
-      lang: 'fr'
+      name: "PAFFME-App",
+      lang: "fr"
     },
     workbox: {
       cacheNames: {
-        prefix: 'paff-me',
-        suffix: 'v1'
+        prefix: "paff-me",
+        suffix: "v1"
       },
       config: {
         debug: false
