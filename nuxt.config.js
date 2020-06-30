@@ -52,9 +52,7 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["~/plugins/google-map.ts",
-    { src: "~/plugins/vue-gallery.js", ssr: false }
-  ],
+  plugins: ["~/plugins/google-map.ts"],
   pwa: {
     manifest: {
       name: "PAFFME-App",

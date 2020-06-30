@@ -34,9 +34,7 @@
     "nuxt": "^2.0.0",
     "nuxt-buefy": "~0.3.27",
     "sass-loader": "^8.0.2",
-    "v-gallery": "^1.2.4",
     "vue": "latest",
-    "vue-gallery": "^2.0.1",
     "vue-property-decorator": "^8.4.0",
     "vue2-google-maps": "^0.10.7"
   },
