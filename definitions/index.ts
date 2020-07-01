@@ -1,67 +1,69 @@
 export enum CategoryName {
-  Microbe = 'microbe',
-  Poussin = 'poussin',
-  Benjamin = 'benjamin',
-  Minime = 'minime',
-  Cadet = 'cadet',
-  Junior = 'junior',
-  Senior = 'senior',
-  Veteran = 'veteran'
+  Microbe = "microbe",
+  Poussin = "poussin",
+  Benjamin = "benjamin",
+  Minime = "minime",
+  Cadet = "cadet",
+  Junior = "junior",
+  Senior = "senior",
+  Veteran = "veteran"
 }
 
 export enum RoleNameQueryParams {
-  pdj = 'pdj',
-  organisateur = 'organisateur',
-  juge = 'juge'
+  pdj = "pdj",
+  organisateur = "organisateur",
+  juge = "juge"
 }
+
 export enum RoleName {
-  Juges = 'Juges',
-  President = 'Président',
-  ChefRouteSetter = 'Chef routes setters',
-  RouteSetter = 'Routes setters',
-  DelegueTechnique = 'Délégués techniques',
-  Organisateur = 'Organisateurs'
+  Juges = "Juges",
+  President = "Président",
+  ChefRouteSetter = "Chef routes setters",
+  RouteSetter = "Routes setters",
+  DelegueTechnique = "Délégués techniques",
+  Organisateur = "Organisateurs"
 }
 
 export enum SlugRoleName {
-  President = 'jury-presidencies',
-  Juges = 'judgements',
-  ChefRouteSetter = 'chief-route-settings',
-  RouteSetter = 'route-settings',
-  DelegueTechnique = 'technical-delegations',
-  Organisateur = 'organizations'
+  President = "jury-presidencies",
+  Juges = "judgements",
+  ChefRouteSetter = "chief-route-settings",
+  RouteSetter = "route-settings",
+  DelegueTechnique = "technical-delegations",
+  Organisateur = "organizations"
 }
 
 export enum RankingType {
-  CIRCUIT = 'Circuit',
-  UNLIMITED_CONTEST = 'Illimité',
-  LIMITED_CONTEST = 'Limité'
+  CIRCUIT = "Circuit",
+  UNLIMITED_CONTEST = "Illimité",
+  LIMITED_CONTEST = "Limité"
 }
+
 export enum RawRankingType {
-  CIRCUIT = 'CIRCUIT',
-  UNLIMITED_CONTEST = 'UNLIMITED_CONTEST',
-  LIMITED_CONTEST = 'LIMITED_CONTEST'
+  CIRCUIT = "CIRCUIT",
+  UNLIMITED_CONTEST = "UNLIMITED_CONTEST",
+  LIMITED_CONTEST = "LIMITED_CONTEST"
 }
 
 export enum TypeBouldering {
-  QUALIFIER = 'Qualification',
-  SEMI_FINAL = 'Demi-final',
-  FINAL = 'Final'
+  QUALIFIER = "Qualification",
+  SEMI_FINAL = "Demi-final",
+  FINAL = "Final"
 }
 
 export enum TypeBoulderingRound {
-  QUALIFIER = 'QUALIFIER',
-  SEMI_FINAL = 'SEMI_FINAL',
-  FINAL = 'FINAL'
+  QUALIFIER = "QUALIFIER",
+  SEMI_FINAL = "SEMI_FINAL",
+  FINAL = "FINAL"
 }
 
 export enum Sex {
-  Male = 'male',
-  Female = 'female'
+  Male = "male",
+  Female = "female"
 }
 
 export enum TypeCompetition {
-  Bouldering = 'bouldering'
+  Bouldering = "bouldering"
 }
 
 export type CompetitionCategories = {
@@ -146,11 +148,13 @@ export type BoulderingRoundCreateInput = {
 export type BoulderingRoundInputEdit = BoulderingRoundInput & {
   id: number
 }
+
 export enum StateRound {
-  PENDING = 'PENDING',
-  ONGOING = 'ONGOING',
-  ENDED = 'ENDED'
+  PENDING = "PENDING",
+  ONGOING = "ONGOING",
+  ENDED = "ENDED"
 }
+
 export type BoulderingLimitedRounds = {
   id: number
   competitionId: number
@@ -242,7 +246,7 @@ export type BoulderingRounds = {
   name: string
   quota: number
   boulders: number
-  rankingType: 'CIRCUIT'
+  rankingType: "CIRCUIT"
   type: TypeBoulderingRound.QUALIFIER
 }
 
@@ -305,12 +309,12 @@ export type APIUserCompetitionRoles = {
 }
 
 export enum Roles {
-  organizer = 'organizer',
-  juryPresident = 'juryPresident',
-  judge = 'judge',
-  chiefRouteSetter = 'chiefRouteSetter',
-  routeSetter = 'routeSetter',
-  technicalDelegate = 'technicalDelegate'
+  organizer = "organizer",
+  juryPresident = "juryPresident",
+  judge = "judge",
+  chiefRouteSetter = "chiefRouteSetter",
+  routeSetter = "routeSetter",
+  technicalDelegate = "technicalDelegate"
 }
 
 export type Ranking = {

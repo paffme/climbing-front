@@ -1,5 +1,5 @@
 <template>
-	<b-carousel-list :data="boulders" :items-to-show="1" v-model="boulderId">
+	<b-carousel-list :data="boulders" :items-to-show="1" v-model="this.boulderId">
 		<template slot="item" slot-scope="props">
 			<div class="card">
 				<div class="card-image">
@@ -37,15 +37,16 @@
     @Prop(Number) boulderId !: number;
     @Prop(Object) readonly round !: { id: number, boulderIds: Array<number> };
     @Prop(Object) readonly competition !: { id: number, name: string };
-    boulders: [{ id: number, image: string | null }] = new Array(this.round.boulderIds.length);
+
+    boulders: Array<{ id: number, image: string | null }> = new Array<{ id: number, image: null }>(this.round.boulderIds.length);
 
     constructor() {
       super();
 
       this.round.boulderIds.forEach((boulderId) => {
-        this.boulders.unshift({ id: boulderId, image: null });
+        this.boulders.unshift({ id: boulderId, image: "https://buefy.org/static/img/placeholder-1280x960.png" });
         // if(boulderId == this.boulderId) {
-        this.boulders[0].image = this.retrieveBoulderPicture(this.boulderId);
+        // this.boulders[0].image = this.retrieveBoulderPicture(this.boulderId);
         // }
       });
     }
