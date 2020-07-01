@@ -1,69 +1,73 @@
 export enum CategoryName {
-  Microbe = "microbe",
-  Poussin = "poussin",
-  Benjamin = "benjamin",
-  Minime = "minime",
-  Cadet = "cadet",
-  Junior = "junior",
-  Senior = "senior",
-  Veteran = "veteran"
+  Microbe = 'microbe',
+  Poussin = 'poussin',
+  Benjamin = 'benjamin',
+  Minime = 'minime',
+  Cadet = 'cadet',
+  Junior = 'junior',
+  Senior = 'senior',
+  Veteran = 'veteran'
 }
 
 export enum RoleNameQueryParams {
-  pdj = "pdj",
-  organisateur = "organisateur",
-  juge = "juge"
+  pdj = 'pdj',
+  organisateur = 'organisateur',
+  juge = 'juge'
 }
 
 export enum RoleName {
-  Juges = "Juges",
-  President = "Président",
-  ChefRouteSetter = "Chef routes setters",
-  RouteSetter = "Routes setters",
-  DelegueTechnique = "Délégués techniques",
-  Organisateur = "Organisateurs"
+  Juges = 'Juges',
+  President = 'Président',
+  ChefRouteSetter = 'Chef routes setters',
+  RouteSetter = 'Routes setters',
+  DelegueTechnique = 'Délégués techniques',
+  Organisateur = 'Organisateurs'
 }
 
 export enum SlugRoleName {
-  President = "jury-presidencies",
-  Juges = "judgements",
-  ChefRouteSetter = "chief-route-settings",
-  RouteSetter = "route-settings",
-  DelegueTechnique = "technical-delegations",
-  Organisateur = "organizations"
+  President = 'jury-presidencies',
+  Juges = 'judgements',
+  ChefRouteSetter = 'chief-route-settings',
+  RouteSetter = 'route-settings',
+  DelegueTechnique = 'technical-delegations',
+  Organisateur = 'organizations'
 }
 
 export enum RankingType {
-  CIRCUIT = "Circuit",
-  UNLIMITED_CONTEST = "Illimité",
-  LIMITED_CONTEST = "Limité"
+  CIRCUIT = 'Circuit',
+  UNLIMITED_CONTEST = 'Illimité',
+  LIMITED_CONTEST = 'Limité'
 }
 
 export enum RawRankingType {
-  CIRCUIT = "CIRCUIT",
-  UNLIMITED_CONTEST = "UNLIMITED_CONTEST",
-  LIMITED_CONTEST = "LIMITED_CONTEST"
+  CIRCUIT = 'CIRCUIT',
+  UNLIMITED_CONTEST = 'UNLIMITED_CONTEST',
+  LIMITED_CONTEST = 'LIMITED_CONTEST'
 }
 
 export enum TypeBouldering {
-  QUALIFIER = "Qualification",
-  SEMI_FINAL = "Demi-final",
-  FINAL = "Final"
+  QUALIFIER = 'Qualification',
+  SEMI_FINAL = 'Demi-final',
+  FINAL = 'Final'
 }
 
 export enum TypeBoulderingRound {
-  QUALIFIER = "QUALIFIER",
-  SEMI_FINAL = "SEMI_FINAL",
-  FINAL = "FINAL"
+  QUALIFIER = 'QUALIFIER',
+  SEMI_FINAL = 'SEMI_FINAL',
+  FINAL = 'FINAL'
 }
 
 export enum Sex {
-  Male = "male",
-  Female = "female"
+  Male = 'male',
+  Female = 'female'
 }
 
 export enum TypeCompetition {
-  Bouldering = "bouldering"
+  Bouldering = 'bouldering'
+}
+
+export enum FRTypeCompetition {
+  bouldering = 'Bloc'
 }
 
 export type CompetitionCategories = {
@@ -142,17 +146,23 @@ export type BoulderingRoundCreateInput = {
   rankingType: RawRankingType
   type: TypeBoulderingRound
   groups: number
-  maxTries: number
+  maxTries?: number
 }
 
 export type BoulderingRoundInputEdit = BoulderingRoundInput & {
   id: number
 }
 
+export enum RawStateRound {
+  PENDING = 'PENDING',
+  ONGOING = 'ONGOING',
+  ENDED = 'ENDED'
+}
+
 export enum StateRound {
-  PENDING = "PENDING",
-  ONGOING = "ONGOING",
-  ENDED = "ENDED"
+  PENDING = 'En attente',
+  ONGOING = 'En cours',
+  ENDED = 'Terminée'
 }
 
 export type BoulderingLimitedRounds = {
@@ -163,7 +173,7 @@ export type BoulderingLimitedRounds = {
   type: TypeBoulderingRound
   sex: Sex
   category: CategoryName
-  state: StateRound
+  state: RawStateRound
   maxTries: number
 }
 
@@ -246,21 +256,20 @@ export type BoulderingRounds = {
   name: string
   quota: number
   boulders: number
-  rankingType: "CIRCUIT"
+  rankingType: 'CIRCUIT'
   type: TypeBoulderingRound.QUALIFIER
 }
 
 export type BoulderingResult = {
   climberId: number
-  top: boolean
-  zone: boolean
+  top?: boolean
+  zone?: boolean
   try: number
 }
 
 export type BoulderingResultWithCredentials = BoulderingResult & {
   groupId: number
   blocId: number
-  roundId: number
 }
 
 export type APIRankingResponse = {
@@ -283,7 +292,7 @@ export type APIBoulderingGroups = {
   climbers: number[]
   boulders: APIBoulders[]
   roundId: number
-  state: StateRound
+  state: RawStateRound
 }
 
 export type APIBoulderingGroupsClimbers = {
@@ -292,7 +301,7 @@ export type APIBoulderingGroupsClimbers = {
   climbers: User[]
   boulders: APIBoulders[]
   roundId: number
-  state: StateRound
+  state: RawStateRound
 }
 
 export type APIBoulders = {
@@ -309,12 +318,12 @@ export type APIUserCompetitionRoles = {
 }
 
 export enum Roles {
-  organizer = "organizer",
-  juryPresident = "juryPresident",
-  judge = "judge",
-  chiefRouteSetter = "chiefRouteSetter",
-  routeSetter = "routeSetter",
-  technicalDelegate = "technicalDelegate"
+  organizer = 'organizer',
+  juryPresident = 'juryPresident',
+  judge = 'judge',
+  chiefRouteSetter = 'chiefRouteSetter',
+  routeSetter = 'routeSetter',
+  technicalDelegate = 'technicalDelegate'
 }
 
 export type Ranking = {
@@ -323,7 +332,7 @@ export type Ranking = {
 }
 
 export type defaultClimber = {
-  id: 0
+  id: number
   firstName: string
   lastName: string
   club: string
@@ -349,7 +358,7 @@ export type BoulderingRoundRankingsDto = {
   groups: UnlimitedContestGroup | LimitedContestGroup | CircuitGroup
 }
 
-export type CompetitionBoulderingResult = {
+export type BoulderingResultDto = {
   id: number
   climberId: number
   competitionId: number
@@ -362,6 +371,23 @@ export type CompetitionBoulderingResult = {
   tries: number
 }
 
+export type LimitedContestResult = {
+  boulderId: number
+  climberId: number
+  type: string
+  topInTries: number
+  zoneInTries: number
+}
+
+export type CircuitResult = LimitedContestResult
+
+export type UnlimitedContestResult = {
+  climberId: number
+  boulderId: number
+  top: boolean
+  type: string
+}
+
 export type UnlimitedContestGroup = {
   id: number
   bouldersPoints: number
@@ -369,11 +395,11 @@ export type UnlimitedContestGroup = {
 }
 export type LimitedContestGroup = {
   id: number
-  rankings: CountedRanking
+  rankings: CountedRankings
 }
 export type CircuitGroup = {
   id: number
-  ranking: CountedRanking
+  ranking: CountedRankings
 }
 
 export type BaseRoundRanking = {
@@ -382,11 +408,58 @@ export type BaseRoundRanking = {
   climber: defaultClimber
 }
 
+export type CountedRankings = {
+  ranking: number
+  climber: defaultClimber
+  tops: Array<boolean>
+  topsInTries: Array<number>
+  zones: Array<boolean>
+  zonesInTries: Array<number>
+}
+
+export type RawCountedRankingWithType = RawCountedRanking & {
+  type: RawRankingType
+}
+export type RawCountedRanking = {
+  ranking: number | null
+  climber: defaultClimber | null
+  top: boolean | null
+  topInTry: number | null
+  zone: boolean | null
+  zoneInTry: number | null
+}
 export type CountedRanking = {
   ranking: number
   climber: defaultClimber
-  tops: boolean
-  topsInTries: boolean
-  zones: boolean
-  zoneInTries: boolean
+  top: boolean
+  topInTry: number
+  zone: boolean
+  zoneInTry: number
 }
+
+export type PropsBulkResult = RawPropsBulkResult & {
+  groupId: number
+  roundId: number
+  boulderId: number
+  competitionId: number
+}
+
+export type RawPropsBulkResult = {
+  index: number
+  row: RawCountedRankingWithType
+}
+
+export type APIGroupRanking = {
+  type: RawRankingType
+  data: {
+    boulders: Array<number>
+    rankings: Array<CountedRankings>
+  }
+}
+
+export type APIRoundRanking = {
+  type: RawRankingType
+  data: Array<CountedRankings>
+}
+
+export type UserChoice = { genre?: string; type?: string; category?: string }
