@@ -11977,6 +11977,11 @@ vue-eslint-parser@^7.0.0:
     esquery "^1.0.1"
     lodash "^4.17.15"
 
+vue-file-picker@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/vue-file-picker/-/vue-file-picker-0.0.2.tgz#9689dd8c1ad8c496edfaae35ffd94035b803863a"
+  integrity sha512-SEBriOCXvn4prhwTdPskq45Iz6WWHF7O5/FGRtG86UM7jygoKhzY2GPhTgHJwmRhSMDGCB/ZUBphQLgKG22xzA==
+
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"
