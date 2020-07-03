@@ -3,7 +3,7 @@
     <div class="column">
       <boulders-picture :boulder-id="0"
                         :competition="{ id: 0, name: 'Competition Damien' }"
-                        :round="{ id: 0, boulderIds: [0, 1, 2, 3, 4] }">
+                        :round="{ id: 0, boulderIds: [0] }">
       </boulders-picture>
     </div>
     <div class="column is-one-fifth">
