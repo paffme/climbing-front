@@ -67,7 +67,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import TableCompetition from '~/components/Rank.vue'
 import StatsBlock from '~/components/StatsBlock.vue'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
-import { Competition } from '~/definitions'
+import { APICompetition, Competition } from '~/definitions'
 import BtnCreateCompetition from '~/components/Button/BtnCreateCompetition.vue'
 import { futureCompetitions } from '~/utils/filterHelper'
 import AuthUser from '~/store/authUser'
@@ -90,7 +90,7 @@ export default class Competitions extends Vue {
     totalCompetitions: 0
   }
 
-  perPage = 5
+  perPage = 10
   page = 1
 
   async created() {
@@ -99,6 +99,8 @@ export default class Competitions extends Vue {
       this.dashboardStats.nbClimber = await this.fetchNbClimber()
       this.dashboardStats.futureCompetitions = await this.countCompetition(true)
       this.dashboardStats.totalCompetitions = await this.countCompetition()
+
+      console.log('this.competitions', this.competitions)
     } catch (err) {
       console.log('error Created - Index', err)
       this.competitions = []
@@ -128,7 +130,7 @@ export default class Competitions extends Vue {
     }
   }
 
-  async fetchFutureCompetitions(): Promise<Competition[]> {
+  async fetchFutureCompetitions(): Promise<APICompetition[]> {
     try {
       const axiosResponse = await ApiHelper.GetCompetitionsPagination(
         this.page,

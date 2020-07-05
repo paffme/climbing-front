@@ -72,8 +72,6 @@ async function fetchRole(
     userId as number
   )
 
-  console.log()
-
   return response.data
 }
 
@@ -113,8 +111,6 @@ async function fetchCompetition(
         // @ts-ignore
         AuthUser.getters?.['Credentials']().id
       )
-
-      console.log('role', role)
 
       return {
         competition,

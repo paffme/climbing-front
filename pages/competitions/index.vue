@@ -3,6 +3,7 @@
     <h1 class="title">
       Toutes les compétitions
     </h1>
+    <BtnCreateCompetition :is-connected="isConnected" />
     <div class="is-pulled-right">
       <b-field
         grouped
@@ -46,17 +47,22 @@ import { Vue, Component } from 'vue-property-decorator'
 import { Competition } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import TableCompetition from '~/components/Rank.vue'
+import BtnCreateCompetition from '~/components/Button/BtnCreateCompetition.vue'
+import AuthUser from '~/store/authUser'
 
 @Component({
-  components: { TableCompetition }
+  components: { TableCompetition, BtnCreateCompetition }
 })
 export default class IndexCompetitions extends Vue {
   competitions?: Competition[] | null = null
   totalCompetition = 0
   perPage = 5
   page = 1
+  isConnected = false
 
   async created() {
+    // @ts-ignore
+    this.isConnected = AuthUser.getters?.['Authenticated']() || false
     try {
       const totalCompetition = await ApiHelper.GetCompetitionsCount()
       this.totalCompetition = totalCompetition.data.count

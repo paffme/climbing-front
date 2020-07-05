@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="competition">
     <div class="header-competition">
       <span class="subtitle"> {{ competition.name }}</span>
       <b-tag

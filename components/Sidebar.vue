@@ -65,7 +65,7 @@
   </b-sidebar>
 </template>
 
-<style>
+<style scoped>
 .p-1 {
   padding: 1em;
 }

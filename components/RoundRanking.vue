@@ -4,12 +4,18 @@
       <b-table-column field="ranking" label="Classement" sortable>
         {{ props.row.ranking }}
       </b-table-column>
-      <b-table-column field="climber.firstName" label="Prénom" sortable>
+      <b-table-column
+        field="climber.firstName"
+        label="Prénom"
+        sortable
+        searchable
+      >
         {{ props.row.climber.firstName }}
       </b-table-column>
-      <b-table-column field="climber.lastName" label="Nom" sortable>
+      <b-table-column field="climber.lastName" label="Nom" sortable searchable>
         {{ props.row.climber.lastName }}
       </b-table-column>
+
       <b-table-column field="top" label="Top" sortable>
         <b-tag
           :type="props.row.top ? 'is-success' : 'is-danger'"
@@ -19,6 +25,7 @@
           {{ props.row.top }}
         </b-tag>
       </b-table-column>
+
       <b-table-column
         field="topInTry"
         label="Top (nb essais)"
@@ -29,7 +36,7 @@
         <form>
           <b-input
             v-model="props.row.topInTry"
-            custom-class="custom-input"
+            :custom-class="'custom-input'"
             :disabled="!isBulk"
             :visible="typeRanking !== rawRankingType.UNLIMITED_CONTEST"
             @blur="editTopInTry(props)"
@@ -38,6 +45,7 @@
           </b-input>
         </form>
       </b-table-column>
+
       <b-table-column
         field="zone"
         label="Essais"
@@ -52,6 +60,7 @@
           {{ props.row.zone }}
         </b-tag>
       </b-table-column>
+
       <b-table-column
         field="zoneInTry"
         label="Zone (nb essais)"
@@ -130,20 +139,23 @@ export default class RoundRanking extends Vue {
 }
 </script>
 
-<style>
-.custom-input {
+<style scoped>
+input.input.custom-input {
   box-shadow: none !important;
   border: none !important;
 }
+
 .custom-input:focus {
   box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1) !important;
   border: 1px solid transparent !important;
 }
+
 .custom-input[disabled] {
   background-color: inherit;
   color: black;
   cursor: text;
 }
+
 .custom-btag {
   cursor: pointer;
 }

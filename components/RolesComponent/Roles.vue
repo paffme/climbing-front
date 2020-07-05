@@ -54,7 +54,7 @@ import RolesComponent from '~/components/RolesComponent/RolesComponent.vue'
   components: { RolesComponent }
 })
 export default class Roles extends Vue {
-  @Prop(String) role!: APIUserCompetitionRoles
+  @Prop(Object) role!: APIUserCompetitionRoles
   @Prop(Number) competitionId!: number
 
   roleName = RoleName

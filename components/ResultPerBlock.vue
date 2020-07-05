@@ -10,7 +10,8 @@
     :mobile-mode="mobileMode"
   >
     <b-step-item
-      step="1"
+      :step="1"
+      :value="0"
       :label="
         userChoice.category ? `Catégorie (${userChoice.category})` : 'Catégorie'
       "
@@ -39,7 +40,8 @@
     </b-step-item>
 
     <b-step-item
-      step="2"
+      :step="2"
+      :value="1"
       :label="
         userChoice.genre
           ? `Genre (${userChoice.genre === 'female' ? 'Femme' : 'Homme'})`
@@ -50,8 +52,8 @@
       <h1 class="title has-text-centered">
         Genre
       </h1>
-      <p class="notification has-text-centered">
-        Un round doit être créé avec le genre souhaité
+      <p class="notification is-warning has-text-centered">
+        Un round doit être préalablement créé avec le <b>genre</b> souhaité
       </p>
       <div class="choice">
         <template v-if="checkIfGenreExist(sex.Male)">
@@ -76,7 +78,8 @@
     </b-step-item>
 
     <b-step-item
-      step="3"
+      :step="3"
+      :value="2"
       :label="
         userChoice.type ? `Phase (${typeBouldering[userChoice.type]})` : 'Phase'
       "
@@ -91,6 +94,15 @@
         <b>"EN COURS"</b>
       </p>
       <div class="choice">
+        <template
+          v-if="
+            !checkIfTypeExist(type.QUALIFIER) &&
+            !checkIfTypeExist(type.SEMI_FINAL) &&
+            !checkIfTypeExist(type.FINAL)
+          "
+        >
+          Aucune compétition n'est disponible pour être noté
+        </template>
         <template v-if="checkIfTypeExist(type.QUALIFIER)">
           <b-button
             size="is-large"
@@ -123,9 +135,40 @@
     </b-step-item>
 
     <b-step-item
-      step="4"
+      :step="4"
+      :value="3"
+      :label="
+        userChoice.nbGroup !== null
+          ? `Groupe(${userChoice.nbGroup + 1})`
+          : 'Groupe'
+      "
+      :clickable="isStepsClickable"
+      :type="{ 'is-success': isProfileSuccess }"
+    >
+      <h1 class="title has-text-centered">
+        Groupes
+      </h1>
+      <template>
+        <div class="choice">
+          <template v-for="(group, index) in groupsToDisplay">
+            <b-button
+              :key="group.id"
+              size="is-large"
+              type="is-primary"
+              @click.native="updateGroupUserChoice(index)"
+            >
+              Groupe (n°{{ index + 1 }})
+            </b-button>
+          </template>
+        </div>
+      </template>
+    </b-step-item>
+
+    <b-step-item
+      :step="5"
+      :value="4"
       label="Résultat"
-      :clickable="false"
+      :clickable="isStepsClickable"
       :type="{ 'is-success': isProfileSuccess }"
     >
       <h1 class="title has-text-centered">
@@ -135,72 +178,13 @@
         Aucun ID ne correspond aux critères demandées
       </template>
       <template v-else>
-        <div>
-          <template v-if="groupsToDisplay.length > 0">
-            <template v-for="(group, index) in groupsToDisplay">
-              <div :key="index">
-                <p class="subtitle">Groupe {{ group.id }}</p>
-                <template v-if="firstGroup">
-                  <template v-for="bloc in firstGroup">
-                    <div :key="bloc.id">
-                      <p class="subtitle">Bloc {{ bloc.id }}</p>
-                      <div v-for="climber in group.climbers" :key="climber.id">
-                        <AddResultComponent
-                          :key="climber.id"
-                          :bloc-id="bloc.id"
-                          :group-id="group.id"
-                          :round-id="idRoundToNote"
-                          :competition-id="competition.id"
-                          :climber="climber"
-                          @onSendNote="sendNote"
-                        />
-                      </div>
-                    </div>
-                  </template>
-                </template>
-                <template v-if="secondGroup">
-                  <template v-for="bloc in secondGroup">
-                    <div :key="bloc.id">
-                      Bloc {{ bloc.id }}
-                      <div v-for="climber in group.climbers" :key="climber.id">
-                        <b-collapse
-                          aria-id="contentIdForA11y2"
-                          class="panel"
-                          animation="slide"
-                        >
-                          <div
-                            slot="trigger"
-                            class="panel-heading"
-                            role="button"
-                            aria-controls="contentIdForA11y2"
-                          >
-                            <strong>{{
-                              `${climber.firstName} ${climber.lastName}`
-                            }}</strong>
-                          </div>
-                          <div class="panel-block">
-                            <div class="columns">
-                              <div class="column is-6">
-                                <figure class="image is-128x128">
-                                  <img
-                                    src="https://bulma.io/images/placeholders/128x128.png"
-                                  />
-                                </figure>
-                              </div>
-                            </div>
-                          </div>
-                        </b-collapse>
-                      </div>
-                    </div>
-                  </template>
-                </template>
-              </div>
-            </template>
-          </template>
-          <template v-else>
-            Aucun participant à afficher
-          </template>
-        </div>
+        <template v-if="finalGroupToDisplay">
+          <ResultClimberComponent
+            :group="finalGroupToDisplay"
+            :round="roundtoDisplay"
+            @onSendNote="sendNote"
+          />
+        </template>
       </template>
     </b-step-item>
   </b-steps>
@@ -213,8 +197,8 @@ import {
   APIBoulderingRounds,
   APIBoulders,
   APICompetition,
+  BoulderingLimitedRounds,
   BoulderingResult,
-  BoulderingResultWithCredentials,
   CategoryName,
   Sex,
   TypeBouldering,
@@ -222,10 +206,10 @@ import {
 } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { AxiosHelper } from '~/utils/axiosHelper'
-import AddResultComponent from '~/components/AddResultComponent.vue'
+import ResultClimberComponent from '~/components/ResultClimberComponent/ResultClimberComponent.vue'
 
 @Component({
-  components: { AddResultComponent }
+  components: { ResultClimberComponent }
 })
 export default class ResultPerBlock extends Vue {
   @Prop(Object) competition!: APICompetition
@@ -238,16 +222,22 @@ export default class ResultPerBlock extends Vue {
 
   availableCategory = new Set()
   groupsToDisplay: APIBoulderingGroupsClimbers[] = []
-  firstGroup: APIBoulders[] | null = null
-  secondGroup: APIBoulders[] | null = null
+  finalGroupToDisplay: APIBoulderingGroupsClimbers | null = null
 
   idRoundToNote: number | null = null
+  roundtoDisplay: BoulderingLimitedRounds | null = null
   finalStepError: boolean = false
 
-  userChoice = {
-    genre: '',
-    type: '',
-    category: ''
+  userChoice: {
+    genre: string | null
+    type: string | null
+    category: string | null
+    nbGroup: number | null
+  } = {
+    genre: null,
+    type: null,
+    category: null,
+    nbGroup: null
   }
 
   activeStep = 0
@@ -264,34 +254,37 @@ export default class ResultPerBlock extends Vue {
   mobileMode = 'minimalist'
 
   created() {
-    console.log('rounds', this.rounds)
     this.competition.categories!.forEach((category) => {
       this.availableCategory.add(category.name)
     })
   }
 
-  async sendNote(note: BoulderingResultWithCredentials) {
-    console.log('sendNote', note)
+  async sendNote(note: {
+    data: BoulderingResult
+    info: { blocId: number; groupId: number }
+  }) {
+    console.log('sendNote - ResultPerBlock', note)
 
-    const result: BoulderingResult = {
-      climberId: note.climberId,
-      top: note.top,
-      zone: note.zone,
-      try: note.try
-    }
     try {
       await ApiHelper.AddBoulderingResult(
-        result,
+        note.data,
         this.competition.id!,
         this.idRoundToNote!,
-        note.groupId,
-        note.blocId
+        note.info.groupId,
+        note.info.blocId
       )
       this.$buefy.toast.open({
         type: 'is-success',
         message: 'Note ajoutée'
       })
     } catch (err) {
+      if (err.response.status === 403) {
+        this.$buefy.toast.open({
+          type: 'is-warning',
+          message: 'Vous ne pouvez noter ce bloc'
+        })
+        return
+      }
       AxiosHelper.HandleAxiosError(this, err)
     }
   }
@@ -299,44 +292,59 @@ export default class ResultPerBlock extends Vue {
   updateGenreUserChoice(genre: Sex) {
     try {
       // Check if a genre with his name exists
+      if (!this.userChoice.category) return
       const data = this.rounds[this.userChoice.category][genre]
       if (!data) throw new Error(`La catégorie ${genre} n'existe pas`)
       this.userChoice.genre = genre
-      this.stepMove(2)
+      this.stepMove(this.activeStep + 1)
     } catch (err) {
       console.log('err', err)
     }
   }
 
-  checkIfGenreExist(genre: Sex): any | undefined {
-    if (!this.userChoice.category) return
-    return this.rounds[this.userChoice.category][genre]
+  checkIfGenreExist(genre: Sex): boolean {
+    if (!this.userChoice.category) return false
+    try {
+      return !!this.rounds[this.userChoice.category][genre]
+    } catch (err) {
+      return false
+    }
   }
 
-  checkIfCategoryExist(category: CategoryName): any | undefined {
-    return this.rounds[category]
+  checkIfCategoryExist(category: CategoryName): boolean {
+    try {
+      return !!this.rounds[category]
+    } catch (err) {
+      return false
+    }
   }
 
   checkIfTypeExist(type: TypeBoulderingRound): boolean {
     if (!this.userChoice.category || !this.userChoice.genre) return false
 
-    const round = this.rounds[this.userChoice.category][this.userChoice.genre][
-      type
-    ]
-    return round && round.state === 'ONGOING'
+    try {
+      const round = this.rounds[this.userChoice.category][
+        this.userChoice.genre
+      ][type]
+      return round && round.state === 'ONGOING'
+    } catch (err) {
+      return false
+    }
   }
 
   updateTypeUserChoice(type: TypeBoulderingRound) {
     this.userChoice.type = type
-    this.stepMove(3)
-    this.idRoundToNote = this.rounds[this.userChoice.category][
+    if (!this.userChoice.category || !this.userChoice.genre) return
+    this.roundtoDisplay = this.rounds[this.userChoice.category][
       this.userChoice.genre
-    ][this.userChoice.type]?.id as number
+    ][this.userChoice.type]
+    this.idRoundToNote = this.roundtoDisplay?.id as number
 
     this.finalStepError = !this.idRoundToNote
 
     if (!this.finalStepError && this.competition.id) {
-      this.fetchGroups(this.competition.id, this.idRoundToNote)
+      this.stepMove(this.activeStep + 1)
+      this.fetchGroups(this.idRoundToNote)
     }
   }
 
@@ -346,7 +354,44 @@ export default class ResultPerBlock extends Vue {
       const data = this.rounds[category]
       if (!data) throw new Error(`Category ${category} dont exist`)
       this.userChoice.category = category
-      this.stepMove(1)
+      this.stepMove(this.activeStep + 1)
+    } catch (err) {
+      console.log('err', err)
+    }
+  }
+
+  async fetchGroups(currentRoundId: number) {
+    try {
+      if (!this.competition.id) throw new Error('No competition ID')
+      // Check if a category with his name exists
+      const result = await ApiHelper.GetBoulderingGroups(
+        this.competition.id,
+        currentRoundId
+      )
+      console.log('result', result.data)
+      this.groupsToDisplay = result.data
+    } catch (err) {
+      AxiosHelper.HandleAxiosError(this, err)
+    }
+  }
+
+  async updateGroupUserChoice(nbGroup: number) {
+    try {
+      this.userChoice.nbGroup = nbGroup
+      console.log('this.groupsToDisplay', this.groupsToDisplay)
+      console.log('nbGroup', nbGroup)
+      this.finalGroupToDisplay = this.groupsToDisplay[nbGroup]
+
+      console.log(
+        'this.rounds[this.userChoice.category][\n' +
+          '        this.userChoice.genre\n' +
+          '        ][this.userChoice.type]',
+        this.rounds[this.userChoice.category!][this.userChoice.genre!][
+          this.userChoice.type!
+        ]
+      )
+
+      this.stepMove(this.activeStep + 1)
     } catch (err) {
       console.log('err', err)
     }
@@ -354,36 +399,6 @@ export default class ResultPerBlock extends Vue {
 
   stepMove(stepNumber: number) {
     this.activeStep = stepNumber
-  }
-
-  async fetchGroups(competitionId: number, roundId: number) {
-    console.log('fetchGroups', competitionId)
-    console.log('fetchGroups - roundId', roundId)
-    try {
-      const groups = await ApiHelper.GetBoulderingGroups(competitionId, roundId)
-
-      console.log('groups', groups)
-      this.groupsToDisplay = groups.data as any
-      const firstBloc =
-        groups.data[0].boulders ||
-        (await ApiHelper.GetBoulder(competitionId, roundId, groups.data[0].id))
-      const secondBloc =
-        groups.data && groups.data[1]
-          ? groups.data[1].boulders ||
-            (await ApiHelper.GetBoulder(
-              competitionId,
-              roundId,
-              groups.data[1].id
-            ))
-          : null
-
-      console.log('firstBloc', firstBloc)
-      console.log('secondBloc', secondBloc)
-      this.firstGroup = this.isJudgeOfBloc(firstBloc)
-      this.secondGroup = secondBloc || null
-    } catch (err) {
-      AxiosHelper.HandleAxiosError(this, err)
-    }
   }
 
   isJudgeOfBloc(boulder: APIBoulders[]) {

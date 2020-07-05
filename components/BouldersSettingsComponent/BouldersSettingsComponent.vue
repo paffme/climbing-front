@@ -34,6 +34,7 @@
               <BouldersDisplay
                 :qualification-round="typeBoulderingRound.QUALIFIER"
                 :round="categoriesDisplayed.qualification"
+                :roles="roles"
                 @refreshRound="$emit('loadBouldering')"
                 @edit="onOpenModalEditRound"
                 @delete="onDeleteRound"
@@ -58,6 +59,7 @@
               <BouldersDisplay
                 :qualification-round="typeBoulderingRound.SEMI_FINAL"
                 :round="categoriesDisplayed.semi"
+                :roles="roles"
                 @refreshRound="$emit('loadBouldering')"
                 @edit="onOpenModalEditRound"
                 @delete="onDeleteRound"
@@ -81,6 +83,7 @@
               <BouldersDisplay
                 :qualification-round="typeBoulderingRound.FINAL"
                 :round="categoriesDisplayed.final"
+                :roles="roles"
                 @refreshRound="$emit('loadBouldering')"
                 @edit="onOpenModalEditRound"
                 @delete="onDeleteRound"
@@ -121,7 +124,8 @@ import {
   BoulderingRoundInputEdit,
   BoulderingRoundCreateInput,
   BoulderingRoundInput,
-  RawRankingType
+  RawRankingType,
+  APIUserCompetitionRoles
 } from '~/definitions'
 import BouldersEmpty from '~/components/BouldersSettingsComponent/BouldersEmpty.vue'
 import BouldersDisplayEmpty from '~/components/BouldersSettingsComponent/BouldersDisplayEmpty.vue'
@@ -146,6 +150,7 @@ import { AxiosHelper } from '~/utils/axiosHelper'
 export default class BouldersSettingsComponent extends Vue {
   @Prop(Number) competitionId!: number
   @Prop(Object) rounds!: APIBoulderingRounds
+  @Prop(Object) roles!: APIUserCompetitionRoles
   @Watch('rounds', { immediate: true, deep: true })
   onBoulderingChange(
     boulderingRounds: APIBoulderingRounds,

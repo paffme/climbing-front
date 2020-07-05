@@ -82,8 +82,8 @@
         Phases
       </h1>
       <p class="notification is-warning has-text-centered">
-        Pour qu'une phase soit active, le status du round doit être
-        <b>"EN COURS"</b>
+        Pour qu'une phase soit disponible le status de cette doit être
+        <b>"EN COURS"</b> ou <b>"TERMINEE"</b>
       </p>
       <div class="choice">
         <template v-if="checkIfTypeExist(type.QUALIFIER)">
@@ -136,6 +136,7 @@ import {
   APIBoulderingRounds,
   APICompetition,
   CategoryName,
+  QueryParamsRank,
   RawStateRound,
   Sex,
   TypeBouldering,
@@ -146,6 +147,8 @@ import {
 export default class StepComponent extends Vue {
   @Prop(Object) rounds!: APIBoulderingRounds
   @Prop(Object) competition!: APICompetition
+  @Prop(Boolean) rating!: boolean
+
   sex = Sex
   type = TypeBoulderingRound
   typeBouldering = TypeBouldering
@@ -170,9 +173,39 @@ export default class StepComponent extends Vue {
   availableCategory = new Set()
 
   created() {
+    this.setUserChoice(this.$route.query as QueryParamsRank)
     this.competition.categories!.forEach((category) => {
       this.availableCategory.add(category.name)
     })
+  }
+
+  setUserChoice(query: QueryParamsRank) {
+    console.log('query', query)
+    if (query.cat) {
+      const cat: string = query.cat.charAt(0).toUpperCase() + query.cat.slice(1)
+      // @ts-ignore
+      const categoryExist = !!CategoryName[cat]
+
+      if (!categoryExist) return
+      this.updateCategoryUserChoice(query.cat as CategoryName)
+
+      if (query.genre) {
+        if ((query.genre as string) !== 'f' && (query.genre as string) !== 'h')
+          return
+        if (query.genre === 'f') this.updateGenreUserChoice(Sex.Female)
+        if ((query.genre as string) === 'h')
+          this.updateGenreUserChoice(Sex.Male)
+
+        if (query.phase) {
+          if (query.phase === 'qualif')
+            this.updateTypeUserChoice(TypeBoulderingRound.QUALIFIER)
+          if (query.phase === 'semi')
+            this.updateTypeUserChoice(TypeBoulderingRound.SEMI_FINAL)
+          if (query.phase === 'final')
+            this.updateTypeUserChoice(TypeBoulderingRound.FINAL)
+        }
+      }
+    }
   }
 
   updateGenreUserChoice(genre: Sex) {
@@ -200,17 +233,25 @@ export default class StepComponent extends Vue {
   checkIfTypeExist(type: TypeBoulderingRound): boolean {
     if (!this.userChoice.category || !this.userChoice.genre) return false
 
-    const roundExist = !!this.rounds[this.userChoice.category][
-      this.userChoice.genre
-    ][type]
-    if (!roundExist) return false
+    try {
+      const roundExist = !!this.rounds[this.userChoice.category][
+        this.userChoice.genre
+      ][type]
+      console.log('roundExist', roundExist)
+      if (!roundExist) return false
 
-    const canBeRating =
-      this.rounds[this.userChoice.category][this.userChoice.genre][type]
-        .state === RawStateRound.ONGOING
-    if (!canBeRating) return false
+      if (!this.rating) return true
 
-    return true
+      const canBeRating =
+        this.rounds[this.userChoice.category][this.userChoice.genre][type]
+          .state === RawStateRound.ONGOING
+
+      console.log('canBeRating', canBeRating)
+
+      return canBeRating
+    } catch (err) {
+      return false
+    }
   }
 
   updateTypeUserChoice(type: TypeBoulderingRound) {
@@ -225,6 +266,8 @@ export default class StepComponent extends Vue {
   updateCategoryUserChoice(category: CategoryName) {
     try {
       // Check if a category with his name exists
+      console.log('category', category)
+      console.log('this.rounds', this.rounds)
       const data = this.rounds[category]
       if (!data) throw new Error(`Category ${category} dont exist`)
       this.userChoice.category = category

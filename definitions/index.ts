@@ -265,7 +265,7 @@ export type BoulderingResult = {
   climberId: number
   top?: boolean
   zone?: boolean
-  try: number
+  try?: number
 }
 
 export type BoulderingResultWithCredentials = BoulderingResult & {
@@ -450,10 +450,20 @@ export type APIRoundRanking = {
 
 export type BoulderingUnlimitedContestRanking = {
   ranking: number
-  tops: boolean[]
-  climber: defaultClimber
+  climber: defaultClimber[]
+  tops: boolean
   nbTops: number
   points: number
+}
+
+export type BoulderingUnlimitedContestRankingWithTops = BoulderingUnlimitedContestRanking & {
+  tops: boolean[]
+}
+
+export type DtoUnlimitedContestRanking = {
+  bloc?: number
+  points?: number
+  rankings?: BoulderingUnlimitedContestRanking[]
 }
 
 export type RawPropsBulkResult = {
@@ -463,10 +473,19 @@ export type RawPropsBulkResult = {
 
 export type APIGroupRanking = {
   type: RawRankingType
-  data: {
-    boulders: Array<number>
-    rankings: Array<CountedRankings>
-  }
+  data: APIGroupRankingData
+}
+
+export type APIGroupRankingData = {
+  bouldersPoints?: Array<number>
+  boulders?: Array<number>
+  rankings?: Array<CountedRankings | BoulderingUnlimitedContestRankingWithTops>
 }
 
 export type UserChoice = { genre?: string; type?: string; category?: string }
+
+export type QueryParamsRank = {
+  cat?: CategoryName
+  genre?: string
+  phase?: 'qualif' | 'semi' | 'final'
+}

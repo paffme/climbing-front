@@ -1,5 +1,19 @@
 <template>
   <div>
+    <h1 class="title">
+      Classement général
+    </h1>
+    <h2 class="subtitle go_back">
+      <GoBackBtn />
+      Voir le détail des classements
+    </h2>
+    <div v-if="competition" class="content notification">
+      <div class="columns">
+        <div class="column is-12">
+          <CompetitionsDetails :competition="competition" />
+        </div>
+      </div>
+    </div>
     <div
       v-if="rankingData && Array.isArray(rankingData) && rankingData.length > 0"
     >
@@ -60,7 +74,15 @@
                   label="Plus de classement"
                   sortable
                 >
-                  <nuxt-link :to="{ name: 'competitions-id-rank-rounds' }">
+                  <nuxt-link
+                    :to="{
+                      name: 'competitions-id-rank-rounds',
+                      query: {
+                        cat: selected.category,
+                        genre: selected.genre === 'h' ? 'h' : 'f'
+                      }
+                    }"
+                  >
                     Voir plus de classement...
                   </nuxt-link>
                 </b-table-column>
@@ -90,38 +112,30 @@
 <script lang="ts">
 import _ from 'lodash'
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { APIBoulderingGroups, CategoryName, Sex } from '~/definitions'
+import {
+  APIBoulderingGroups,
+  APICompetition,
+  CategoryName,
+  Sex
+} from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import RankNotFound from '~/components/RankNotFound.vue'
+import CompetitionsDetails from '~/components/CompetitionDetails.vue'
+import GoBackBtn from '~/components/Button/GoBackBtn.vue'
 
 @Component({
-  components: { RankNotFound }
+  components: { RankNotFound, CompetitionsDetails, GoBackBtn }
 })
 export default class GeneralRanking extends Vue {
+  @Prop(Number) totalCompetition!: number
+  @Prop(Number) perPage!: number
+
   user!: APIBoulderingGroups
-  data: any = [
-    {
-      firstName: 'Ruben',
-      lastName: 'Faro',
-      top: true,
-      zone: true,
-      try: false
-    },
-    {
-      firstName: 'Yoni',
-      lastName: 'Faro',
-      top: false,
-      zone: true,
-      try: true
-    }
-  ]
+  competition: APICompetition | null = null
 
   sex = Sex
   rankingData: any | null = null
-
-  @Prop(Number) totalCompetition!: number
-  @Prop(Number) perPage!: number
 
   selected: { genre: Sex; category: CategoryName } = {
     genre: Sex.Female,
@@ -141,6 +155,12 @@ export default class GeneralRanking extends Vue {
         this.rankingData = []
         return
       }
+
+      const competitions = await ApiHelper.GetCompetition(
+        parseInt(competitionId, 10)
+      )
+
+      this.competition = competitions.data
 
       const categories: CategoryName[] = Object.keys(
         ranking.data

@@ -7,7 +7,7 @@
     </header>
     <div class="card-content">
       <span class="description-text"
-        >Trouver un utilisateur via son <b>nom</b></span
+        >Trouver un utilisateur via son <b>nom</b> (Sensible à la casse)</span
       >
       <div class="custom-field">
         <SearchUser

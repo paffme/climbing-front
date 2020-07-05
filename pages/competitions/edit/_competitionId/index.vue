@@ -34,7 +34,14 @@
         </template>
       </b-tab-item>
 
-      <b-tab-item v-if="role.juryPresident">
+      <b-tab-item
+        v-if="
+          role.juryPresident ||
+          role.judge ||
+          role.chiefRouteSetter ||
+          role.routeSetter
+        "
+      >
         <template slot="header">
           <b-icon icon="information-outline"></b-icon>
           <span>Rounds</span>
@@ -42,6 +49,7 @@
         <template>
           <div id="boulder-settings">
             <BouldersSettingsComponent
+              :roles="role"
               :competition-id="competition.id"
               :rounds="rounds"
               @loadBouldering="onLoadBouldering"
@@ -53,11 +61,14 @@
       <b-tab-item v-if="role.judge || role.juryPresident">
         <template slot="header">
           <b-icon icon="information-outline"></b-icon>
-          <span>Résultats</span>
+          <span>Ajout de résultat</span>
         </template>
-        <p>Pour quel compétition souhaitez vous entrer les résultats ?</p>
+        <p class="content notification has-text-centered">
+          Veuillez selectionner la compétition que vous souhaitez noter
+        </p>
         <ResultPerBlock :competition="competition" :rounds="rounds" />
       </b-tab-item>
+
       <b-tab-item v-if="role.juryPresident">
         <template slot="header">
           <b-icon icon="information-outline"></b-icon>

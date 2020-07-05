@@ -4,16 +4,18 @@
       <table class="table">
         <thead>
           <tr>
-            <th><abbr title="Nom">Nom</abbr></th>
             <th><abbr title="Top">Top</abbr></th>
-            <th><abbr title="Try">Try</abbr></th>
-            <th><abbr title="Zone">Zone</abbr></th>
-            <th><abbr title="Zone">Résultats</abbr></th>
+            <template
+              v-if="round.rankingType !== rankingType.UNLIMITED_CONTEST"
+            >
+              <th><abbr title="Try">Try</abbr></th>
+              <th><abbr title="Zone">Zone</abbr></th>
+            </template>
+            <th><abbr title="results">Résultats</abbr></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <th>{{ climber.firstName }} {{ climber.lastName }}</th>
             <th>
               <FormClimberRadio
                 :data="result.top"
@@ -21,30 +23,38 @@
                 @onSelect="selectTop"
               />
             </th>
+            <template
+              v-if="round.rankingType !== rankingType.UNLIMITED_CONTEST"
+            >
+              <td>
+                <div class="content">
+                  <b-field>
+                    <b-select v-model="result.try" :disabled="!isJudge">
+                      <option
+                        v-for="maxTry in round.maxTries || 50"
+                        :key="maxTry"
+                        :value="maxTry"
+                      >
+                        {{ maxTry }}
+                      </option>
+                    </b-select>
+                  </b-field>
+                </div>
+              </td>
+              <td>
+                <FormClimberRadio
+                  :data="result.zone"
+                  :disabled="isEdition || !isJudge"
+                  @onSelect="selectZone"
+                />
+              </td>
+            </template>
             <td>
-              <div class="content">
-                <b-field>
-                  <b-select v-model="result.try" :disabled="!isJudge">
-                    <option
-                      v-for="maxTry in maxTries"
-                      :key="maxTry"
-                      :value="maxTry"
-                    >
-                      {{ maxTry }}
-                    </option>
-                  </b-select>
-                </b-field>
-              </div>
-            </td>
-            <td>
-              <FormClimberRadio
-                :data="result.zone"
-                :disabled="isEdition || !isJudge"
-                @onSelect="selectZone"
-              />
-            </td>
-            <td>
-              <b-button :disabled="!isJudge" @click="sendResult">
+              <b-button
+                type="is-info"
+                :disabled="!isJudge || isDisabled"
+                @click="sendResult"
+              >
                 Envoyer les résultats
               </b-button>
             </td>
@@ -57,22 +67,27 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { BoulderingResultWithCredentials, User } from '~/definitions'
+import {
+  BoulderingLimitedRounds,
+  BoulderingResult,
+  RawRankingType
+} from '~/definitions'
 import FormClimberRadio from '~/components/Form/FormClimberRadio.vue'
 
 @Component({
   components: { FormClimberRadio }
 })
 export default class FormClimber extends Vue {
-  @Prop(Object) result!: BoulderingResultWithCredentials
-  @Prop(Number) blocId!: number
+  @Prop(Object) result!: BoulderingResult
+  @Prop(Object) round!: BoulderingLimitedRounds
   @Prop(Number) groupId!: number
-  @Prop(Object) climber!: User
+  @Prop(Boolean) isDisabled!: boolean
+
+  rankingType = RawRankingType
 
   isJudge = true
 
-  maxTries = 3
-  isEdition = false
+  isEdition = false // Use to know if a result has been already set
   oldResult = {
     try: 0,
     top: null,
@@ -80,27 +95,37 @@ export default class FormClimber extends Vue {
   }
 
   sendResult() {
-    const essai = !this.isEdition
-      ? this.result.try
-      : this.oldResult.try
-      ? this.differenceBetween(
-          this.result.try,
-          (this.oldResult.try as unknown) as number
-        )
-      : 0
-    const result: BoulderingResultWithCredentials = {
-      climberId: this.result.climberId,
-      top:
-        this.isEdition && this.result.top !== this.oldResult.top
-          ? undefined
-          : this.result.top,
-      zone:
-        this.isEdition && this.result.zone !== this.oldResult.zone
-          ? undefined
-          : this.result.zone,
-      try: essai,
-      groupId: this.groupId,
-      blocId: this.blocId
+    let result: BoulderingResult = {
+      climberId: this.result.climberId
+    }
+
+    if (this.rankingType.UNLIMITED_CONTEST !== this.round.rankingType) {
+      const essai =
+        this.result.try && !this.isEdition
+          ? this.result.try
+          : this.oldResult.try && this.result.try
+          ? this.differenceBetween(
+              this.result.try,
+              (this.oldResult.try as unknown) as number
+            )
+          : 0
+      result = {
+        ...result,
+        top:
+          this.isEdition && this.result.top !== this.oldResult.top
+            ? undefined
+            : this.result.top,
+        zone:
+          this.isEdition && this.result.zone !== this.oldResult.zone
+            ? undefined
+            : this.result.zone,
+        try: essai
+      }
+    } else {
+      result = {
+        ...result,
+        top: this.result.top
+      }
     }
     console.log('result', result)
     this.$emit('onSendNote', result)
@@ -122,4 +147,9 @@ export default class FormClimber extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+form {
+  display: flex;
+  justify-content: center;
+}
+</style>

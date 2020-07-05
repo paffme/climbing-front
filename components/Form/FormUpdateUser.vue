@@ -82,6 +82,7 @@ import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { authUser } from '~/utils/store-accessor'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import AuthUser from '~/store/authUser'
+import { EventBus } from '~/utils/EventBus'
 
 @Component
 export default class FormUpdateUser extends Vue {
@@ -114,6 +115,7 @@ export default class FormUpdateUser extends Vue {
         message: 'Profil mis a jours'
       })
       authUser.setUserCredentials(user.data)
+      EventBus.$emit('credentialUpdated')
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
     }
