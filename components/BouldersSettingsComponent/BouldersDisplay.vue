@@ -40,6 +40,7 @@
             <li>
               <b>Genre :</b> {{ round.sex === 'male' ? 'Homme' : 'Femme' }}
             </li>
+            <li><b>Type :</b> {{ rankingType[round.rankingType] }}</li>
             <li><b>Catégorie :</b> {{ round.category }}</li>
             <li><b>Quota :</b> {{ round.quota }}</li>
             <li v-show="round.maxTries">
@@ -67,6 +68,7 @@
         <BouldersGroups
           :groups="groups"
           :round="round"
+          :roles="roles"
           @delete="onDelete"
           @create="onCreateGroup"
           @createBloc="onCreateBloc"
@@ -87,7 +89,9 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import {
   APIBoulderingGroups,
   APIBoulderingGroupsClimbers,
+  APIUserCompetitionRoles,
   BoulderingLimitedRounds,
+  RankingType,
   RawStateRound,
   StateRound,
   TypeBouldering,
@@ -103,11 +107,13 @@ import { AxiosHelper } from '~/utils/axiosHelper'
 export default class BouldersDisplay extends Vue {
   @Prop(String) qualificationRound!: TypeBoulderingRound
   @Prop(Object) round!: BoulderingLimitedRounds
+  @Prop(Object) roles!: APIUserCompetitionRoles
   modalIsActive = false
   groups: APIBoulderingGroupsClimbers[] = []
   typeBouldering = TypeBouldering
   stateRound = StateRound
   rawStateRound = RawStateRound
+  rankingType = RankingType
 
   async created() {
     await this.refreshBouldersGroups()

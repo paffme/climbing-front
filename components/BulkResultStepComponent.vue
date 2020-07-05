@@ -1,143 +1,150 @@
 <template>
-  <b-steps
-    v-model="activeStep"
-    :animated="isAnimated"
-    :rounded="isRounded"
-    :has-navigation="hasNavigation"
-  >
-    <b-step-item
-      step="1"
-      :label="
-        userChoice.category ? `Catégorie (${userChoice.category})` : 'Catégorie'
-      "
-      :clickable="isStepsClickable"
+  <div>
+    <b-steps
+      v-model="activeStep"
+      :animated="isAnimated"
+      :rounded="isRounded"
+      :has-navigation="hasNavigation"
     >
-      <h1 class="title has-text-centered">
-        Catégorie
-      </h1>
-      <p v-show="!rounds" class="notification is-warning has-text-centered">
-        Veuillez d'abord créer des rounds
-      </p>
-      <div class="choice">
-        <template v-for="(category, index) in availableCategory">
-          <template v-if="rounds && checkIfCategoryExist(category)">
+      <b-step-item
+        step="1"
+        :label="
+          userChoice.category
+            ? `Catégorie (${userChoice.category})`
+            : 'Catégorie'
+        "
+        :clickable="isStepsClickable"
+      >
+        <h1 class="title has-text-centered">
+          Catégorie
+        </h1>
+        <p v-show="!rounds" class="notification is-warning has-text-centered">
+          Veuillez d'abord créer des rounds
+        </p>
+        <div class="choice">
+          <template v-for="(category, index) in availableCategory">
+            <template v-if="rounds && checkIfCategoryExist(category)">
+              <b-button
+                :key="index"
+                size="is-large"
+                type="is-primary"
+                @click="updateCategoryUserChoice(category)"
+              >
+                {{ category }}
+              </b-button>
+            </template>
+          </template>
+        </div>
+      </b-step-item>
+
+      <b-step-item
+        step="2"
+        :label="
+          userChoice.genre
+            ? `Genre (${userChoice.genre === 'female' ? 'Femme' : 'Homme'})`
+            : 'Genre'
+        "
+        :clickable="isStepsClickable"
+      >
+        <h1 class="title has-text-centered">
+          Genre
+        </h1>
+        <p class="notification has-text-centered">
+          Veuillez choisir le genre que vous souhaitez noter
+        </p>
+        <div class="choice">
+          <template v-if="checkIfGenreExist(sex.Male)">
             <b-button
-              :key="index"
               size="is-large"
               type="is-primary"
-              @click="updateCategoryUserChoice(category)"
+              @click="updateGenreUserChoice(sex.Male)"
             >
-              {{ category }}
+              Homme
             </b-button>
           </template>
-        </template>
-      </div>
-    </b-step-item>
-    <b-step-item
-      step="2"
-      :label="
-        userChoice.genre
-          ? `Genre (${userChoice.genre === 'female' ? 'Femme' : 'Homme'})`
-          : 'Genre'
-      "
-      :clickable="isStepsClickable"
-    >
-      <h1 class="title has-text-centered">
-        Genre
-      </h1>
-      <p class="notification has-text-centered">
-        Veuillez choisir le genre que vous souhaitez noter
-      </p>
-      <div class="choice">
-        <template v-if="checkIfGenreExist(sex.Male)">
-          <b-button
-            size="is-large"
-            type="is-primary"
-            @click="updateGenreUserChoice(sex.Male)"
-          >
-            Homme
-          </b-button>
-        </template>
-        <template v-if="checkIfGenreExist(sex.Female)">
-          <b-button
-            size="is-large"
-            type="is-primary"
-            @click="updateGenreUserChoice(sex.Female)"
-          >
-            Femme
-          </b-button>
-        </template>
-      </div>
-    </b-step-item>
+          <template v-if="checkIfGenreExist(sex.Female)">
+            <b-button
+              size="is-large"
+              type="is-primary"
+              @click="updateGenreUserChoice(sex.Female)"
+            >
+              Femme
+            </b-button>
+          </template>
+        </div>
+      </b-step-item>
 
-    <b-step-item
-      step="3"
-      :label="
-        userChoice.type ? `Phase (${typeBouldering[userChoice.type]})` : 'Phase'
-      "
-      :clickable="isStepsClickable"
-      :type="{ 'is-success': isProfileSuccess }"
-    >
-      <h1 class="title has-text-centered">
-        Phases
-      </h1>
-      <p class="notification is-warning has-text-centered">
-        Pour qu'une phase soit active, le status du round doit être
-        <b>"EN COURS"</b>
-      </p>
-      <div class="choice">
-        <template v-if="checkIfTypeExist(type.QUALIFIER)">
-          <b-button
-            size="is-large"
-            type="is-primary"
-            @click="updateTypeUserChoice(type.QUALIFIER)"
-          >
-            Qualification
-          </b-button>
-        </template>
-        <template v-if="checkIfTypeExist(type.SEMI_FINAL)">
-          <b-button
-            size="is-large"
-            type="is-primary"
-            @click="updateTypeUserChoice(type.SEMI_FINAL)"
-          >
-            Demi-final
-          </b-button>
-        </template>
-        <template v-if="checkIfTypeExist(type.FINAL)">
-          <b-button
-            size="is-large"
-            type="is-primary"
-            @click="updateTypeUserChoice(type.FINAL)"
-          >
-            Final
-          </b-button>
-        </template>
-      </div>
-    </b-step-item>
+      <b-step-item
+        step="3"
+        :label="
+          userChoice.type
+            ? `Phase (${typeBouldering[userChoice.type]})`
+            : 'Phase'
+        "
+        :clickable="isStepsClickable"
+        :type="{ 'is-success': isProfileSuccess }"
+      >
+        <h1 class="title has-text-centered">
+          Phases
+        </h1>
+        <p class="notification is-warning has-text-centered">
+          Pour qu'une phase soit active, le status du round doit être
+          <b>"EN COURS"</b>
+        </p>
+        <div class="choice">
+          <template v-if="checkIfTypeExist(type.QUALIFIER)">
+            <b-button
+              size="is-large"
+              type="is-primary"
+              @click="updateTypeUserChoice(type.QUALIFIER)"
+            >
+              Qualification
+            </b-button>
+          </template>
+          <template v-if="checkIfTypeExist(type.SEMI_FINAL)">
+            <b-button
+              size="is-large"
+              type="is-primary"
+              @click="updateTypeUserChoice(type.SEMI_FINAL)"
+            >
+              Demi-final
+            </b-button>
+          </template>
+          <template v-if="checkIfTypeExist(type.FINAL)">
+            <b-button
+              size="is-large"
+              type="is-primary"
+              @click="updateTypeUserChoice(type.FINAL)"
+            >
+              Final
+            </b-button>
+          </template>
+        </div>
+      </b-step-item>
 
-    <b-step-item
-      step="4"
-      label="Résultat"
-      :clickable="false"
-      :type="{ 'is-success': isProfileSuccess }"
-    >
-      <h1 class="title has-text-centered">
-        Résultat
-      </h1>
-      <template v-if="finalStepError">
-        Aucun ID ne correspond aux critères demandées
-      </template>
-      <template v-else>
-        <BoulderRankingPerBlocs
-          :is-bulk="isBulk"
-          :rounds="rounds"
-          :user-choice="userChoice"
-          @bulkEdition="onBulkEdition"
-        />
-      </template>
-    </b-step-item>
-  </b-steps>
+      <b-step-item
+        step="4"
+        label="Résultat"
+        :clickable="false"
+        :type="{ 'is-success': isProfileSuccess }"
+      >
+        <h1 class="title has-text-centered">
+          Résultat
+        </h1>
+        <template v-if="finalStepError">
+          Aucun ID ne correspond aux critères demandées
+        </template>
+        <template v-else>
+          <BoulderRankingPerBlocs
+            :is-bulk="isBulk"
+            :rounds="rounds"
+            :user-choice="userChoice"
+            @bulkEdition="onBulkEdition"
+          />
+        </template>
+      </b-step-item>
+    </b-steps>
+  </div>
 </template>
 
 <script lang="ts">

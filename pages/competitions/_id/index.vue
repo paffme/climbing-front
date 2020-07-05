@@ -54,9 +54,21 @@
         <div class="columns is-multiline">
           <div class="column is-6">
             <div class="content">
-              <h1 class="title">
-                {{ competition.name }}
-              </h1>
+              <div>
+                <span class="title">
+                  {{ competition.name }}
+                </span>
+                <b-button
+                  class="is-pulled-right"
+                  tag="nuxt-link"
+                  :to="{
+                    name: 'competitions-id-rank',
+                    params: { id: competition.id }
+                  }"
+                >
+                  Voir classement
+                </b-button>
+              </div>
               <p>
                 {{ competition.description }}
               </p>
@@ -80,7 +92,9 @@
                 </li>
                 <li>
                   Type compétition :
-                  <b-tag>{{ competition.type | capitalize }}</b-tag>
+                  <b-tag>
+                    {{ frTypeCompetition[competition.type] | capitalize }}
+                  </b-tag>
                 </li>
                 <li>
                   Adresse :
@@ -160,7 +174,9 @@
               </div>
             </div>
           </div>
-          <div class="column is-6"></div>
+          <div class="column is-6">
+            <GoogleMapComponent :competition="competition" />
+          </div>
         </div>
       </div>
     </template>
@@ -185,6 +201,7 @@ import {
   CategoryName,
   Competition,
   CompetitionsRegistrations,
+  FRTypeCompetition,
   RoleNameQueryParams,
   Sex
 } from '~/definitions'
@@ -194,12 +211,14 @@ import AuthUser from '~/store/authUser'
 import BtnEditOrRegisterCompetition from '~/components/Button/BtnEditOrRegisterCompetition.vue'
 import BreadcrumbComponent from '~/components/BreadcrumbComponent.vue'
 import { AxiosHelper } from '~/utils/axiosHelper'
+import GoogleMapComponent from '~/components/GoogleMapComponent.vue'
 
 @Component({
   components: {
     GoBackBtn,
     BtnEditOrRegisterCompetition,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    GoogleMapComponent
   },
   middleware: ['setHeader'],
   filters: {
@@ -236,6 +255,8 @@ export default class OneCompetition extends Vue {
   isAutenthicated = AuthUser.getters?.['Authenticated']() || false
   // @ts-ignore
   credentials = AuthUser.getters?.['Credentials']() || false
+
+  frTypeCompetition = FRTypeCompetition
 
   editOrRegisterBtn = {
     status: {

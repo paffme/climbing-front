@@ -161,7 +161,7 @@ export default class Subscriptions extends Vue {
     lastName: 'Gbagbo',
     sex: Sex.Male,
     club: 'FFME',
-    birthDay: new Date(),
+    birthDay: new Date('9/20/1924'),
     dateBirth: 0,
     password: 'admin@test.com',
     passwordConfirmation: 'admin@test.com'

@@ -74,9 +74,12 @@ export default class BoulderRankingPerBlocs extends Vue {
           // @ts-ignore
           rankingPerGroups.data.data.boulders.forEach((bloc, index) => {
             if (!this.rankingsPerBloc && bloc) return
-            this.rankingsPerBloc.push(
-              boulderFilter.getGroupsRankings(rankingPerGroups.data, index)
+            const filtered = boulderFilter.getGroupsRankings(
+              rankingPerGroups.data,
+              index
             )
+            if (!filtered) return
+            this.rankingsPerBloc.push(filtered)
           })
         }
       } catch (err) {

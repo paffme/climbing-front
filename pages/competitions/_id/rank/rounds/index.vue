@@ -3,7 +3,8 @@
     <h1 class="title">
       Classement round
     </h1>
-    <h2 class="subtitle">
+    <h2 class="subtitle go_back">
+      <GoBackBtn />
       Voir le détail des classements
     </h2>
     <div class="content notification">
@@ -17,6 +18,7 @@
       <StepComponent
         :competition="competition"
         :rounds="rounds"
+        :rating="false"
         @onSelectRound="selectRound"
       >
         <template
@@ -24,8 +26,30 @@
             selectedRound && currentRoundRanking && currentRoundRanking.data
           "
         >
-          <b-button>Voir classement groupe 1</b-button>
-          <b-button>Voir classement groupe 2</b-button>
+          <div class="display-btn">
+            <b-button
+              v-if="currentGroups && currentGroups[0]"
+              tag="nuxt-link"
+              :to="{
+                name: 'competitions-id-rank-groups-groupId',
+                params: { groupId: currentGroups[0].id },
+                query: { roundId: currentGroups[0].roundId }
+              }"
+            >
+              Voir classement groupe 1
+            </b-button>
+            <b-button
+              v-if="currentGroups && currentGroups[1]"
+              tag="nuxt-link"
+              :to="{
+                name: 'competitions-id-rank-groups-groupId',
+                params: { groupId: currentGroups[1].id },
+                query: { roundId: currentGroups[1].roundId }
+              }"
+            >
+              Voir classement groupe 2
+            </b-button>
+          </div>
           <template
             v-if="
               selectedRound.rankingType === rawRankingType.UNLIMITED_CONTEST
@@ -43,7 +67,11 @@
           </template>
         </template>
         <template v-else>
-          <p>Aucun round trouvé</p>
+          <div class="has-text-centered">
+            <p class="notification is-warning">
+              Aucun classement pour ce type de round
+            </p>
+          </div>
         </template>
       </StepComponent>
     </div>
@@ -55,18 +83,21 @@ import { Vue, Component } from 'vue-property-decorator'
 import BulkResultStepComponent from '~/components/BulkResultStepComponent.vue'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import {
+  APIBoulderingGroupsClimbers,
   APIBoulderingRounds,
   APICompetition,
   APIRoundRanking,
   BoulderingLimitedRounds,
+  CategoryName,
+  QueryParamsRank,
   RawRankingType
 } from '~/definitions'
 import GoogleMapComponent from '~/components/GoogleMapComponent.vue'
 import UnlimitedRoundRanking from '~/components/Table/UnlimitedRoundRanking.vue'
 import StepComponent from '~/components/StepComponent.vue'
 import CompetitionsDetails from '~/components/CompetitionDetails.vue'
-import { AxiosHelper } from '~/utils/axiosHelper'
 import CircuitRoundRanking from '~/components/Table/CircuitRoundRanking.vue'
+import GoBackBtn from '~/components/Button/GoBackBtn.vue'
 
 async function getRound(competitionId: number) {
   try {
@@ -77,6 +108,7 @@ async function getRound(competitionId: number) {
     err({ statusCode: 404, message: 'Round non trouvé' })
   }
 }
+
 async function fetchCompetition(
   idCompetition: number
 ): Promise<APICompetition> {
@@ -90,6 +122,7 @@ async function fetchCompetition(
       : null
   }
 }
+
 @Component({
   components: {
     BulkResultStepComponent,
@@ -97,7 +130,8 @@ async function fetchCompetition(
     StepComponent,
     CircuitRoundRanking,
     UnlimitedRoundRanking,
-    CompetitionsDetails
+    CompetitionsDetails,
+    GoBackBtn
   },
   async asyncData(ctx) {
     const idCompetition = parseInt(ctx.params.id, 10)
@@ -117,10 +151,12 @@ export default class RoundsRankPage extends Vue {
   selectedRound: BoulderingLimitedRounds | null = null
   currentRoundRanking: APIRoundRanking | null = null
   rawRankingType = RawRankingType
+  currentGroups: APIBoulderingGroupsClimbers[] | null = null
 
   async selectRound(round: BoulderingLimitedRounds): Promise<void> {
     this.selectedRound = round
     this.currentRoundRanking = await this.fetchRoundRanking(round.id)
+    this.currentGroups = await this.fetchGroups(round.id)
   }
 
   async fetchRoundRanking(roundId: number): Promise<APIRoundRanking | null> {
@@ -134,11 +170,48 @@ export default class RoundsRankPage extends Vue {
       console.log('result', result)
       return result.data
     } catch (err) {
-      AxiosHelper.HandleAxiosError(this, err)
+      // AxiosHelper.HandleAxiosError(this, err)
       return null
     }
+  }
+
+  async fetchGroups(
+    roundId: number
+  ): Promise<APIBoulderingGroupsClimbers[] | null> {
+    try {
+      if (!this.competition?.id)
+        throw new Error('No competition ID has been found')
+
+      const result = await ApiHelper.GetBoulderingGroups(
+        this.competition.id,
+        roundId
+      )
+
+      console.log('fetchGroups - result', result)
+      return result.data
+    } catch (err) {
+      // AxiosHelper.HandleAxiosError(this, err)
+      return null
+    }
+  }
+
+  buildQuery(): QueryParamsRank {
+    const query = {
+      cat: (this.$route.query.cat as CategoryName) || undefined,
+      genre: (this.$route.query.genre as string) || undefined,
+      phase: (this.$route.query.type as any) || undefined
+    }
+
+    console.log('buildQuery', query)
+
+    return query
   }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.display-btn {
+  display: flex;
+  justify-content: space-evenly;
+}
+</style>

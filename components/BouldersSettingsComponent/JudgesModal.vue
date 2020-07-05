@@ -42,7 +42,19 @@
               </template>
               <div class="is-flex buttons-actions">
                 <b-button
-                  v-show="selectedJudge"
+                  type="is-info"
+                  tag="nuxt-link"
+                  class="btn"
+                  :to="{
+                    name: 'competitions-edit-competitionId-images',
+                    query: currentCompetition,
+                    params: { competitionId }
+                  }"
+                >
+                  Gestion de l'image du bloc
+                </b-button>
+                <b-button
+                  v-show="selectedJudge && selectedJudge.length == 1"
                   class="btn"
                   type="is-danger"
                   @click="deleteJudge"
@@ -80,7 +92,7 @@ export default class JudgesModal extends Vue {
     boulderId: number
   }
 
-  selectedJudge: User | null = null
+  selectedJudge: User[] = []
   isActive = false
 
   async onSelect(user: { id: number; name: string }) {

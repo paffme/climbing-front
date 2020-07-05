@@ -143,5 +143,12 @@ export default {
     boulderId: number,
     climberId: number
   ): string =>
-    `/competitions/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders/${boulderId}/results/${climberId}`
+    `/competitions/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders/${boulderId}/results/${climberId}`,
+  boulderPhoto: (
+    competitionId: number,
+    roundId: number,
+    groupId: number,
+    boulderId: number
+  ): string =>
+    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders/${boulderId}/photo`
 }

@@ -38,6 +38,12 @@
           </span>
         </b-table-column>
 
+        <b-table-column field="createdAt" label="Date de création" sortable>
+          <span class="tag is-success">
+            {{ new Date(props.row.createdAt).toLocaleDateString() }}
+          </span>
+        </b-table-column>
+
         <b-table-column field="city" label="Ville" sortable>
           {{ props.row.city }}
         </b-table-column>
@@ -88,6 +94,10 @@ export default class TableCompetition extends Vue {
       label: 'Date début'
     },
     {
+      field: 'createdAt',
+      label: 'Date de création'
+    },
+    {
       field: 'endDate',
       label: 'Date fin'
     },
@@ -110,7 +120,7 @@ export default class TableCompetition extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
 .cursor {
   cursor: pointer;
 }

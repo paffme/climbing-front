@@ -1,16 +1,24 @@
 <template>
-  <section>
+  <section v-if="groupRankings">
+    <p class="content">
+      Nombre de points :
+      <b-tag type="is-primary">
+        {{ groupRankings.points }}
+      </b-tag>
+    </p>
     <b-table
-      :data="roundRanking"
+      :data="groupRankings.rankings"
       :paginated="isPaginated"
       :per-page="perPage"
+      :striped="isStriped"
       :current-page.sync="currentPage"
       :pagination-simple="isPaginationSimple"
       :pagination-position="paginationPosition"
       :default-sort-direction="defaultSortDirection"
+      :sort-multiple="multiColumnSortingEnabled"
       :sort-icon="sortIcon"
       :sort-icon-size="sortIconSize"
-      default-sort="user.first_name"
+      default-sort="ranking"
       aria-next-label="Next page"
       aria-previous-label="Previous page"
       aria-page-label="Page"
@@ -39,21 +47,12 @@
           {{ props.row.climber.club }}
         </b-table-column>
 
-        <b-table-column field="detail" label="Plus d'informations">
-          <p
-            @click="
-              openBlocDetailsModal(
-                props.row.tops,
-                props.row.zones,
-                props.row.topsInTries,
-                props.row.zonesInTries
-              )
-            "
-          >
-            <b-button type="is-info">
-              Detail du bloc
-            </b-button>
-          </p>
+        <b-table-column field="climber.nbTops" label="Nombre Tops" sortable>
+          {{ props.row.nbTops }}
+        </b-table-column>
+
+        <b-table-column field="climber.points" label="Points" sortable>
+          {{ props.row.points }}
         </b-table-column>
       </template>
     </b-table>
@@ -62,42 +61,22 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { APIRoundRanking } from '~/definitions'
-import BlocDetailsModal from '~/components/BlocDetailsModal.vue'
+import { DtoUnlimitedContestRanking } from '~/definitions'
 
-@Component({
-  components: { BlocDetailsModal }
-})
-export default class CircuitRoundRanking extends Vue {
-  @Prop(Array) roundRanking!: APIRoundRanking[]
+@Component
+export default class UnlimitedGroupRanking extends Vue {
+  @Prop(Object) groupRankings!: DtoUnlimitedContestRanking
 
   isPaginated = true
-  isPaginationSimple = false
+  isStriped = true
+  isPaginationSimple = true
   paginationPosition = 'bottom'
   defaultSortDirection = 'asc'
   sortIcon = 'arrow-up'
   sortIconSize = 'is-small'
   currentPage = 1
   perPage = 5
-
-  openBlocDetailsModal(
-    tops: boolean[],
-    zones: boolean[],
-    topInTries: number[],
-    zoneInTries: number[]
-  ) {
-    this.$buefy.modal.open({
-      parent: this,
-      hasModalCard: true,
-      props: {
-        tops,
-        zones,
-        topInTries,
-        zoneInTries
-      },
-      component: BlocDetailsModal
-    })
-  }
+  multiColumnSortingEnabled = true
 }
 </script>
 
