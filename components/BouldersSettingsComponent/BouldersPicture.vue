@@ -1,38 +1,27 @@
 <template>
-  <b-carousel-list v-model="test" :data="boulders" :items-to-show="1">
-    <template slot="item" slot-scope="props">
-      <div class="card">
-        <div class="card-image">
-          <figure class="image is-5by4">
-            <a @click="info(props.index)"><img :src="props.list.image" /></a>
-          </figure>
-          <b-tag type="is-danger" rounded style="position: absolute; top: 0;">
-            <b>50%</b>
-          </b-tag>
-        </div>
-        <div class="card-content">
-          <div class="content">
-            <p class="title is-6">
-              {{ props.list.title }}
-            </p>
-            <p class="subtitle is-7">
-              @johnsmith
-            </p>
-            <div class="field is-grouped">
-              <p v-if="props.list.rating" class="control">
-                <b-rate :value="props.list.rating" show-score disabled />
-              </p>
-              <p class="control" style="margin-left: auto;">
-                <button class="button is-small is-danger is-outlined">
-                  <b-icon size="is-small" icon="heart" />
-                </button>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </template>
-  </b-carousel-list>
+	<b-carousel :autoplay="false" :indicator-inside="false" :overlay="gallery" indicator-custom>
+		<b-carousel-item :key="i" v-for="(item, i) in round.boulderIds.length">
+			<a class="image" v-if="boulders[i].image !== null">
+				<img :src="boulders[i].image">
+			</a>
+			<p class="level-item has-text-centered add-image" v-if="boulders[i].image === null">
+				<b-button icon-left="plus-box"
+				          size="is-large">
+					Ajouter
+				</b-button>
+			</p>
+		</b-carousel-item>
+		<span class="modal-close is-large" v-if="gallery"/>
+		<template slot="indicators" slot-scope="props">
+			<figure :draggable="false" class="al image">
+				<img :draggable="false"
+				     :src="boulders[props.i].image" :title="props.i" v-if="boulders[props.i].image !== null">
+				<img :draggable="false"
+				     :src="require('../../assets/image_not_found.png')" :title="props.i"
+				     v-if="boulders[props.i].image === null">
+			</figure>
+		</template>
+	</b-carousel>
 </template>
 
 <script lang="ts">
@@ -41,22 +30,22 @@ import { AxiosHelper } from '~/utils/axiosHelper'
 
 @Component
 export default class BouldersPicture extends Vue {
-  @Prop(Number) boulderId!: number
-  @Prop(Object) readonly round!: { id: number; boulderIds: Array<number> }
-  @Prop(Object) readonly competition!: { id: number; name: string }
-  boulders: Array<{ id: number; image: string | null }> = []
+  @Prop(Number) boulderId!: number;
+  @Prop(Object) readonly round!: { id: number; boulderIds: Array<number> };
+  @Prop(Object) readonly competition!: { id: number; name: string };
 
-  @Prop(Object) readonly annotations!: Array<Array<Number>>
+  boulders: Array<{ id: number; image: string | null }> = [];
 
-  test = 0
-  items: any = null
+  test = 0;
+
+  // items: any = null
 
   created() {
-    this.retrieveImageAPI()
+    this.retrieveImageAPI();
     this.round.boulderIds.forEach((boulderId) => {
       this.boulders.push({
         id: boulderId,
-        image: 'https://buefy.org/static/img/placeholder-1280x960.png'
+        image: "https://buefy.org/static/img/placeholder-1280x960.png"
       })
     })
   }
@@ -68,49 +57,47 @@ export default class BouldersPicture extends Vue {
   async retrieveImageAPI() {
     const fakeData = [
       {
-        title: 'Slide 1',
-        image: 'https://buefy.org/static/img/placeholder-1280x960.png'
+        id: 0,
+        image: "https://www.bienetre-et-sante.fr/wp-content/uploads/2018/08/NL_135_ESCALADE.jpg"
       },
       {
-        title: 'Slide 2',
-        image: 'https://buefy.org/static/img/placeholder-1280x960.png',
-        rating: 3.5
+        id: 1,
+        image: null
       },
       {
-        title: 'Slide 3',
-        image: 'https://buefy.org/static/img/placeholder-1280x960.png',
-        rating: 5
+        id: 2,
+        image: "https://buefy.org/static/img/placeholder-1280x960.png"
       },
       {
-        title: 'Slide 4',
-        image: 'https://buefy.org/static/img/placeholder-1280x960.png'
+        id: 3,
+        image: "https://buefy.org/static/img/placeholder-1280x960.png"
       },
       {
-        title: 'Slide 5',
-        image: 'https://buefy.org/static/img/placeholder-1280x960.png',
-        rating: 5
-      },
-      {
-        title: 'Slide 6',
-        image: 'https://buefy.org/static/img/placeholder-1280x960.png',
-        rating: 4
-      },
-      {
-        title: 'Slide 7',
-        image: 'https://buefy.org/static/img/placeholder-1280x960.png',
-        rating: 2.7
-      },
-      {
-        title: 'Slide 8',
-        image: 'https://buefy.org/static/img/placeholder-1280x960.png',
-        rating: 1.5
+        id: 4,
+        image: "https://buefy.org/static/img/placeholder-1280x960.png"
       }
     ]
     try {
-      this.items = fakeData
+      this.boulders = fakeData;
     } catch (err) {
-      AxiosHelper.HandleAxiosError(this, err)
+      AxiosHelper.HandleAxiosError(this, err);
     }
   }
 }
 </script>
+
+<style>
+	.is-active .al img {
+		border: 1px solid #fff;
+		filter: grayscale(0%);
+	}
+
+	.al img {
+		border: 1px solid transparent;
+		filter: grayscale(100%);
+	}
+
+	.add-image {
+		min-height: 500px;
+	}
+</style>
