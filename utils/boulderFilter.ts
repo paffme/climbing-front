@@ -44,8 +44,9 @@ export default {
     if (type === RawRankingType.UNLIMITED_CONTEST) {
       console.log('Is Ulimited contest')
     } else {
+      if (!apiGroupRanking.data.rankings) return
       return ((apiGroupRanking.data
-        .rankings as unknown) as CountedRankings[])?.map((ranking) => {
+        .rankings as unknown) as CountedRankings[]).map((ranking) => {
         console.log('ranking', ranking)
         console.log('blocNumber', blocNumber)
         const result: RawCountedRankingWithType = {
@@ -79,7 +80,6 @@ export default {
     blocIndex: number
   ): RawCountedRanking | undefined {
     if (!apiRoundRanking) return
-    console.log('apiRoundRanking', apiRoundRanking)
     return {
       top: apiRoundRanking.tops[blocIndex],
       topInTry: apiRoundRanking.topsInTries[blocIndex],

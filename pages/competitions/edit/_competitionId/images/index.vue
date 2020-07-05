@@ -111,8 +111,6 @@ export default class ImagePage extends Vue {
         boulderId
       )
       console.log('photos', photos)
-      const response = new Response(photos.body)
-      console.log('response', response)
     } catch (err) {
       console.log('err', err)
       if (err.response?.data?.code === 'BOULDER_HAS_NO_PHOTO') {
