@@ -44,6 +44,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { authUser } from '~/utils/store-accessor'
 import AuthUser from '~/store/authUser'
+import { EventBus } from '~/utils/EventBus'
 
 type NavbarItem = {
   linkTo: string
@@ -64,6 +65,14 @@ export default class Navbar extends Vue {
     return {
       APP_TITLE: process.env.NUXT_ENV_APP_TITLE || 'PAFFME'
     }
+  }
+
+  created() {
+    // Use to update the credential. The êmit comes from FormUpdateUser.vue (EventBus.$emit('credentialUpdated'))
+    EventBus.$on('credentialUpdated', () => {
+      // @ts-ignore
+      this.userCredentials = AuthUser.getters?.['Credentials']() || undefined
+    })
   }
 
   disconnect() {

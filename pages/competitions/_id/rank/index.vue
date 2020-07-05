@@ -1,10 +1,5 @@
 <template>
-  <div>
-    <h1 class="title">
-      Classement général
-    </h1>
-    <GeneralRanking />
-  </div>
+  <GeneralRanking />
 </template>
 
 <script lang="ts">

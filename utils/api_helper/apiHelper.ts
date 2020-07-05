@@ -23,7 +23,8 @@ import {
   APIGroupRanking,
   CircuitResult,
   UnlimitedContestResult,
-  BoulderingResultDto
+  BoulderingResultDto,
+  RawStateRound
 } from '~/definitions'
 import { AxiosResponse } from '~/node_modules/axios'
 import API_URL from '~/utils/api_helper/apiUrl'
@@ -94,7 +95,10 @@ export const ApiHelper = {
   GetBoulderRoundRankings: getBoulderRoundRankings,
   GetBoulder: getBoulder,
   GetResultClimber: getResultClimber,
-  GetGroupRankings: getBoulderGroupRankings
+  GetGroupRankings: getBoulderGroupRankings,
+  GetBoulderPhoto: getBoulderPhoto,
+  DeleteBoulderPhoto: deleteBoulderPhoto,
+  UpdateBoulderPhoto: updateBoulderPhoto
 }
 
 async function addUserInCompetition(
@@ -377,7 +381,7 @@ async function getCompetitionsPagination(
   page: number,
   perPage: number,
   query?: string
-): Promise<AxiosResponse<Competition[]>> {
+): Promise<AxiosResponse<APICompetition[]>> {
   return axios.get(API_URL.getCompetitionsPagination(page, perPage, query))
 }
 
@@ -530,15 +534,16 @@ async function getUserCompetitionsRoles(
 
 async function startCompetition(
   type: TypeBoulderingRound,
-  competitionId: number
+  competitionId: number,
+  body?: Array<{ state: RawStateRound }>
 ): Promise<AxiosResponse<BoulderingLimitedRounds>> {
   switch (type) {
     case TypeBoulderingRound.FINAL:
-      return axios.patch(API_URL.startFinal(competitionId))
+      return axios.patch(API_URL.startFinal(competitionId), body)
     case TypeBoulderingRound.SEMI_FINAL:
-      return axios.patch(API_URL.startSemiFinal(competitionId))
+      return axios.patch(API_URL.startSemiFinal(competitionId), body)
     case TypeBoulderingRound.QUALIFIER:
-      return axios.patch(API_URL.startQualifier(competitionId))
+      return axios.patch(API_URL.startQualifier(competitionId), body)
   }
 }
 
@@ -555,6 +560,44 @@ async function getBoulderGroupRankings(
   groupId: number
 ): Promise<AxiosResponse<APIGroupRanking>> {
   return axios.get(API_URL.getGroupRankings(competitionId, roundId, groupId))
+}
+
+async function getBoulderPhoto(
+  competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number
+): Promise<AxiosResponse<APIGroupRanking>> {
+  return axios({
+    method: 'get',
+    maxRedirects: 0,
+    url: API_URL.boulderPhoto(competitionId, roundId, groupId, boulderId)
+  })
+}
+async function deleteBoulderPhoto(
+  competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number
+): Promise<AxiosResponse<APIGroupRanking>> {
+  return axios.delete(
+    API_URL.boulderPhoto(competitionId, roundId, groupId, boulderId)
+  )
+}
+async function updateBoulderPhoto(
+  formData: any,
+  competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number
+): Promise<AxiosResponse<APIGroupRanking>> {
+  return axios({
+    method: 'put',
+    url: API_URL.boulderPhoto(competitionId, roundId, groupId, boulderId),
+    maxRedirects: 0,
+    data: formData,
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
 }
 
 async function getResultClimber(

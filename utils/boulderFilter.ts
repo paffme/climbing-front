@@ -3,7 +3,8 @@ import {
   APIRoundRanking,
   CountedRankings,
   RawCountedRanking,
-  RawCountedRankingWithType
+  RawCountedRankingWithType,
+  RawRankingType
 } from '~/definitions'
 
 export default {
@@ -38,35 +39,40 @@ export default {
   getGroupsRankings(
     apiGroupRanking: APIGroupRanking,
     blocNumber: number
-  ): Array<RawCountedRankingWithType | null> {
+  ): Array<RawCountedRankingWithType | null> | undefined {
     const type = apiGroupRanking.type
-    return apiGroupRanking.data.rankings.map((ranking) => {
-      console.log('ranking', ranking)
-      console.log('blocNumber', blocNumber)
-      const result: RawCountedRankingWithType = {
-        type,
-        top: null,
-        topInTry: null,
-        zone: null,
-        zoneInTry: null,
-        ranking: ranking.ranking,
-        climber: ranking.climber
-      }
-      if (typeof ranking.tops[blocNumber] === 'boolean')
-        result.top = ranking.tops[blocNumber]
-      if (ranking.topsInTries[blocNumber] >= 0)
-        result.topInTry = ranking.topsInTries[blocNumber]
-      if (typeof ranking.zones[blocNumber] === 'boolean')
-        result.zone = ranking.zones[blocNumber]
-      if (ranking.zonesInTries[blocNumber] >= 0)
-        result.zoneInTry = ranking.zonesInTries[blocNumber]
+    if (type === RawRankingType.UNLIMITED_CONTEST) {
+      console.log('Is Ulimited contest')
+    } else {
+      return ((apiGroupRanking.data
+        .rankings as unknown) as CountedRankings[])?.map((ranking) => {
+        console.log('ranking', ranking)
+        console.log('blocNumber', blocNumber)
+        const result: RawCountedRankingWithType = {
+          type,
+          top: null,
+          topInTry: null,
+          zone: null,
+          zoneInTry: null,
+          ranking: ranking.ranking,
+          climber: ranking.climber
+        }
+        if (typeof ranking.tops[blocNumber] === 'boolean')
+          result.top = ranking.tops[blocNumber]
+        if (ranking.topsInTries[blocNumber] >= 0)
+          result.topInTry = ranking.topsInTries[blocNumber]
+        if (typeof ranking.zones[blocNumber] === 'boolean')
+          result.zone = ranking.zones[blocNumber]
+        if (ranking.zonesInTries[blocNumber] >= 0)
+          result.zoneInTry = ranking.zonesInTries[blocNumber]
 
-      console.log('result', result)
-      if (typeof result.top !== 'boolean' && typeof result.zone !== 'boolean')
-        return null
+        console.log('result', result)
+        if (typeof result.top !== 'boolean' && typeof result.zone !== 'boolean')
+          return null
 
-      return result
-    })
+        return result
+      })
+    }
   },
   getPerBloc(
     apiRoundRanking: CountedRankings,

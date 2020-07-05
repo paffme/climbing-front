@@ -1,5 +1,5 @@
 <template>
-  <div class="notification">
+  <div class="notification" style="min-width: 960px;">
     <div class="columns is-multiline">
       <div class="column is-12">
         <div class="header">
@@ -11,7 +11,9 @@
         <div v-if="round.state !== rawStateRound.ENDED" class="is-pulled-right">
           <b-button
             class="btn2"
-            :disabled="round.state !== rawStateRound.PENDING"
+            :disabled="
+              round.state !== rawStateRound.PENDING || !roles.juryPresident
+            "
             @click="startRound"
           >
             {{
@@ -23,7 +25,12 @@
         </div>
       </div>
       <div
-        v-if="groups && Array.isArray(groups) && groups.length > 0"
+        v-if="
+          groups &&
+          Array.isArray(groups) &&
+          groups.length > 0 &&
+          roles.juryPresident
+        "
         class="column is-12"
       >
         <p>Créer un nouveau groupe :</p>
@@ -49,11 +56,11 @@
                   ></LabelState>
                 </div>
                 <div class="columns">
-                  <div class="column is-6">
+                  <div class="column is-6 line-right">
                     <ul>
                       <li>
                         <div class="line">
-                          <p>Bloc :</p>
+                          <p>Bloc</p>
                           <template
                             v-if="
                               group.boulders &&
@@ -130,7 +137,10 @@
             </div>
             <footer class="card-footer">
               <span class="card-footer-item has-text-white">
-                <b-button type="is-danger" @click="$emit('delete', group)"
+                <b-button
+                  type="is-danger"
+                  :disabled="!roles.juryPresident"
+                  @click="$emit('delete', group)"
                   >Supprimer groupe</b-button
                 >
               </span>
@@ -148,6 +158,7 @@
               <b-button
                 icon-left="plus-circle"
                 type="is-primary"
+                :disabled="roles"
                 @click="createGroup = true"
               >
                 Créer un nouveau groupe
@@ -164,10 +175,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import {
   APIBoulderingGroups,
   APIBoulders,
+  APIUserCompetitionRoles,
   BoulderingLimitedRounds,
   RawStateRound
 } from '~/definitions'
@@ -190,6 +202,7 @@ export default class BouldersGroups extends Vue {
   @Prop(Array) groups!: APIBoulderingGroups[]
   @Prop(Object) round!: BoulderingLimitedRounds
   @Prop(Number) boulderId!: number
+  @Prop(Object) roles!: APIUserCompetitionRoles
 
   createGroup = false
   rawStateRound = RawStateRound
@@ -270,6 +283,23 @@ export default class BouldersGroups extends Vue {
       AxiosHelper.HandleAxiosError(this, err)
     }
   }
+
+  async stopRound() {
+    try {
+      await ApiHelper.StartCompetition(
+        this.round.type,
+        this.round.competitionId,
+        [{ state: RawStateRound.ENDED }]
+      )
+      this.$buefy.toast.open({
+        type: 'is-success',
+        message: 'La compétition à démarré'
+      })
+      this.$emit('roundStart')
+    } catch (err) {
+      AxiosHelper.HandleAxiosError(this, err)
+    }
+  }
 }
 </script>
 
@@ -313,6 +343,7 @@ ul {
 ul#boulder-list {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   margin: 0;
 }
 
@@ -342,5 +373,8 @@ li {
 
 .btn2 {
   margin: 10px 0;
+}
+.line-right {
+  border-right: 1px solid #e2e2e2;
 }
 </style>

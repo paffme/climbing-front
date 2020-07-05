@@ -161,12 +161,18 @@ export default class FormRoundCompetition extends Vue {
 
   mounted() {
     this.competitionId = this.$route.params.competitionId
+    this.updateMaxGroups()
   }
 
   updateMaxGroups() {
     console.log('this.Form.input.type', this.Form.input.type)
     this.maxGroups =
       this.Form.input.type === TypeBoulderingRound.QUALIFIER ? 2 : 1
+
+    this.maxGroups =
+      this.Form.input.rankingType !== this.rawRankingType.CIRCUIT
+        ? 1
+        : this.maxGroups
     this.Form.input.groups = 1
     console.log('this.maxGroups', this.maxGroups)
   }

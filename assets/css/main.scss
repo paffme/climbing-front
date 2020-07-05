@@ -13,6 +13,14 @@ li {
   list-style-type: none;
 }
 
+.go_back {
+  display: flex;
+  align-items: center;
+}
+.go_back button {
+  margin-right: 10px;
+}
+
 .page-enter-active, .page-leave-active {
   transition: opacity .5s;
 }
@@ -20,6 +28,9 @@ li {
   opacity: 0;
 }
 .pointer {
+  cursor: pointer;
+}
+.cursor {
   cursor: pointer;
 }
 .layout-enter-active, .layout-leave-active {
