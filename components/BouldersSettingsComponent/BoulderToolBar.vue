@@ -1,58 +1,60 @@
 <template>
-	<div class="sidebar-page">
-		<section class="sidebar-layout">
-			<b-sidebar position="absolute" type="is-light" open right>
-				<div class="p-1">
-					<b-menu class="is-custom-mobile">
-						<div id="picture-selection" class="media content">
-							<div class="media-left">
-								<b-icon icon="image" size="is-large">
-								</b-icon>
-							</div>
-							<div class="media-content">
-								<button-select-local-image :fileSelected="null">
-								</button-select-local-image>
-							</div>
-						</div>
-					</b-menu>
-				</div>
-				<div class="p-1">
-					<b-menu class="is-custom-mobile">
-						<b-menu-list icon="image-search-outline" label="Annotations">
-							<menu-item class="control">
-								<b-switch type="is-primary">
-									Activer
-								</b-switch>
-							</menu-item>
-							<menu-item class="control">
-								<b-button type="is-primary" icon-left="file-find">
-									Detection Automatique
-								</b-button>
-							</menu-item>
-						</b-menu-list>
-					</b-menu>
-
-				</div>
-			</b-sidebar>
-
-			<div class="is-divider content"></div>
-		</section>
+	<div class="card">
+		<div class="card-header">
+			<button-select-local-image id="drag-drop" :fileSelected="file"
+			                           @screw-updated="updateFile">
+			</button-select-local-image>
+		</div>
+		<div class="card-content">
+			<div class="content">
+				Annotations
+				<hr>
+			</div>
+			<div class="content">
+				<b-switch type="is-primary">
+					Activer
+				</b-switch>
+			</div>
+			<div class="content">
+				<b-button id="auto-detection" type="is-primary" icon-left="file-find">
+					Auto Detection
+				</b-button>
+			</div>
+			<div class="card-footer">
+				<b-button class="card-footer-item" type="is-info" outlined @click="savePicture">
+					Sauvegarder
+				</b-button>
+			</div>
+		</div>
 	</div>
 </template>
 
-<script>
+<script lang="ts">
   import { Component, Prop, Vue } from 'vue-property-decorator'
   import ButtonSelectLocalImage  from '~/components/Button/ButtonSelectLocalImage.vue'
 
   @Component({components: { ButtonSelectLocalImage }})
   export default class BoulderToolBar extends Vue {
+    @Prop(Object) readonly oldFile!: File | null
 
+    private file: File | null = this.oldFile
+
+    updateFile(file: File) {
+      this.file = file;
+    }
+    savePicture() {
+		if(this.file !== this.oldFile) {
+		  console.log('OK on export le frero')
+		}
+    }
   }
 </script>
 
 <style scoped>
-	#picture-selection {
-		align-items: center;
+	#drag-drop {
+		margin: 10px 10px 6px 10px;
 	}
-
+	.card-footer-item {
+		margin-top: 10px;
+	}
 </style>

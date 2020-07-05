@@ -7,20 +7,21 @@
       </boulders-picture>
     </div>
     <div class="column is-one-fifth">
-      <boulder-tool-bar>
+      <boulder-tool-bar oldFile="null">
       </boulder-tool-bar>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import BouldersPicture from '~/components/BouldersSettingsComponent/BouldersPicture.vue'
 
 import BoulderToolBar from '~/components/BouldersSettingsComponent/BoulderToolBar.vue'
 
 @Component({ components: { BouldersPicture, BoulderToolBar} })
 export default class damien extends Vue {
+  @Prop(Object) readonly annotations!: Array<Array<Number>>
 
 }
 </script>

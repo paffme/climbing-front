@@ -39,9 +39,14 @@
       </div>
       <footer class="card-footer">
         <span class="card-footer-item has-text-white">
-          <b-button type="is-info" @click="modalIsActive = !modalIsActive"
-            >Gestion des groupes et blocs</b-button
-          >
+          <b-button type="is-info" @click="modalIsActive = !modalIsActive">
+            Gestion des groupes et blocs
+          </b-button>
+        </span>
+        <span class="card-footer-item has-text-white">
+          <b-button type="is-info" tag="router-link" :to="'/competitions/create'">
+            Images
+          </b-button>
         </span>
       </footer>
 

@@ -46,6 +46,8 @@ export default class BouldersPicture extends Vue {
   @Prop(Object) readonly competition!: { id: number; name: string }
   boulders: Array<{ id: number; image: string | null }> = []
 
+  @Prop(Object) readonly annotations!: Array<Array<Number>>
+
   test = 0
   items: any = null
 
@@ -67,8 +69,7 @@ export default class BouldersPicture extends Vue {
     const fakeData = [
       {
         title: 'Slide 1',
-        image: 'https://buefy.org/static/img/placeholder-1280x960.png',
-        rating: 4.4
+        image: 'https://buefy.org/static/img/placeholder-1280x960.png'
       },
       {
         title: 'Slide 2',
