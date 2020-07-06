@@ -1,7 +1,9 @@
 <template>
 	<div class="card">
 		<div class="card-header">
-			Annotations
+			<p class="card-header-title">
+				Annotations
+			</p>
 		</div>
 		<div class="card-content">
 			<div class="content">
@@ -9,43 +11,79 @@
 					Activer
 				</b-switch>
 			</div>
-			<div class="content">
-				<b-button id="auto-detection" type="is-primary" icon-left="file-find">
-					Auto Detection
+			<div class="content" @click="loadAnnotations">
+				<b-button type="is-primary" icon-left="file-find">
+					<p>
+						Auto Detection
+					</p>
 				</b-button>
 			</div>
-			<div class="card-footer">
-				<b-button class="card-footer-item" type="is-info" outlined @click="savePicture">
-					Sauvegarder
-				</b-button>
+			<div v-if="loadingAnnotations" class="content">
+				<b-progress></b-progress>
 			</div>
 		</div>
+		<div v-if="file !== null"  class="card-header">
+			<p class="card-header-title">
+				Image
+			</p>
+		</div>
+		<div v-if="file !== null" class="card-content">
+			<div class="content" @click="deleteImg">
+				<b-button type="is-danger">Supprimer</b-button>
+			</div>
+		</div>
+		<footer class="card-footer">
+			<a class="card-footer-item"
+			   @click="downloadFile">
+				Télécharger
+			</a>
+		</footer>
 	</div>
 </template>
 
 <script lang="ts">
   import { Component, Prop, Vue } from 'vue-property-decorator'
-  import ButtonSelectLocalImage  from '~/components/Button/ButtonSelectLocalImage.vue'
 
 
+  @Component
   export default class BoulderToolBar extends Vue {
     @Prop(Object) readonly oldFile!: File | null
 
     private file: File | null = this.oldFile
 
-    savePicture() {
-		if(this.file !== this.oldFile) {
-		  console.log('OK on export le frero')
-		}
+    loadingAnnotations = false
+
+    loadAnnotations() {
+      this.loadingAnnotations = true
+    }
+
+    deleteImg() {
+      this.file = null
+    }
+
+    downloadFile() {
+      if(this.file === null) {
+        this.warningNoFile()
+	      return
+      }
+      console.log("WESHHHHH")
+	    console.log(this.file)
+    }
+    warningNoFile() {
+		  this.$buefy.snackbar.open({
+		    duration: 2000,
+		    message: "Il n'y a pas d'Image a Télécharger",
+		    type: "is-warning",
+		    position: 'is-top',
+		    actionText: 'OK'
+	    })
     }
   }
 </script>
 
 <style scoped>
-	#drag-drop {
-		margin: 10px 10px 6px 10px;
+	b-button > p {
+		word-wrap: break-spaces;
 	}
-	.card-footer-item {
-		margin-top: 10px;
-	}
+
 </style>

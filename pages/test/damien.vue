@@ -6,8 +6,8 @@
                         :round="{ id: 0, boulderIds: [0, 1, 2, 3] }">
       </boulders-picture>
     </div>
-    <div class="column is-one-fifth">
-      <boulder-tool-bar oldFile="null">
+    <div class="column is-one-fifth" id="toolBar">
+      <boulder-tool-bar :oldFile="null">
       </boulder-tool-bar>
     </div>
   </div>
@@ -23,6 +23,10 @@ import BoulderToolBar from '../../components/BouldersSettingsComponent/BoulderTo
 export default class damien extends Vue {
   @Prop(Object) readonly annotations!: Array<Array<Number>>
 
+  created() {
+    console.log("Card Width")
+    console.log(document.getElementById('toolBar'))
+  }
 }
 </script>
 

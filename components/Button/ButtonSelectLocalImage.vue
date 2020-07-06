@@ -1,27 +1,16 @@
 <template>
-	<section>
-		<b-field v-if="fileDrop.length === 0">
-			<b-upload v-model="fileDrop" multiple drag-drop type="file" accept="image/*">
+	<b-field>
+		<b-upload v-model="fileDrop" multiple expanded drag-drop type="file" accept="image/*">
+			<section class="section">
 				<div class="content has-text-centered">
-					<div class="columns is-mobile">
-						<div class="column is-one-fifth">
-							<b-icon icon="upload" size="is-large"></b-icon>
-						</div>
-						<div class="column">
-							Ajouter une image
-						</div>
-					</div>
+					<p>
+						<b-icon icon="upload" size="is-large"></b-icon>
+					</p>
+					<p>Ajouter une image</p>
 				</div>
-			</b-upload>
-		</b-field>
-		<div class="tags">
-			<span  v-if="fileDrop.length !== 0" class="tag is-primary">
-				{{fileDrop[0].name}}
-				<button class="delete is-small" type="button" @click="deleteFile">
-				</button>
-			</span>
-		</div>
-	</section>
+			</section>
+		</b-upload>
+	</b-field>
 </template>
 
 <script lang="ts">
@@ -30,14 +19,15 @@
 
   @Component
   export default class ButtonSelectLocalImage extends Vue {
-    @Prop(Object) fileSelected !: File | null
+    @Prop(Object) fileSelected!: File | null
 
 	public fileDrop: Array<File> = []
 
     @Watch('fileDrop')
     onFileDropChange(val: Array<File>, oldVal: Array<File>) {
-      if(val !== oldVal) {
-        this.$emit('updateFile', this.fileDrop === [] ? null : this.fileDrop[0])
+      console.log("val=" + val.toString() + " && oldVal=" + oldVal.toString())
+      if(val !== oldVal && this.fileDrop !== []) {
+        this.$emit('updateImgBoulder', this.fileDrop[0])
       }
     }
 
@@ -52,7 +42,4 @@
 </script>
 
 <style scoped>
-	.is-mobile {
-		align-items: center;
-	}
 </style>

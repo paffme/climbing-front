@@ -1,27 +1,21 @@
 <template>
-	<b-carousel :autoplay="false" :indicator-inside="false" indicator-custom>
+	<b-carousel :autoplay="false" :indicator-inside="false" indicator-custom id="carousel">
 		<b-carousel-item :key="i" v-for="(item, i) in round.boulderIds">
-			<a v-if="item !== null" class="image" @click="switchGallery(true)">
-				<img :src="item">
+			<a v-if="boulders[i].image !== null" >
+				<img :src="boulders[i].image">
 			</a>
-			<a v-else @click="switchGallery(true)">
-				<button-select-local-image id="drag-drop" :fileSelected="file"
-					@screw-updated="updateImgBoulder">
+			<a v-else class="image">
+				<button-select-local-image id="drag-drop" :fileSelected="null"
+				                           @screw-updated="updateImgBoulder">
 				</button-select-local-image>
 			</a>
-<!--			<p class="level-item has-text-centered add-image" v-if="boulders[i].image === null">-->
-<!--				<b-button icon-left="plus-box"-->
-<!--				          size="is-large">-->
-<!--					Ajouter-->
-<!--				</b-button>-->
-<!--			</p>-->
 		</b-carousel-item>
 		<template slot="indicators" slot-scope="props">
 			<figure :draggable="false" class="al image">
 				<img v-if="boulders[props.i].image !== null" :draggable="false"
 				     :src="boulders[props.i].image" :title="props.i">
 				<img v-else :draggable="false"
-				     :src="require('../../assets/image_not_found.png')" :title="props.i">
+				     :src="require('~/assets/image_not_found.png')" :title="props.i">
 			</figure>
 		</template>
 	</b-carousel>
@@ -47,35 +41,29 @@ export default class BouldersPicture extends Vue {
 
   created() {
     this.retrieveImageAPI();
-    this.round.boulderIds.forEach((boulderId) => {
-      this.boulders.push({
-        id: boulderId,
-        image: "https://buefy.org/static/img/placeholder-1280x960.png"
-      })
-    })
   }
 
   async retrieveImageAPI() {
     const fakeData = [
       {
         id: 0,
-        image: "https://www.bienetre-et-sante.fr/wp-content/uploads/2018/08/NL_135_ESCALADE.jpg"
+        image: null
       },
       {
         id: 1,
-        image: "https://buefy.org/static/img/placeholder-1280x960.png"
+        image: require("/home/damso/Pictures/Screenshot from 2020-07-03 10-32-36.png")
       },
       {
         id: 2,
-        image: "https://buefy.org/static/img/placeholder-1280x960.png"
+        image: null
       },
       {
         id: 3,
-        image: "https://buefy.org/static/img/placeholder-1280x960.png"
+        image: null
       },
       {
         id: 4,
-        image: "https://buefy.org/static/img/placeholder-1280x960.png"
+        image: null
       }
     ]
     try {
@@ -104,5 +92,13 @@ export default class BouldersPicture extends Vue {
 
 	#drag-drop {
 		margin: 10px 10px 6px 10px;
+	}
+
+	.image {
+		position: relative;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
 	}
 </style>
