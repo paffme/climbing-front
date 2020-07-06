@@ -1,24 +1,27 @@
 <template>
-	<b-carousel :autoplay="false" :indicator-inside="false" :overlay="gallery" indicator-custom>
-		<b-carousel-item :key="i" v-for="(item, i) in round.boulderIds.length">
-			<a class="image" v-if="boulders[i].image !== null">
-				<img :src="boulders[i].image">
+	<b-carousel :autoplay="false" :indicator-inside="false" indicator-custom>
+		<b-carousel-item :key="i" v-for="(item, i) in round.boulderIds">
+			<a v-if="item !== null" class="image" @click="switchGallery(true)">
+				<img :src="item">
 			</a>
-			<p class="level-item has-text-centered add-image" v-if="boulders[i].image === null">
-				<b-button icon-left="plus-box"
-				          size="is-large">
-					Ajouter
-				</b-button>
-			</p>
+			<a v-else @click="switchGallery(true)">
+				<button-select-local-image id="drag-drop" :fileSelected="file"
+					@screw-updated="updateImgBoulder">
+				</button-select-local-image>
+			</a>
+<!--			<p class="level-item has-text-centered add-image" v-if="boulders[i].image === null">-->
+<!--				<b-button icon-left="plus-box"-->
+<!--				          size="is-large">-->
+<!--					Ajouter-->
+<!--				</b-button>-->
+<!--			</p>-->
 		</b-carousel-item>
-		<span class="modal-close is-large" v-if="gallery"/>
 		<template slot="indicators" slot-scope="props">
 			<figure :draggable="false" class="al image">
-				<img :draggable="false"
-				     :src="boulders[props.i].image" :title="props.i" v-if="boulders[props.i].image !== null">
-				<img :draggable="false"
-				     :src="require('../../assets/image_not_found.png')" :title="props.i"
-				     v-if="boulders[props.i].image === null">
+				<img v-if="boulders[props.i].image !== null" :draggable="false"
+				     :src="boulders[props.i].image" :title="props.i">
+				<img v-else :draggable="false"
+				     :src="require('../../assets/image_not_found.png')" :title="props.i">
 			</figure>
 		</template>
 	</b-carousel>
@@ -27,18 +30,20 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { AxiosHelper } from '~/utils/axiosHelper'
+import ButtonSelectLocalImage from '~/components/Button/ButtonSelectLocalImage.vue'
 
-@Component
+@Component({components: { ButtonSelectLocalImage }})
 export default class BouldersPicture extends Vue {
   @Prop(Number) boulderId!: number;
   @Prop(Object) readonly round!: { id: number; boulderIds: Array<number> };
   @Prop(Object) readonly competition!: { id: number; name: string };
 
   boulders: Array<{ id: number; image: string | null }> = [];
+  imgCurrentBoulder: string | File | null = null
 
-  test = 0;
-
-  // items: any = null
+  updateImgBoulder(newImg: File) {
+    this.imgCurrentBoulder = newImg;
+  }
 
   created() {
     this.retrieveImageAPI();
@@ -50,10 +55,6 @@ export default class BouldersPicture extends Vue {
     })
   }
 
-  info(value: any) {
-    this.test = value
-  }
-
   async retrieveImageAPI() {
     const fakeData = [
       {
@@ -62,7 +63,7 @@ export default class BouldersPicture extends Vue {
       },
       {
         id: 1,
-        image: null
+        image: "https://buefy.org/static/img/placeholder-1280x960.png"
       },
       {
         id: 2,
@@ -99,5 +100,9 @@ export default class BouldersPicture extends Vue {
 
 	.add-image {
 		min-height: 500px;
+	}
+
+	#drag-drop {
+		margin: 10px 10px 6px 10px;
 	}
 </style>

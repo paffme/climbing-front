@@ -1,15 +1,9 @@
 <template>
 	<div class="card">
 		<div class="card-header">
-			<button-select-local-image id="drag-drop" :fileSelected="file"
-			                           @screw-updated="updateFile">
-			</button-select-local-image>
+			Annotations
 		</div>
 		<div class="card-content">
-			<div class="content">
-				Annotations
-				<hr>
-			</div>
 			<div class="content">
 				<b-switch type="is-primary">
 					Activer
@@ -33,15 +27,12 @@
   import { Component, Prop, Vue } from 'vue-property-decorator'
   import ButtonSelectLocalImage  from '~/components/Button/ButtonSelectLocalImage.vue'
 
-  @Component({components: { ButtonSelectLocalImage }})
+
   export default class BoulderToolBar extends Vue {
     @Prop(Object) readonly oldFile!: File | null
 
     private file: File | null = this.oldFile
 
-    updateFile(file: File) {
-      this.file = file;
-    }
     savePicture() {
 		if(this.file !== this.oldFile) {
 		  console.log('OK on export le frero')

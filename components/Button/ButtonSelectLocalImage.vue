@@ -37,7 +37,7 @@
     @Watch('fileDrop')
     onFileDropChange(val: Array<File>, oldVal: Array<File>) {
       if(val !== oldVal) {
-        this.$emit('updateFile', thsi.fileDrop === [] ? null : thsi.fileDrop[0])
+        this.$emit('updateFile', this.fileDrop === [] ? null : this.fileDrop[0])
       }
     }
 
