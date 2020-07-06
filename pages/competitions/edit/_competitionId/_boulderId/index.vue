@@ -6,10 +6,6 @@
 			                  :round="{ id: 0, boulderIds: [0] }">
 			</boulders-picture>
 		</div>
-		<div class="column is-one-fifth">
-			<boulder-tool-bar oldFile="null">
-			</boulder-tool-bar>
-		</div>
 	</div>
 </template>
 
@@ -18,9 +14,8 @@
   import { Competition } from '~/definitions'
 
   import BouldersPicture from '~/components/BouldersSettingsComponent/BouldersPicture.vue'
-  import BoulderToolBar from '~/components/BouldersSettingsComponent/BoulderToolBar.vue'
 
-  @Component({ components: { BouldersPicture, BoulderToolBar} })
+  @Component({ components: { BouldersPicture } })
   export default class BouldersVue extends Vue {
     @Prop(Object) readonly annotations!: Array<Array<Number>>
 
