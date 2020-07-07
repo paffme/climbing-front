@@ -118,8 +118,23 @@
             <footer class="card-footer">
               <span class="card-footer-item has-text-white">
                 <b-button type="is-danger" @click="$emit('delete', group)"
-                  >Supprimer groupe</b-button
+                >Supprimer groupe</b-button
                 >
+              </span>
+              <span class="card-footer-item has-text-white">
+                <b-button :to="{ path: `/competitions/edit/${round.competitionId}/${round.id}/${groups.id}/pictures`,
+                          props: { roundBouldersInfo: {
+                            sex: round.sex,
+                            name: round.category,
+                            competitionId: round.competitionId,
+                            roundName: round.name,
+                            roundId: round.id,
+                            groupName: group.name,
+                            groupId: group.id,
+                            boulderIds: group.boulders.map(boulder => { return boulder.id })
+                          }}}" tag="router-link" type="is-info">
+                  Ajouter des Images
+                </b-button>
               </span>
             </footer>
           </div>

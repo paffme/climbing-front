@@ -4,12 +4,13 @@
 
 			<b-carousel :autoplay="false" :indicator-inside="false" @change="updateBoulderId($event)" id="carousel"
 			            indicator-custom>
-				<b-carousel-item :key="i" v-for="(item, i) in roundBouldersInfo.boulderIds">
+				<b-carousel-item :key="i" v-for="(item, i) in info.boulderIds">
 					<a v-if="boulders[i].image !== null">
 						<img :src="boulders[i].image">
 					</a>
 					<a class="image" v-else>
-						<button-select-local-image :fileSelected="null" @newFile="updateImgBoulder($event)" id="drag-drop">
+						<button-select-local-image :fileSelected="null" @newFile="updateImgBoulder($event)"
+						                           id="drag-drop">
 						</button-select-local-image>
 					</a>
 				</b-carousel-item>
@@ -80,6 +81,8 @@ import { RoundBouldersPictures } from '~/definitions'
 @Component({components: { GoBackBtn, ButtonSelectLocalImage }})
 export default class BouldersPicture extends Vue {
   @Prop(Object) roundBouldersInfo!: RoundBouldersPictures;
+
+  info = this.roundBouldersInfo;
 
   boulders: Array<{ id: number; image: string | null }> = [];
 
