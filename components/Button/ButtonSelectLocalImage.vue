@@ -1,6 +1,7 @@
 <template>
 	<b-field>
-		<b-upload v-model="fileDrop" multiple expanded drag-drop type="file" accept="image/*">
+		<b-upload v-model="fileDrop" @input="$emit('newFile', fileDrop[0])"
+		          multiple expanded drag-drop type="file" accept="image/*">
 			<section class="section">
 				<div class="content has-text-centered">
 					<p>
@@ -21,23 +22,15 @@
   export default class ButtonSelectLocalImage extends Vue {
     @Prop(Object) fileSelected!: File | null
 
-	public fileDrop: Array<File> = []
+		public fileDrop: Array<File> = []
 
-    @Watch('fileDrop')
-    onFileDropChange(val: Array<File>, oldVal: Array<File>) {
-      console.log("val=" + val.toString() + " && oldVal=" + oldVal.toString())
-      if(val !== oldVal && this.fileDrop !== []) {
-        this.$emit('updateImgBoulder', this.fileDrop[0])
-      }
-    }
+		created() {
+			if(this.fileSelected !== null) this.fileDrop.push(this.fileSelected)
+		}
 
-	created() {
-		if(this.fileSelected !== null) this.fileDrop.push(this.fileSelected)
-	}
-
-    public deleteFile() {
-      this.fileDrop = []
-    }
+	    public deleteFile() {
+	      this.fileDrop = []
+	    }
   }
 </script>
 

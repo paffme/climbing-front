@@ -237,5 +237,11 @@ describe('ApiUrl Helper', () => {
         '/competitions/1/bouldering-rounds/2/groups/3/boulders/4/results/5'
       )
     })
+  
+    test('boulderPicture - Should return a correct URL', () => {
+      expect(API_URL.boulderPicture(0, 1, 2, 3)).toEqual(
+        '/competitions/0/bouldering-rounds/1/groups/2/boulders/3/photo'
+      )
+    })
   })
 })

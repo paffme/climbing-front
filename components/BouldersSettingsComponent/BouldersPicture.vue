@@ -1,15 +1,15 @@
 <template>
 	<div class="columns is-mobile">
 		<div class="column">
+
 			<b-carousel :autoplay="false" :indicator-inside="false" @change="updateBoulderId($event)" id="carousel"
 			            indicator-custom>
-				<b-carousel-item :key="i" v-for="(item, i) in round.boulderIds">
+				<b-carousel-item :key="i" v-for="(item, i) in roundBouldersInfo.boulderIds">
 					<a v-if="boulders[i].image !== null">
 						<img :src="boulders[i].image">
 					</a>
 					<a class="image" v-else>
-						<button-select-local-image :fileSelected="null" @screw-updated="updateImgBoulder"
-						                           id="drag-drop">
+						<button-select-local-image :fileSelected="null" @newFile="updateImgBoulder($event)" id="drag-drop">
 						</button-select-local-image>
 					</a>
 				</b-carousel-item>
@@ -23,45 +23,48 @@
 				</template>
 			</b-carousel>
 		</div>
-		<div class="card" id="card">
-			<div class="card-header">
-				<p class="card-header-title">
-					Annotations
-				</p>
-			</div>
-			<div class="card-content">
-				<div class="content">
-					<b-switch type="is-primary">
-						Activer
-					</b-switch>
+		<div id="div-card">
+			<div class="card" id="card">
+				<div class="card-header">
+					<p class="card-header-title">
+						Annotations
+					</p>
 				</div>
-				<div @click="loadAnnotations" class="content">
-					<b-button icon-left="file-find" type="is-primary">
-						<p>
-							Auto Detection
-						</p>
-					</b-button>
+				<div class="card-content">
+					<div class="content">
+						<b-switch type="is-primary">
+							Activer
+						</b-switch>
+					</div>
+					<div @click="loadAnnotations" class="content">
+						<b-button icon-left="file-find" type="is-primary">
+							<p>
+								Auto Detection
+							</p>
+						</b-button>
+					</div>
+					<div class="content" v-if="loadingAnnotations">
+						<b-progress></b-progress>
+					</div>
 				</div>
-				<div class="content" v-if="loadingAnnotations">
-					<b-progress></b-progress>
+
+				<div class="card-header" v-if="localImgBoulder !== null">
+					<p class="card-header-title">
+						Image
+					</p>
 				</div>
-			</div>
-			<div class="card-header" v-if="localImgBoulder !== null">
-				<p class="card-header-title">
-					Image
-				</p>
-			</div>
-			<div class="card-content" v-if="localImgBoulder !== null">
-				<div @click="deleteImg" class="content">
-					<b-button type="is-danger">Supprimer</b-button>
+				<div class="card-content" v-if="localImgBoulder !== null">
+					<div @click="deleteImg" class="content">
+						<b-button type="is-danger">Supprimer</b-button>
+					</div>
 				</div>
+				<footer class="card-footer" v-if="localImgBoulder !== null">
+					<a @click="downloadFile"
+					   class="card-footer-item">
+						Télécharger
+					</a>
+				</footer>
 			</div>
-			<footer class="card-footer" v-if="localImgBoulder !== null">
-				<a @click="downloadFile"
-				   class="card-footer-item">
-					Télécharger
-				</a>
-			</footer>
 		</div>
 	</div>
 
@@ -71,16 +74,16 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import ButtonSelectLocalImage from '~/components/Button/ButtonSelectLocalImage.vue'
+import GoBackBtn from '~/components/Button/GoBackBtn.vue'
+import { RoundBouldersPictures } from '~/definitions'
 
-@Component({components: { ButtonSelectLocalImage }})
+@Component({components: { GoBackBtn, ButtonSelectLocalImage }})
 export default class BouldersPicture extends Vue {
-  @Prop(Number) boulderId!: number;
-  @Prop(Object) readonly round!: { id: number; boulderIds: Array<number> };
-  @Prop(Object) readonly competition!: { id: number; name: string };
+  @Prop(Object) roundBouldersInfo!: RoundBouldersPictures;
 
   boulders: Array<{ id: number; image: string | null }> = [];
 
-  localBoulderId = this.round.id;
+  localBoulderId = 0;
   localImgBoulder: string | File | null = null;
 
   loadingAnnotations = false;
@@ -93,8 +96,7 @@ export default class BouldersPicture extends Vue {
     this.localImgBoulder = this.boulders[this.localBoulderId].image;
 
     this.reader.addEventListener("load", () => {
-      console.log(this.reader.result);
-      this.boulders[this.localBoulderId].image = this.reader.result;
+      this.boulders[this.localBoulderId].image = this.reader.result as string | null;
     }, false);
   }
 
@@ -103,14 +105,12 @@ export default class BouldersPicture extends Vue {
   updateBoulderId(newId: number) {
     this.localBoulderId = newId;
     this.localImgBoulder = this.boulders[newId].image;
-
   }
 
   updateImgBoulder(newImg: File) {
     this.localImgBoulder = newImg;
-
-    console.log(newImg);
     this.reader.readAsDataURL(newImg);
+    // TODO : API Call : /put boulder picture
   }
 
   // ToolBar
@@ -119,7 +119,20 @@ export default class BouldersPicture extends Vue {
   }
 
   deleteImg() {
-    this.localImgBoulder = null;
+    this.$buefy.dialog.confirm({
+	    title: "Suppression d'Image",
+	    message: "Vous êtes sûr de vouloir supprimer l'image ?",
+	    confirmText: "Supprimer !",
+	    type: 'is-danger',
+	    hasIcon: true,
+	    onConfirm: () => {
+        this.$buefy.toast.open("Image Supprimée")
+        this.localImgBoulder = null;
+        this.boulders[this.localBoulderId].image = null
+		    // TODO : API Call : /delete boulder picture
+      },
+	    onCancel: () => this.$buefy.toast.open("Action Annulée")
+    })
   }
 
   warningNoFile() {
@@ -136,7 +149,7 @@ export default class BouldersPicture extends Vue {
     if (this.localImgBoulder === null) {
       this.warningNoFile();
     } else {
-
+      // TODO : API Call : /get boulder picture
     }
   }
 
@@ -153,7 +166,7 @@ export default class BouldersPicture extends Vue {
       },
       {
         id: 2,
-        image: null
+        image: require("~/assets/ffme_logo.png")
       },
       {
         id: 3,
@@ -194,5 +207,14 @@ export default class BouldersPicture extends Vue {
 		bottom: 0;
 		left: 0;
 		right: 0;
+	}
+	#div-card {
+		height: fit-content;
+		width: fit-content;
+	}
+
+	#card {
+		overflow: auto;
+		display: inline-block;
 	}
 </style>

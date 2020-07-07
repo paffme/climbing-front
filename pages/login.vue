@@ -75,7 +75,7 @@ export default class Login extends Vue {
       if (!user) throw new Error('No user was found')
       this.setUser(user)
 
-      setTimeout(async () => this.$router.push({ name: 'index' }), 1000)
+      setTimeout(async () => this.$router.push({ name: 'pictures.vue' }), 1000)
     } catch (error) {
       console.log('err', error)
       this.form.error = true

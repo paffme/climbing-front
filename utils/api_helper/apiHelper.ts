@@ -546,3 +546,48 @@ async function getResultClimber(
     )
   )
 }
+
+async function getBoulderPicture(competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number
+): Promise<AxiosResponse<string>> {
+  return axios.get(
+    API_URL.boulderPicture(
+      competitionId,
+      roundId,
+      groupId,
+      boulderId
+    )
+  )
+}
+
+async function putBoulderPicture(competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number
+): Promise<AxiosResponse<void>> {
+  return axios.put(
+    API_URL.boulderPicture(
+      competitionId,
+      roundId,
+      groupId,
+      boulderId
+    )
+  )
+}
+
+async function deleteBoulderPicture(competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number
+): Promise<AxiosResponse<void>> {
+  return axios.delete(
+    API_URL.boulderPicture(
+      competitionId,
+      roundId,
+      groupId,
+      boulderId
+    )
+  )
+}

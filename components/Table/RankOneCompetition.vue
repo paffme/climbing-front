@@ -42,7 +42,7 @@ import { CategoryName, Sex } from '~/definitions'
 @Component
 export default class RankOneCompetition extends Vue {
   @PropSync('sex', { type: String }) selectedSex!: Sex
-  @PropSync('categorie', { type: String }) selectedCategory!: CategoryName
+  @PropSync('categories', { type: String }) selectedCategory!: CategoryName
   @Prop(Number) competitionId!: number
 
   @Watch('selectedCategory', { immediate: true })

@@ -27,7 +27,7 @@
             icon="home"
             label="Tableau de bord"
             tag="nuxt-link"
-            :to="{ name: 'index' }"
+            :to="{ name: 'pictures.vue' }"
           />
           <b-menu-list v-if="isConnected" label="Gestion">
             <b-menu-item
@@ -91,7 +91,7 @@ export default class Sidebar extends Vue {
     {
       title: 'Tableau de bord',
       icon: 'home',
-      to: { name: 'index' }
+      to: { name: 'pictures.vue' }
     },
     {
       title: 'Mon profile',

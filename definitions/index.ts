@@ -463,3 +463,11 @@ export type APIRoundRanking = {
 }
 
 export type UserChoice = { genre?: string; type?: string; category?: string }
+
+export type RoundBouldersPictures = CompetitionCategories & {
+  competitionName: string,
+  competitionId: number,
+  roundId: number
+  groupId: number
+  boulderIds: Array<number>
+}

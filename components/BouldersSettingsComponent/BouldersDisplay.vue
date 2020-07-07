@@ -44,7 +44,11 @@
           </b-button>
         </span>
         <span class="card-footer-item has-text-white">
-          <b-button type="is-info" tag="router-link" :to="'/competitions/create'">
+          <b-button type="is-info" tag="router-link"
+                    :to="{ path: `/competitions/edit/${round.competitionId}/${round.id}/${groups.id}/pictures`,
+                    params: {roundBouldersInfo: {
+                      sex: round.sex
+                    }}">
             Images
           </b-button>
         </span>
