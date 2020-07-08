@@ -118,7 +118,6 @@ export default class UserRolesCompetitions extends Vue {
       const rolesAPI = RolesBuilder.getRoles(role)
       if (!rolesAPI) throw new Error('No role has been found')
       const { data } = await rolesAPI.getCompetitionFromRole(this.userId)
-      console.log('role', data)
       this.competitions = data
       this.isLoading = false
     } catch (err) {

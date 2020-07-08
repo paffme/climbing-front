@@ -84,7 +84,7 @@
       </h1>
       <p class="notification is-warning has-text-centered">
         Pour qu'une phase soit active, le status du round doit être
-        <b>"EN COURS"</b>
+        <b>"TERMINEE"</b>
       </p>
       <div class="choice">
         <b-button
@@ -225,6 +225,7 @@ import {
   APIRoundRanking,
   CategoryName,
   RawCountedRanking,
+  RawStateRound,
   Sex,
   TypeBouldering,
   TypeBoulderingRound
@@ -309,7 +310,7 @@ export default class BulkResult extends Vue {
     return (
       this.rounds[this.userChoice.category][this.userChoice.genre][type] &&
       this.rounds[this.userChoice.category][this.userChoice.genre][type]
-        .state === 'ONGOING'
+        .state === RawStateRound.ENDED
     )
   }
 
