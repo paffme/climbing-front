@@ -89,7 +89,7 @@
         </h1>
         <p class="notification is-warning has-text-centered">
           Pour qu'une phase soit active, le status du round doit être
-          <b>"EN COURS"</b>
+          <b>"TERMINEE"</b>
         </p>
         <div class="choice">
           <template v-if="checkIfTypeExist(type.QUALIFIER)">
@@ -228,7 +228,7 @@ export default class BulkResultStepComponent extends Vue {
 
     const canBeRating =
       this.rounds[this.userChoice.category][this.userChoice.genre][type]
-        .state === RawStateRound.ONGOING
+        .state === RawStateRound.ENDED
     if (!canBeRating) return false
 
     return true

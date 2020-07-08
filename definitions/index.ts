@@ -268,6 +268,10 @@ export type BoulderingResult = {
   try?: number
 }
 
+export type BoulderResultWithNote = BoulderingResult & {
+  alreadyNote: boolean
+}
+
 export type BoulderingResultWithCredentials = BoulderingResult & {
   groupId: number
   blocId: number

@@ -567,10 +567,9 @@ async function getBoulderPhoto(
   roundId: number,
   groupId: number,
   boulderId: number
-): Promise<AxiosResponse<APIGroupRanking>> {
+): Promise<AxiosResponse<{ url: string }>> {
   return axios({
     method: 'get',
-    maxRedirects: 0,
     url: API_URL.boulderPhoto(competitionId, roundId, groupId, boulderId)
   })
 }

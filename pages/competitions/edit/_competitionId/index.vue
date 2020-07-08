@@ -207,7 +207,6 @@ export default class EditOneCompetition extends Vue {
       ] as CircuitResult[]
     }
     try {
-      console.log('AddBulkResult', result)
       await ApiHelper.AddBulkResult(
         { results: result },
         props.competitionId,

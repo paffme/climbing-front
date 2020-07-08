@@ -28,12 +28,24 @@
             </li>
           </ul>
         </nav>
-        <b-notification v-if="currentRoles">
-          Vous êtes connecté en tant que
-          <template v-for="role in currentRoles">
-            {{ role.toLocaleLowerCase() }},
-          </template>
-        </b-notification>
+        <div class="content">
+          <span v-if="currentRoles" class="notification">
+            Vous êtes connecté en tant que
+            <template v-for="role in currentRoles">
+              {{ role.toLocaleLowerCase() }},
+            </template>
+          </span>
+          <b-button
+            class="is-pulled-right"
+            tag="nuxt-link"
+            :to="{
+              name: 'competitions-id-rank',
+              params: { id: competition.id }
+            }"
+          >
+            Voir classement
+          </b-button>
+        </div>
         <nuxt-child
           :competition="competition"
           :role="role"

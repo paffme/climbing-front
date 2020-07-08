@@ -11,10 +11,12 @@
     </div>
     <div class="column is-offset-3 is-6 upload">
       <div v-if="blocId" class="image">
-        <img
-          :src="`https://paffme.hdaroit.fr/storage/boulders/${blocId}.jpg`"
-          alt=""
-        />
+        <img :src="photoUrl" alt="" />
+        <b-loading
+          :is-full-page="false"
+          :active.sync="isLoading"
+          :can-cancel="true"
+        ></b-loading>
       </div>
       <div class="tags">
         <span
@@ -82,8 +84,11 @@ export default class ImagePage extends Vue {
   hasUploadedPhoto = false
 
   dropFiles = []
+  photoUrl: string | null = null
+  isLoading = true
 
   created() {
+    this.isLoading = true
     this.roundId = parseInt(this.$route.query.roundId as string, 10)
     this.blocId = parseInt(this.$route.query.boulderId as string, 10)
     this.groupId = parseInt(this.$route.query.groupId as string, 10)
@@ -111,7 +116,10 @@ export default class ImagePage extends Vue {
         boulderId
       )
       console.log('photos', photos)
+      this.photoUrl = photos.data.url
+      this.isLoading = false
     } catch (err) {
+      this.isLoading = false
       console.log('err', err)
       if (err.response?.data?.code === 'BOULDER_HAS_NO_PHOTO') {
         return
@@ -139,6 +147,24 @@ export default class ImagePage extends Vue {
         boulderId
       )
       this.hasUploadedPhoto = true
+      this.$buefy.toast.open({
+        type: 'is-success',
+        message: 'Photo upload succes'
+      })
+      this.dropFiles = []
+      if (
+        !this.competition.id ||
+        !this.roundId ||
+        !this.blocId ||
+        !this.groupId
+      )
+        return
+      this.getPhoto(
+        this.competition.id,
+        this.roundId,
+        this.groupId,
+        this.blocId
+      )
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
     }

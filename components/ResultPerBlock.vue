@@ -182,7 +182,6 @@
           <ResultClimberComponent
             :group="finalGroupToDisplay"
             :round="roundtoDisplay"
-            @onSendNote="sendNote"
           />
         </template>
       </template>
@@ -198,7 +197,6 @@ import {
   APIBoulders,
   APICompetition,
   BoulderingLimitedRounds,
-  BoulderingResult,
   CategoryName,
   Sex,
   TypeBouldering,
@@ -257,36 +255,6 @@ export default class ResultPerBlock extends Vue {
     this.competition.categories!.forEach((category) => {
       this.availableCategory.add(category.name)
     })
-  }
-
-  async sendNote(note: {
-    data: BoulderingResult
-    info: { blocId: number; groupId: number }
-  }) {
-    console.log('sendNote - ResultPerBlock', note)
-
-    try {
-      await ApiHelper.AddBoulderingResult(
-        note.data,
-        this.competition.id!,
-        this.idRoundToNote!,
-        note.info.groupId,
-        note.info.blocId
-      )
-      this.$buefy.toast.open({
-        type: 'is-success',
-        message: 'Note ajoutée'
-      })
-    } catch (err) {
-      if (err.response.status === 403) {
-        this.$buefy.toast.open({
-          type: 'is-warning',
-          message: 'Vous ne pouvez noter ce bloc'
-        })
-        return
-      }
-      AxiosHelper.HandleAxiosError(this, err)
-    }
   }
 
   updateGenreUserChoice(genre: Sex) {

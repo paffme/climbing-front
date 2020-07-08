@@ -19,7 +19,7 @@
             <th>
               <FormClimberRadio
                 :data="result.top"
-                :disabled="isEdition || !isJudge"
+                :disabled="isEdition || result.alreadyNote || !isJudge"
                 @onSelect="selectTop"
               />
             </th>
@@ -29,7 +29,10 @@
               <td>
                 <div class="content">
                   <b-field>
-                    <b-select v-model="result.try" :disabled="!isJudge">
+                    <b-select
+                      v-model="result.try"
+                      :disabled="!isJudge || result.alreadyNote"
+                    >
                       <option
                         v-for="maxTry in round.maxTries || 50"
                         :key="maxTry"
@@ -44,7 +47,7 @@
               <td>
                 <FormClimberRadio
                   :data="result.zone"
-                  :disabled="isEdition || !isJudge"
+                  :disabled="isEdition || !isJudge || result.alreadyNote"
                   @onSelect="selectZone"
                 />
               </td>
@@ -52,10 +55,11 @@
             <td>
               <b-button
                 type="is-info"
-                :disabled="!isJudge || isDisabled"
-                @click="sendResult"
+                native-type="submit"
+                :disabled="!isJudge || result.alreadyNote || isDisabled"
               >
                 Envoyer les résultats
+                {{ result.alreadyNote ? '(Déjà noté)' : '' }}
               </b-button>
             </td>
           </tr>
@@ -70,6 +74,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import {
   BoulderingLimitedRounds,
   BoulderingResult,
+  BoulderResultWithNote,
   RawRankingType
 } from '~/definitions'
 import FormClimberRadio from '~/components/Form/FormClimberRadio.vue'
@@ -78,7 +83,7 @@ import FormClimberRadio from '~/components/Form/FormClimberRadio.vue'
   components: { FormClimberRadio }
 })
 export default class FormClimber extends Vue {
-  @Prop(Object) result!: BoulderingResult
+  @Prop(Object) result!: BoulderResultWithNote
   @Prop(Object) round!: BoulderingLimitedRounds
   @Prop(Number) groupId!: number
   @Prop(Boolean) isDisabled!: boolean

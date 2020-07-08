@@ -35,7 +35,7 @@ module.exports = {
 
       axiosResponse.data.forEach((competition) => {
         routesToGenerate.push('/competitions/' + competition.id)
-        routesToGenerate.push('/competitions' + competition.id + '/rank')
+        routesToGenerate.push('/competitions/' + competition.id + '/rank')
         routesToGenerate.push('/competitions/edit/' + competition.id)
         routesToGenerate.push(
           '/competitions/edit/' + competition.id + '/images'

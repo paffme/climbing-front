@@ -41,6 +41,7 @@ import boulderFilter from '~/utils/boulderFilter'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import RankNotFound from '~/components/RankNotFound.vue'
 import RoundRanking from '~/components/RoundRanking.vue'
+import { AxiosHelper } from '~/utils/axiosHelper'
 
 @Component({
   components: { RankNotFound, RoundRanking }
@@ -64,6 +65,7 @@ export default class BoulderRankingPerBlocs extends Vue {
           currentRound.id
         )
         this.groups = groups.data
+        console.log('groups - onUserChoice', groups)
         for (const group of this.groups) {
           const rankingPerGroups = await ApiHelper.GetGroupRankings(
             currentRound.competitionId,
@@ -71,6 +73,8 @@ export default class BoulderRankingPerBlocs extends Vue {
             group.id
           )
           console.log('rankingPerGroups', rankingPerGroups)
+          if (((rankingPerGroups.data as unknown) as string) === '')
+            throw new Error('Aucun classement trouvé')
           // @ts-ignore
           rankingPerGroups.data.data.boulders.forEach((bloc, index) => {
             if (!this.rankingsPerBloc && bloc) return
@@ -83,7 +87,7 @@ export default class BoulderRankingPerBlocs extends Vue {
           })
         }
       } catch (err) {
-        // AxiosHelper.HandleAxiosError(this, err)
+        AxiosHelper.HandleAxiosError(this, err)
       }
     }
   }
