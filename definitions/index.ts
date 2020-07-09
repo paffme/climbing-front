@@ -455,9 +455,26 @@ export type APIRoundRanking = {
 export type BoulderingUnlimitedContestRanking = {
   ranking: number
   climber: defaultClimber[]
-  tops: boolean
+  tops: boolean[]
   nbTops: number
   points: number
+}
+export type BoulderingUnlimitedContestRankingWithType = BoulderingUnlimitedContestRanking & {
+  ranking: number
+  climber: defaultClimber[]
+  top: boolean
+  nbTop: number
+  point: number
+  type: RawRankingType
+}
+
+export type RawBoulderingUnlimitedContestRankingWithType = {
+  ranking: number | null
+  climber: defaultClimber[] | null
+  top: boolean | null
+  nbTop: number | null
+  point: number | null
+  type: RawRankingType
 }
 
 export type BoulderingUnlimitedContestRankingWithTops = BoulderingUnlimitedContestRanking & {

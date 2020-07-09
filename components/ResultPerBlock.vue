@@ -21,7 +21,7 @@
         Catégorie
       </h1>
       <p v-show="!rounds" class="notification is-warning has-text-centered">
-        Veuillez d'abord créer des rounds, pour pouvoir y entrer des résultats
+        Veuillez d'abord créer des tours, pour pouvoir y entrer des résultats
       </p>
       <div class="choice">
         <template v-for="(category, index) in availableCategory">

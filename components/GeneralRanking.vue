@@ -18,6 +18,7 @@
       <div class="topBtn">
         <BouldersSelectCategories
           :category-can-be-selected="availableCategory"
+          :current-select="selected"
           @select="onSelect"
         />
         <div v-if="competition && competition.id" class="is-pulled-right">
@@ -25,6 +26,19 @@
             type-competition="general"
             :competition-id="competition.id"
           ></BtnDownloadPdf>
+          <b-button
+            class="button"
+            tag="nuxt-link"
+            :to="{
+              name: 'competitions-id-rank-rounds',
+              query: {
+                cat: selected.category,
+                genre: selected.genre === 'male' ? 'h' : 'f'
+              }
+            }"
+          >
+            Voir plus de classement...
+          </b-button>
         </div>
       </div>
       <div v-show="selectedRanking">
@@ -62,20 +76,6 @@
 
             <b-table-column field="Club" label="Club" sortable>
               {{ props.row.climber.club }}
-            </b-table-column>
-
-            <b-table-column field="moreClassement" label="Plus de classement">
-              <nuxt-link
-                :to="{
-                  name: 'competitions-id-rank-rounds',
-                  query: {
-                    cat: selected.category,
-                    genre: selected.genre === 'male' ? 'h' : 'f'
-                  }
-                }"
-              >
-                Voir plus de classement...
-              </nuxt-link>
             </b-table-column>
           </template>
 

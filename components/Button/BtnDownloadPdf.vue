@@ -1,5 +1,10 @@
 <template>
-  <b-button @click="downloadPdf">
+  <b-button
+    :loading="isLoading"
+    rounded
+    icon-left="download"
+    @click="downloadPdf"
+  >
     Télécharger le PDF
   </b-button>
 </template>
@@ -16,7 +21,10 @@ export default class BtnDownloadPdf extends Vue {
   @Prop(Number) roundId!: number
   @Prop(Number) groupId!: number
 
+  isLoading = false
+
   async downloadPdf() {
+    this.isLoading = true
     try {
       let response: any = null
       if (this.typeCompetition === 'general' && this.competitionId) {
@@ -33,7 +41,6 @@ export default class BtnDownloadPdf extends Vue {
           this.roundId
         )
         console.log('t', response)
-        return
       }
       if (
         this.typeCompetition === 'groups' &&
@@ -47,10 +54,11 @@ export default class BtnDownloadPdf extends Vue {
           this.groupId
         )
         console.log('t', response)
-        return
       }
 
       if (!response) return
+
+      this.isLoading = false
 
       const fileURL = window.URL.createObjectURL(new Blob([response.data]))
 
@@ -60,12 +68,16 @@ export default class BtnDownloadPdf extends Vue {
 
       fileLink.href = fileURL
 
-      fileLink.setAttribute('download', 'file.pdf')
+      fileLink.setAttribute(
+        'download',
+        `rankings_${this.competitionId}_${Date.now()}.pdf`
+      )
 
       document.body.appendChild(fileLink)
 
       fileLink.click()
     } catch (err) {
+      this.isLoading = false
       AxiosHelper.HandleAxiosError(this, err)
     }
   }

@@ -20,7 +20,7 @@
         Catégorie
       </h1>
       <p v-show="!rounds" class="notification is-warning has-text-centered">
-        Veuillez d'abord créer des rounds
+        Veuillez d'abord créer des tours
       </p>
       <div class="choice">
         <div v-for="(category, index) in availableCategory" :key="index">

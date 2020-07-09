@@ -19,7 +19,7 @@
           Catégorie
         </h1>
         <p v-show="!rounds" class="notification is-warning has-text-centered">
-          Veuillez d'abord créer des rounds
+          Veuillez d'abord créer des tours afin de pouvoir ajouter des résultats
         </p>
         <div class="choice">
           <template v-for="(category, index) in availableCategory">
@@ -89,7 +89,7 @@
         </h1>
         <p class="notification is-warning has-text-centered">
           Pour qu'une phase soit active, le status du round doit être
-          <b>"TERMINEE"</b>
+          <b>"EN COURS"</b> ou <b>"TERMINEE"</b>
         </p>
         <div class="choice">
           <template v-if="checkIfTypeExist(type.QUALIFIER)">
@@ -228,7 +228,7 @@ export default class BulkResultStepComponent extends Vue {
 
     const canBeRating =
       this.rounds[this.userChoice.category][this.userChoice.genre][type]
-        .state === RawStateRound.ENDED
+        .state === RawStateRound.ENDED || RawStateRound.ONGOING
     if (!canBeRating) return false
 
     return true
