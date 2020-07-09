@@ -20,7 +20,7 @@
         Catégorie
       </h1>
       <p v-show="!rounds" class="notification is-warning has-text-centered">
-        Veuillez d'abord créer des rounds
+        Veuillez d'abord créer des tours
       </p>
       <div class="choice">
         <div v-for="(category, index) in availableCategory" :key="index">
@@ -80,7 +80,7 @@
       :type="{ 'is-success': isProfileSuccess }"
     >
       <h1 class="title has-text-centered">
-        Phases
+        Tours
       </h1>
       <p class="notification is-warning has-text-centered">
         Pour qu'une phase soit active, le status du round doit être

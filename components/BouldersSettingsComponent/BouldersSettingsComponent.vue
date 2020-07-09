@@ -203,7 +203,7 @@ export default class BouldersSettingsComponent extends Vue {
       await ApiHelper.AddRound(this.competitionId, data)
       this.$buefy.toast.open({
         type: 'is-success',
-        message: 'Round ajouté'
+        message: 'Tour ajouté'
       })
       this.$emit('loadBouldering')
     } catch (error) {

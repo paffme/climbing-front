@@ -72,7 +72,7 @@
       <b-tab-item v-if="role.juryPresident">
         <template slot="header">
           <b-icon icon="information-outline"></b-icon>
-          <span>Bulk Résultat</span>
+          <span>Vue globale des résultats</span>
         </template>
         <BulkResultStepComponent
           :is-bulk="isBulk"
@@ -214,8 +214,10 @@ export default class EditOneCompetition extends Vue {
         props.groupId
       )
       this.$buefy.snackbar.open({
-        message: 'Mise a jours des résultats'
+        message: 'Les résultats on été mis à jours',
+        actionText: null
       })
+      this.$emit('onFetchRound')
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
     }

@@ -8,7 +8,7 @@
           'is-pulled-right'
         ]"
       >
-        {{ competition.open ? 'Ouverte' : 'Fermée' }}
+        Status : {{ competition.open ? 'Ouverte' : 'Fermée' }}
       </b-tag>
     </div>
     <ul>
@@ -25,11 +25,13 @@
         <span>{{ competition.address }}</span>
         <span>{{ competition.postalCode }}</span>
         <span>{{ competition.city }}</span>
-        <span
-          class="pointer has-text-info"
-          @click="GoogleMapModalOpen = !GoogleMapModalOpen"
-          >Voir la carte</span
-        >
+        <b-button size="is-small">
+          <span
+            class="pointer has-text-info"
+            @click="GoogleMapModalOpen = !GoogleMapModalOpen"
+            >Voir la carte</span
+          >
+        </b-button>
       </li>
     </ul>
 

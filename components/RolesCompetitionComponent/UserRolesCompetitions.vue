@@ -2,7 +2,7 @@
   <div id="roles" class="columns">
     <div class="column is-3">
       <p class="_title">
-        Voir mon profile en tant que :
+        Voir mon profil en tant que :
       </p>
       <b-select v-model="selectedRole" expanded @input="getCompetitions">
         <option v-for="(role, index) in roleName" :key="index" :value="role">

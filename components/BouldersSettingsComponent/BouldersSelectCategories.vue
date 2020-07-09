@@ -1,6 +1,5 @@
 <template>
   <b-field v-if="categoryCanBeSelected" label="Selectionner la catégories">
-    {{ this.selected }}
     <b-select
       v-model="selected"
       placeholder="Selectionner une catégorie"

@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="title">
-      Classement round
+      Classement des tours
     </h1>
     <h2 class="subtitle go_back">
       <GoBackBtn />
