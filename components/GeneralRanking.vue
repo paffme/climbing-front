@@ -14,94 +14,83 @@
         </div>
       </div>
     </div>
-    <div
-      v-if="rankingData && Array.isArray(rankingData) && rankingData.length > 0"
-    >
+    <div v-if="Rankings">
       <div class="topBtn">
-        <b-select v-model="selected.genre" @input="onSelectGenre">
-          <option :value="sex.Male">
-            Homme
-          </option>
-          <option :value="sex.Female">
-            Femme
-          </option>
-        </b-select>
-        <b-button class="is-pulled-right">
-          Télécharger le PDF
-        </b-button>
+        <BouldersSelectCategories
+          :category-can-be-selected="availableCategory"
+          @select="onSelect"
+        />
+        <div v-if="competition && competition.id" class="is-pulled-right">
+          <BtnDownloadPdf
+            type-competition="general"
+            :competition-id="competition.id"
+          ></BtnDownloadPdf>
+        </div>
       </div>
-      <b-tabs>
-        <template v-for="(category, index) in availableCategory">
-          <b-tab-item :key="index" :label="category">
-            <b-table
-              :data="rankingData"
-              :hovered="true"
-              :bordered="true"
-              :striped="true"
-              hoverable
-              :total="totalCompetition"
-              :per-page="perPage"
-              default-sort="id"
-              aria-next-label="Next page"
-              aria-previous-label="Previous page"
-              aria-page-label="Page"
-              aria-current-label="Current page"
+      <div v-show="selectedRanking">
+        <b-table
+          :data="selectedRanking"
+          :hovered="true"
+          :bordered="true"
+          :striped="true"
+          hoverable
+          :total="totalCompetition"
+          :per-page="perPage"
+          default-sort="id"
+          aria-next-label="Next page"
+          aria-previous-label="Previous page"
+          aria-page-label="Page"
+          aria-current-label="Current page"
+        >
+          <template slot-scope="props">
+            <b-table-column
+              field="ranking"
+              label="Classement"
+              sortable
+              width="40"
             >
-              <template slot-scope="props">
-                <b-table-column
-                  field="ranking"
-                  label="Classement"
-                  sortable
-                  width="40"
-                >
-                  {{ props.row.ranking }}
-                </b-table-column>
+              {{ props.row.ranking }}
+            </b-table-column>
 
-                <b-table-column field="name" label="Prénom" sortable>
-                  {{ props.row.climber.firstName }}
-                </b-table-column>
+            <b-table-column field="name" label="Prénom" sortable>
+              {{ props.row.climber.firstName }}
+            </b-table-column>
 
-                <b-table-column disabled field="lastName" label="Nom" sortable>
-                  {{ props.row.climber.lastName }}
-                </b-table-column>
+            <b-table-column disabled field="lastName" label="Nom" sortable>
+              {{ props.row.climber.lastName }}
+            </b-table-column>
 
-                <b-table-column field="Club" label="Club" sortable>
-                  {{ props.row.climber.club }}
-                </b-table-column>
+            <b-table-column field="Club" label="Club" sortable>
+              {{ props.row.climber.club }}
+            </b-table-column>
 
-                <b-table-column
-                  field="moreClassement"
-                  label="Plus de classement"
-                  sortable
-                >
-                  <nuxt-link
-                    :to="{
-                      name: 'competitions-id-rank-rounds',
-                      query: {
-                        cat: selected.category,
-                        genre: selected.genre === 'h' ? 'h' : 'f'
-                      }
-                    }"
-                  >
-                    Voir plus de classement...
-                  </nuxt-link>
-                </b-table-column>
-              </template>
+            <b-table-column field="moreClassement" label="Plus de classement">
+              <nuxt-link
+                :to="{
+                  name: 'competitions-id-rank-rounds',
+                  query: {
+                    cat: selected.category,
+                    genre: selected.genre === 'male' ? 'h' : 'f'
+                  }
+                }"
+              >
+                Voir plus de classement...
+              </nuxt-link>
+            </b-table-column>
+          </template>
 
-              <template slot="empty">
-                <section class="section">
-                  <div class="content has-text-grey has-text-centered">
-                    <p>
-                      <b-icon icon="emoticon-sad" size="is-large" />
-                    </p>
-                    <p>Aucune compétition trouvée</p>
-                  </div>
-                </section>
-              </template>
-            </b-table>
-          </b-tab-item>
-        </template>
-      </b-tabs>
+          <template slot="empty">
+            <section class="section">
+              <div class="content has-text-grey has-text-centered">
+                <p>
+                  <b-icon icon="emoticon-sad" size="is-large" />
+                </p>
+                <p>Aucune compétition trouvée</p>
+              </div>
+            </section>
+          </template>
+        </b-table>
+      </div>
     </div>
     <div v-else>
       <RankNotFound />
@@ -115,7 +104,10 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import {
   APIBoulderingGroups,
   APICompetition,
+  APIRankingResponse,
+  CategoriesSelect,
   CategoryName,
+  Ranking,
   Sex
 } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
@@ -123,9 +115,18 @@ import { AxiosHelper } from '~/utils/axiosHelper'
 import RankNotFound from '~/components/RankNotFound.vue'
 import CompetitionsDetails from '~/components/CompetitionDetails.vue'
 import GoBackBtn from '~/components/Button/GoBackBtn.vue'
+import BoulderFilter from '~/utils/boulderFilter'
+import BouldersSelectCategories from '~/components/BouldersSettingsComponent/BouldersSelectCategories.vue'
+import BtnDownloadPdf from '~/components/Button/BtnDownloadPdf.vue'
 
 @Component({
-  components: { RankNotFound, CompetitionsDetails, GoBackBtn }
+  components: {
+    RankNotFound,
+    CompetitionsDetails,
+    GoBackBtn,
+    BouldersSelectCategories,
+    BtnDownloadPdf
+  }
 })
 export default class GeneralRanking extends Vue {
   @Prop(Number) totalCompetition!: number
@@ -135,14 +136,15 @@ export default class GeneralRanking extends Vue {
   competition: APICompetition | null = null
 
   sex = Sex
-  rankingData: any | null = null
+  selectedRanking: Array<Ranking> = []
+  Rankings: APIRankingResponse | null = null
 
   selected: { genre: Sex; category: CategoryName } = {
     genre: Sex.Female,
     category: CategoryName.Benjamin
   }
 
-  availableCategory: Array<string> = []
+  availableCategory: Array<CategoriesSelect> = []
 
   async created() {
     const competitionId = this.$route.params.id
@@ -151,10 +153,13 @@ export default class GeneralRanking extends Vue {
       const ranking = await ApiHelper.GetCompetitionRankings(
         parseInt(competitionId, 10)
       )
+      console.log('created', ranking)
       if (_.isEmpty(ranking.data)) {
-        this.rankingData = []
+        this.selectedRanking = []
         return
       }
+
+      this.Rankings = ranking.data
 
       const competitions = await ApiHelper.GetCompetition(
         parseInt(competitionId, 10)
@@ -162,18 +167,27 @@ export default class GeneralRanking extends Vue {
 
       this.competition = competitions.data
 
-      const categories: CategoryName[] = Object.keys(
-        ranking.data
-      ) as CategoryName[]
-      this.availableCategory = categories
-      this.selected.category = categories[0] as CategoryName
-      this.rankingData =
-        ranking.data[this.selected.category][this.selected.genre]
-      console.log('rankingData', this.rankingData)
-      console.log('this.$route.params.i', this.$route.params.id)
+      this.availableCategory = BoulderFilter.getGeneralRankings(ranking.data)
+
+      if (
+        this.availableCategory?.[0]?.category &&
+        this.availableCategory?.[0]?.genre?.[0]
+      ) {
+        console.log('here')
+        this.selected.genre = this.availableCategory[0].genre[0]
+        this.selected.category = this.availableCategory[0].category
+        this.selectedRanking = this.Rankings[this.selected.category][
+          this.selected.genre
+        ]
+      }
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
     }
+  }
+
+  onSelect(selected: { category: CategoryName; genre: Sex }) {
+    console.log('fire', selected)
+    this.selected = selected
   }
 
   onSelectGenre(genre: Sex) {

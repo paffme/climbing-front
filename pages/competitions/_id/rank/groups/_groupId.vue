@@ -8,6 +8,12 @@
       Voir le détail des classements par groupe
     </h2>
     <template v-if="groupRank">
+      <BtnDownloadPdf
+        type-competition="rounds"
+        :competition-id="parameters.competitionId"
+        :round-id="parameters.roundId"
+        :group-id="parameters.groupId"
+      />
       <template v-if="groupRank.type === rawRankingType.UNLIMITED_CONTEST">
         <div>
           <p class="notification content">
@@ -47,30 +53,43 @@ import {
 } from '~/definitions'
 import UnlimitedGroupRanking from '~/components/Table/UnlimitedGroupRanking.vue'
 import GoBackBtn from '~/components/Button/GoBackBtn.vue'
+import BtnDownloadPdf from '~/components/Button/BtnDownloadPdf.vue'
 
 @Component({
-  components: { CircuitRoundRanking, UnlimitedGroupRanking, GoBackBtn }
+  components: {
+    CircuitRoundRanking,
+    UnlimitedGroupRanking,
+    GoBackBtn,
+    BtnDownloadPdf
+  }
 })
 export default class groupsRankPage extends Vue {
   groupRank: APIGroupRanking | null = null
   rawRankingType = RawRankingType
 
   selectedBloc: DtoUnlimitedContestRanking | null = null
+  parameters: {
+    competitionId?: number
+    roundId?: number
+    groupId?: number
+  } | null = null
 
   async created() {
     console.log('this.sockets', this.$socket)
-    const parameters = this.getParameters()
+    this.parameters = this.getParameters()
 
-    console.log('parameters', parameters)
-
-    if (!parameters.competitionId || !parameters.roundId || !parameters.groupId)
+    if (
+      !this.parameters?.competitionId ||
+      !this.parameters?.roundId ||
+      !this.parameters?.groupId
+    )
       return
 
     try {
       const result = await ApiHelper.GetGroupRankings(
-        parameters.competitionId,
-        parameters.roundId,
-        parameters.groupId
+        this.parameters.competitionId,
+        this.parameters.roundId,
+        this.parameters.groupId
       )
       console.log('result', result)
       this.groupRank = result.data

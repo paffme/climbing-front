@@ -49,6 +49,11 @@
             >
               Voir classement groupe 2
             </b-button>
+            <BtnDownloadPdf
+              type-competition="rounds"
+              :competition-id="competition.id"
+              :round-id="selectedRound.id"
+            />
           </div>
           <template
             v-if="
@@ -98,6 +103,7 @@ import StepComponent from '~/components/StepComponent.vue'
 import CompetitionsDetails from '~/components/CompetitionDetails.vue'
 import CircuitRoundRanking from '~/components/Table/CircuitRoundRanking.vue'
 import GoBackBtn from '~/components/Button/GoBackBtn.vue'
+import BtnDownloadPdf from '~/components/Button/BtnDownloadPdf.vue'
 
 async function getRound(competitionId: number) {
   try {
@@ -131,7 +137,8 @@ async function fetchCompetition(
     CircuitRoundRanking,
     UnlimitedRoundRanking,
     CompetitionsDetails,
-    GoBackBtn
+    GoBackBtn,
+    BtnDownloadPdf
   },
   async asyncData(ctx) {
     const idCompetition = parseInt(ctx.params.id, 10)
