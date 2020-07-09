@@ -18,10 +18,8 @@
                 Compétitions
               </nuxt-link>
             </li>
-            <li class="is-primary" v-if="competition">
-              <nuxt-link
-                :to="`/competitions/${competition.id}`"
-              >
+            <li v-if="competition" class="is-primary">
+              <nuxt-link :to="`/competitions/${competition.id}`">
                 {{ competition.name }}
               </nuxt-link>
             </li>
@@ -207,7 +205,9 @@ export default class EditOneCompetitionPage extends Vue {
     this.role = await fetchRole(
       this.competition.id as number,
       // @ts-ignore
-      AuthUser.getters?.['Credentials']() ? AuthUser.getters?.['Credentials']().id : undefined
+      AuthUser.getters?.['Credentials']()
+        ? AuthUser.getters?.['Credentials']().id
+        : undefined
     )
   }
 }
