@@ -205,9 +205,7 @@ export default class EditOneCompetitionPage extends Vue {
     this.role = await fetchRole(
       this.competition.id as number,
       // @ts-ignore
-      AuthUser.getters?.['Credentials']()
-        ? AuthUser.getters?.['Credentials']().id
-        : undefined
+      AuthUser.getters?.['Credentials']().id
     )
   }
 }
