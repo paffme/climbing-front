@@ -16,7 +16,6 @@ import {
   CompetitionEdit,
   BoulderingLimitedRounds,
   TypeBoulderingRound,
-  BoulderingRoundCreateInput,
   APIBoulderingGroupsClimbers,
   APIBoulders,
   APIRoundRanking,
@@ -251,7 +250,7 @@ async function removeOrganizers(
 
 async function addRound(
   competitionId: number,
-  body: BoulderingRoundCreateInput
+  body: BoulderingRoundInput
 ): Promise<BoulderingRounds> {
   return axios.post(API_URL.getOraddRound(competitionId), body)
 }

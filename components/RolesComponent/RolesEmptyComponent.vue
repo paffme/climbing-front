@@ -1,14 +1,18 @@
 <template>
   <div class="panel-block">
-    <p>Aucun roles n'est défini</p>
+    <p>
+      Aucun <i>{{ roleName.toLowerCase() }}</i> n'est défini
+    </p>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
-export default class RolesEmptyComponent extends Vue {}
+export default class RolesEmptyComponent extends Vue {
+  @Prop(String) roleName!: string
+}
 </script>
 
 <style scoped></style>

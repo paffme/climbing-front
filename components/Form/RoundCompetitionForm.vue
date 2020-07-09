@@ -69,8 +69,10 @@ import {
   CategoryName,
   FormBoulderingRound,
   RankingType,
+  RawRankingType,
   Sex,
-  TypeBouldering
+  TypeBouldering,
+  TypeBoulderingRound
 } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 
@@ -85,6 +87,7 @@ export default class RoundCompetitionForm extends Vue {
     error: false,
     success: false,
     isLoading: false,
+    isEdition: false,
     input: {
       category: undefined,
       sex: undefined,
@@ -92,8 +95,8 @@ export default class RoundCompetitionForm extends Vue {
       name: undefined,
       quota: 0,
       boulders: 0,
-      rankingType: RankingType.CIRCUIT,
-      type: TypeBouldering.FINAL,
+      rankingType: RawRankingType.CIRCUIT,
+      type: TypeBoulderingRound.FINAL,
       groups: 1
     }
   }

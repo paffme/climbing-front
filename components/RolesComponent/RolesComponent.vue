@@ -17,7 +17,7 @@
           ></RolesButton>
         </template>
         <template v-else>
-          <RolesEmptyComponent />
+          <RolesEmptyComponent :role-name="roleName" />
           <RolesButton
             class="rolesbtn is-pulled-right"
             @click="modalIsActive = true"
