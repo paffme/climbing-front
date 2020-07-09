@@ -11,10 +11,7 @@
     </div>
     <div class="column is-offset-3 is-6 upload">
       <div v-if="blocId" class="image">
-        <img
-          :src="`https://paffme.hdaroit.fr/storage/boulders/${blocId}.jpg`"
-          alt=""
-        />
+        <AnnotationComponent />
       </div>
       <div class="tags">
         <span
@@ -66,8 +63,10 @@ import {
 } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { AxiosHelper } from '~/utils/axiosHelper'
+import AnnotationComponent from "~/components/AnnotationComponent.vue";
 
 @Component({
+  components: { AnnotationComponent },
   middleware: ['isAuth', 'setHeader']
 })
 export default class ImagePage extends Vue {
