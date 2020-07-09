@@ -1,94 +1,133 @@
 <template>
-  <div class="annotator">
-    <v-annotator
-      :drawing="true"
-      :grid="[5, 5]"
-      :width="1024"
-      :height="683"
-      :min-size="[50, 50]"
-      :no-interact="true"
-      :no-select="true"
-      inertia
-    >
-      <img
-        id="imgBlock"
-        :src=" urlImage || 'https://paffme.hdaroit.fr/storage/boulders/16.jpg'"
-        draggable="false"
-        width="100%"
-        height="100%"
-      />
-      <template v-for="hold in holds.boundingBoxes">
-        <polygon slot="annotation" stroke="green" :points="hold.toString()" />
-      </template>
-    </v-annotator>
-  </div>
+	<div>
+		<div class="field">
+			<b-switch :value="false" @input="modeDelete" type="is-danger" v-model="deleting">
+				Suppresion au click
+			</b-switch>
+		</div>
+		<div class="annotator">
+			<v-annotator
+					:drawing="drawing"
+					:grid="[0, 0]"
+					:height="444"
+					:inertia="true"
+					:min-size="[5, 5]"
+					:no-interact="noInteract"
+					:no-select="false"
+					:width="840"
+					@draw-end="drawFinish"
+					@select="deleteBox"
+			>
+				<img
+						:src="urlImage || require('~/assets/NL_135_ESCALADE.jpg')"
+						draggable="false"
+						height="100%"
+						id="imgBlock"
+						width="100%"
+				/>
+				<template v-for="(hold,i) in holds.boundingBoxes">
+					<rect :height="Math.abs(hold[2] - hold[0])" :id="i" :style="{'cursor': cursor}"
+					      :width="Math.abs(hold[3] - hold[1])" :x="hold[1]"
+					      :y="hold[0]" fill="none"
+					      slot="annotation"/>
+				</template>
+				<rect slot="drawing" stroke="red"/>
+			</v-annotator>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
   import { Component, Prop, Vue } from "vue-property-decorator";
-  import VAnnotator from 'vue-annotator'
+  import VAnnotator from "vue-annotator";
 
   @Component({ components: { VAnnotator } })
   export default class AnnotationComponent extends Vue {
-    @Prop(String) urlImage !: string
+    @Prop(String) urlImage !: string;
+
+    deleting = false;
+    drawing = true;
+    noInteract = false;
+    cursor = "auto";
     holds = {
       boundingBoxes: [
-        [155, 382, 175, 395],
-        [444, 338, 458, 353],
-        [484, 572, 501, 583],
-        [529, 557, 544, 575],
-        [266, 579, 292, 590],
-        [282, 258, 318, 278],
-        [306, 464, 358, 498],
-        [168, 270, 195, 287],
-        [459, 212, 478, 230],
-        [330, 532, 351, 544],
-        [418, 947, 447, 972],
-        [550, 101, 568, 113],
-        [196, 519, 216, 533],
-        [408, 588, 424, 604],
-        [187, 303, 198, 315],
-        [340, 440, 402, 503],
-        [342, 561, 370, 584],
-        [386, 541, 416, 563],
-        [302, 298, 317, 311],
-        [154, 307, 166, 318],
-        [519, 253, 542, 274],
-        [257, 304, 271, 316],
-        [206, 422, 262, 470],
-        [567, 315, 589, 339],
-        [550, 587, 572, 604],
-        [315, 571, 333, 594],
-        [201, 592, 225, 606],
-        [519, 82, 536, 104],
-        [361, 592, 380, 605],
-        [415, 253, 433, 268],
-        [475, 341, 486, 355],
-        [513, 827, 543, 840],
-        [127, 338, 137, 349],
-        [556, 51, 572, 67],
-        [439, 113, 469, 131],
-        [348, 264, 366, 283],
-        [517, 938, 548, 962],
-        [250, 692, 266, 704],
-        [427, 979, 451, 993],
-        [383, 343, 414, 369],
-        [220, 299, 230, 312]
+        [338, 293, 347, 309],
+        [240, 626, 255, 653],
+        [340, 789, 356, 810],
+        [89, 724, 113, 744],
+        [3, 210, 33, 232],
+        [147, 163, 166, 182],
+        [142, 673, 166, 704],
+        [242, 293, 272, 319],
+        [234, 205, 257, 228],
+        [291, 295, 302, 306],
+        [143, 341, 160, 360],
+        [223, 726, 255, 756],
+        [233, 780, 263, 820],
+        [43, 771, 64, 793],
+        [93, 342, 114, 359],
+        [384, 293, 394, 308],
+        [53, 344, 77, 368],
+        [287, 75, 300, 92],
+        [104, 34, 117, 60],
+        [335, 243, 353, 265],
+        [18, 81, 37, 104],
+        [275, 536, 306, 558],
+        [379, 512, 389, 523],
+        [387, 388, 397, 399],
+        [91, 597, 110, 610],
+        [0, 769, 15, 791],
+        [313, 748, 332, 763],
+        [46, 822, 59, 838],
+        [336, 112, 347, 131]
       ]
+    };
+
+    modeDelete(mode: boolean) {
+      console.log(mode);
+      if (mode) {
+        this.drawing = false;
+        this.noInteract = true;
+        this.cursor = "crosshair";
+      } else {
+        this.drawing = true;
+        this.noInteract = false;
+        this.cursor = "auto";
+      }
+    }
+
+    deleteBox(obj: any) {
+      if (this.deleting) {
+        this.holds.boundingBoxes.splice(obj.node.id, 1);
+      }
+    }
+
+    drawFinish(element: any) {
+      this.holds.boundingBoxes.push([
+        element.node.y.baseVal.value,
+        element.node.x.baseVal.value,
+        element.node.y.baseVal.value + element.node.height.baseVal.value,
+        element.node.x.baseVal.value + element.node.width.baseVal.value
+      ]);
+      if (element != null && element.node != null)
+        document.getElementById(element.node.id).remove();
     }
 
     created() {
-      this.holds.boundingBoxes.forEach(hold => {
-        console.log('hold', hold.toString())
-      })
     }
   }
 </script>
 
 <style scoped lang="scss">
-  // @import '~vue-annotator/style.css';
-  .annotator {
-    width: 500px;
-    height: 500px;
-  }
+	.annotator {
+		width: 500px;
+		height: 500px;
+	}
+
+	rect {
+		stroke: #ff0000;
+		stroke-width: 2px;
+		fill: rgba(205, 212, 214, 0.01);
+		touch-action: none;
+	}
 </style>
