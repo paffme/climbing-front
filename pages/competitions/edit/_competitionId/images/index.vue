@@ -10,13 +10,38 @@
       </div>
     </div>
     <div class="column is-offset-3 is-6 upload">
-      <div v-if="blocId" class="image">
-        <img :src="photoUrl" alt="" />
+      <div v-if="blocId" class="image content">
+        <template v-if="photoUrl">
+          <img :src="photoUrl" alt="Boulder bloc" />
+        </template>
+        <template v-else>
+          <div class="has-text-centered">
+            <p class="notification">
+              Aucune photo
+            </p>
+          </div>
+        </template>
         <b-loading
           :is-full-page="false"
           :active.sync="isLoading"
           :can-cancel="true"
         ></b-loading>
+      </div>
+      <div class="content">
+        <div
+          v-show="Holds && !Holds.boundingBoxes && photoUrl"
+          class="has-text-centered content"
+        >
+          <b-progress></b-progress>
+          <span>Calcul...</span>
+        </div>
+        <b-button
+          v-show="photoUrl"
+          type="is-danger"
+          @click="deletePhoto(competition.id, roundId, groupId, blocId)"
+        >
+          Supprimer
+        </b-button>
       </div>
       <div class="tags">
         <span
@@ -50,6 +75,7 @@
           type="is-info"
           icon-left="upload"
           expanded
+          :loading="isLoading"
           @click="uploadPhoto(competition.id, roundId, groupId, blocId)"
         >
           Uploader
@@ -64,6 +90,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import {
   APIBoulderingRounds,
   APICompetition,
+  APIHolds,
   APIUserCompetitionRoles
 } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
@@ -86,6 +113,7 @@ export default class ImagePage extends Vue {
   dropFiles = []
   photoUrl: string | null = null
   isLoading = true
+  Holds: APIHolds | null = null
 
   created() {
     this.isLoading = true
@@ -102,6 +130,48 @@ export default class ImagePage extends Vue {
       )
   }
 
+  async getHolds(
+    competitionId: number,
+    roundId: number,
+    groupId: number,
+    boulderId: number
+  ): Promise<APIHolds | null> {
+    try {
+      const result = await ApiHelper.GetHolds(
+        competitionId,
+        roundId,
+        groupId,
+        boulderId
+      )
+
+      return result.data
+    } catch (err) {
+      AxiosHelper.HandleAxiosError(this, err)
+      return null
+    }
+  }
+
+  async holdsInterval(
+    competitionId: number,
+    roundId: number,
+    groupId: number,
+    boulderId: number
+  ) {
+    this.Holds = await this.getHolds(competitionId, roundId, groupId, boulderId)
+
+    if (this.Holds) return
+
+    const intervalId = setInterval(async () => {
+      if (!this.Holds) clearInterval(intervalId)
+      this.Holds = await this.getHolds(
+        competitionId,
+        roundId,
+        groupId,
+        boulderId
+      )
+    }, 5000)
+  }
+
   async getPhoto(
     competitionId: number,
     roundId: number,
@@ -115,9 +185,9 @@ export default class ImagePage extends Vue {
         groupId,
         boulderId
       )
-      console.log('photos', photos)
       this.photoUrl = photos.data.url
       this.isLoading = false
+      this.holdsInterval(competitionId, roundId, groupId, boulderId)
     } catch (err) {
       this.isLoading = false
       console.log('err', err)
@@ -170,6 +240,29 @@ export default class ImagePage extends Vue {
     }
   }
 
+  async deletePhoto(
+    competitionId: number,
+    roundId: number,
+    groupId: number,
+    boulderId: number
+  ) {
+    try {
+      await ApiHelper.DeleteBoulderPhoto(
+        competitionId,
+        roundId,
+        groupId,
+        boulderId
+      )
+      this.$buefy.notification.open({
+        type: 'is-success',
+        message: 'Photo supprimer'
+      })
+      this.photoUrl = null
+    } catch (err) {
+      AxiosHelper.HandleAxiosError(this, err)
+    }
+  }
+
   deleteDropFile(index: number) {
     this.dropFiles.splice(index, 1)
   }
@@ -181,5 +274,9 @@ export default class ImagePage extends Vue {
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+
+.progress-wrapper {
+  margin: 0 !important;
 }
 </style>

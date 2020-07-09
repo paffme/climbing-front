@@ -1,10 +1,15 @@
 import {
   APIGroupRanking,
+  APIRankingResponse,
   APIRoundRanking,
+  CategoriesSelect,
+  CategoryName,
   CountedRankings,
   RawCountedRanking,
   RawCountedRankingWithType,
-  RawRankingType
+  RawRankingType,
+  Sex,
+  TempCategoriesSelect
 } from '~/definitions'
 
 export default {
@@ -36,6 +41,37 @@ export default {
       return result
     })
   },
+  getGeneralRankings(
+    apiGroupRanking: APIRankingResponse
+  ): Array<CategoriesSelect> {
+    if (!apiGroupRanking) return []
+    const final = []
+    for (const [key, value] of Object.entries(apiGroupRanking)) {
+      const haveFemaleCategory =
+        value.female && Object.keys(value.female).length !== 0
+      const haveMaleCategory =
+        value.male && Object.keys(value.male).length !== 0
+
+      if (!haveFemaleCategory && !haveMaleCategory) continue
+
+      const temp: TempCategoriesSelect = {
+        category: undefined,
+        genre: []
+      }
+
+      if (haveFemaleCategory) {
+        temp.genre.push('female' as Sex)
+      }
+      if (haveMaleCategory) {
+        temp.genre.push('male' as Sex)
+      }
+
+      temp.category = key as CategoryName
+      final.push(temp as CategoriesSelect)
+    }
+
+    return final
+  },
   getGroupsRankings(
     apiGroupRanking: APIGroupRanking,
     blocNumber: number
@@ -47,8 +83,6 @@ export default {
       if (!apiGroupRanking.data.rankings) return
       return ((apiGroupRanking.data
         .rankings as unknown) as CountedRankings[]).map((ranking) => {
-        console.log('ranking', ranking)
-        console.log('blocNumber', blocNumber)
         const result: RawCountedRankingWithType = {
           type,
           top: null,

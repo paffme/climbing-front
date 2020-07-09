@@ -493,3 +493,19 @@ export type QueryParamsRank = {
   genre?: string
   phase?: 'qualif' | 'semi' | 'final'
 }
+
+export type APIHolds = {
+  boundingBoxes: [
+    {
+      coordinates: Array<number>
+      type: TypeHolds
+    }
+  ]
+}
+
+export enum TypeHolds {
+  START,
+  NORMAL,
+  ZONE,
+  TOP
+}

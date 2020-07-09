@@ -24,7 +24,8 @@ import {
   CircuitResult,
   UnlimitedContestResult,
   BoulderingResultDto,
-  RawStateRound
+  RawStateRound,
+  APIHolds
 } from '~/definitions'
 import { AxiosResponse } from '~/node_modules/axios'
 import API_URL from '~/utils/api_helper/apiUrl'
@@ -98,7 +99,11 @@ export const ApiHelper = {
   GetGroupRankings: getBoulderGroupRankings,
   GetBoulderPhoto: getBoulderPhoto,
   DeleteBoulderPhoto: deleteBoulderPhoto,
-  UpdateBoulderPhoto: updateBoulderPhoto
+  UpdateBoulderPhoto: updateBoulderPhoto,
+  GetHolds: getHolds,
+  GetRoundRankingPdf: getRoundRankingPdf,
+  GetGroupRankingPdf: getGroupRankingPdf,
+  GetGeneralRankingPdf: getGeneralRankingPdf
 }
 
 async function addUserInCompetition(
@@ -568,10 +573,9 @@ async function getBoulderPhoto(
   groupId: number,
   boulderId: number
 ): Promise<AxiosResponse<{ url: string }>> {
-  return axios({
-    method: 'get',
-    url: API_URL.boulderPhoto(competitionId, roundId, groupId, boulderId)
-  })
+  return axios.get(
+    API_URL.boulderPhoto(competitionId, roundId, groupId, boulderId)
+  )
 }
 async function deleteBoulderPhoto(
   competitionId: number,
@@ -615,4 +619,46 @@ async function getResultClimber(
       climberId
     )
   )
+}
+
+async function getHolds(
+  competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios.get(API_URL.getHolds(competitionId, roundId, groupId, boulderId))
+}
+
+async function getGroupRankingPdf(
+  competitionId: number,
+  roundId: number,
+  groupId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios({
+    url: API_URL.getGroupRankingPdf(competitionId, roundId, groupId),
+    method: 'GET',
+    responseType: 'blob'
+  })
+}
+
+async function getRoundRankingPdf(
+  competitionId: number,
+  roundId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios({
+    url: API_URL.getRoundRankingPdf(competitionId, roundId),
+    method: 'GET',
+    responseType: 'blob'
+  })
+}
+
+async function getGeneralRankingPdf(
+  competitionId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios({
+    url: API_URL.getGeneralRankingPdf(competitionId),
+    method: 'GET',
+    responseType: 'blob'
+  })
 }
