@@ -18,9 +18,8 @@
                 Compétitions
               </nuxt-link>
             </li>
-            <li class="is-primary">
+            <li class="is-primary" v-if="competition">
               <nuxt-link
-                v-if="competition"
                 :to="`/competitions/${competition.id}`"
               >
                 {{ competition.name }}
@@ -36,6 +35,7 @@
             </template>
           </span>
           <b-button
+            v-if="competition"
             class="is-pulled-right"
             tag="nuxt-link"
             :to="{
@@ -190,18 +190,24 @@ export default class EditOneCompetitionPage extends Vue {
   }
 
   async loadCompetition() {
+    if (!this.competition || !this.competition.id) return
+
     this.competition = await fetchCompetition(this.competition!.id as number)
   }
 
   async loadRounds() {
-    this.rounds = await fetchRounds(this.competition!.id as number)
+    if (!this.competition || !this.competition.id) return
+
+    this.rounds = await fetchRounds(this.competition.id as number)
   }
 
   async loadRoles() {
+    if (!this.competition || !this.competition.id) return
+
     this.role = await fetchRole(
-      this.competition!.id as number,
+      this.competition.id as number,
       // @ts-ignore
-      AuthUser.getters?.['Credentials']().id
+      AuthUser.getters?.['Credentials']() ? AuthUser.getters?.['Credentials']().id : undefined
     )
   }
 }
