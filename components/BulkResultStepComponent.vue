@@ -139,7 +139,6 @@
             :is-bulk="isBulk"
             :rounds="rounds"
             :user-choice="userChoice"
-            @bulkEdition="onBulkEdition"
           />
         </template>
       </b-step-item>
@@ -153,7 +152,6 @@ import {
   APIBoulderingRounds,
   APICompetition,
   CategoryName,
-  PropsBulkResult,
   RawStateRound,
   Sex,
   TypeBouldering,
@@ -253,11 +251,6 @@ export default class BulkResultStepComponent extends Vue {
 
   stepMove(stepNumber: number) {
     this.activeStep = stepNumber
-  }
-
-  onBulkEdition(props: PropsBulkResult) {
-    console.log('StepComponent', props)
-    this.$emit('bulkEdition', props)
   }
 }
 </script>

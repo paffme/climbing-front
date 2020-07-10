@@ -489,7 +489,7 @@ export type DtoUnlimitedContestRanking = {
 
 export type RawPropsBulkResult = {
   index: number
-  row: RawCountedRankingWithType
+  row: RawCountedRankingWithType | RawBoulderingUnlimitedContestRankingWithType
 }
 
 export type APIGroupRanking = {
