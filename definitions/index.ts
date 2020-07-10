@@ -248,7 +248,7 @@ export type APIUserCredentials = {
 export type CompetitionsRegistrations = {
   createdAt: string
   updatedAt: string
-  userId: number
+  user: User
   competitionId: number
 }
 
