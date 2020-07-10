@@ -35,12 +35,12 @@
 					@select="deleteBox"
 					@unselect="unselected"
 			>
-				<img
-						:src="urlImage || require('~/assets/NL_135_ESCALADE.jpg')"
-						draggable="false"
-						height="100%"
-						id="imgBlock"
-						width="100%"
+				<img :src="urlImage"
+				     v-if="urlImage !== null"
+				     draggable="false"
+				     height="100%"
+				     id="imgBlock"
+				     width="100%"
 				/>
 				<template v-for="(hold,i) in holds.boundingBoxes">
 					<rect :height="Math.abs(hold[2] - hold[0])" :id="i" :key="i"

@@ -24,9 +24,9 @@ import {
   CircuitResult,
   UnlimitedContestResult,
   BoulderingResultDto,
-  RawStateRound
-} from '~/definitions'
-import { AxiosResponse } from '~/node_modules/axios'
+  RawStateRound, APIBoulderPicture
+} from "~/definitions";
+import { AxiosResponse } from "~/node_modules/axios";
 import API_URL from '~/utils/api_helper/apiUrl'
 
 axios.defaults.baseURL = 'https://paffme.hdaroit.fr/api/v1'
@@ -567,37 +567,39 @@ async function getBoulderPhoto(
   roundId: number,
   groupId: number,
   boulderId: number
-): Promise<AxiosResponse<APIGroupRanking>> {
+): Promise<AxiosResponse<APIBoulderPicture>> {
   return axios({
-    method: 'get',
+    method: "get",
     maxRedirects: 0,
     url: API_URL.boulderPhoto(competitionId, roundId, groupId, boulderId)
-  })
+  });
 }
+
 async function deleteBoulderPhoto(
   competitionId: number,
   roundId: number,
   groupId: number,
   boulderId: number
-): Promise<AxiosResponse<APIGroupRanking>> {
+): Promise<AxiosResponse<APIBoulderPicture>> {
   return axios.delete(
     API_URL.boulderPhoto(competitionId, roundId, groupId, boulderId)
-  )
+  );
 }
+
 async function updateBoulderPhoto(
   formData: any,
   competitionId: number,
   roundId: number,
   groupId: number,
   boulderId: number
-): Promise<AxiosResponse<APIGroupRanking>> {
+): Promise<AxiosResponse<APIBoulderPicture>> {
   return axios({
-    method: 'put',
+    method: "put",
     url: API_URL.boulderPhoto(competitionId, roundId, groupId, boulderId),
     maxRedirects: 0,
     data: formData,
-    headers: { 'Content-Type': 'multipart/form-data' }
-  })
+    headers: { "Content-Type": "multipart/form-data" }
+  });
 }
 
 async function getResultClimber(

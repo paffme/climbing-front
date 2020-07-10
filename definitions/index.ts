@@ -318,13 +318,19 @@ export type APIUserCompetitionRoles = {
   technicalDelegate: boolean
 }
 
+export type APIBoulderPicture = {
+  url: string
+  width: number
+  height: number
+}
+
 export enum Roles {
-  organizer = 'organizer',
-  juryPresident = 'juryPresident',
-  judge = 'judge',
-  chiefRouteSetter = 'chiefRouteSetter',
-  routeSetter = 'routeSetter',
-  technicalDelegate = 'technicalDelegate'
+  organizer = "organizer",
+  juryPresident = "juryPresident",
+  judge = "judge",
+  chiefRouteSetter = "chiefRouteSetter",
+  routeSetter = "routeSetter",
+  technicalDelegate = "technicalDelegate"
 }
 
 export type Ranking = {
