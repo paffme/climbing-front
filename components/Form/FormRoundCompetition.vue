@@ -103,20 +103,20 @@
 </template>
 
 <script lang="ts">
-  import { Component, Prop, Vue } from "vue-property-decorator";
-  import {
-    BoulderingRoundInput,
-    BoulderingRoundInputEdit,
-    CategoryName,
-    FormBoulderingRound,
-    RankingType,
-    RawRankingType,
-    Sex,
-    TypeBouldering,
-    TypeBoulderingRound
-  } from "~/definitions";
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import {
+  BoulderingRoundInput,
+  BoulderingRoundInputEdit,
+  CategoryName,
+  FormBoulderingRound,
+  RankingType,
+  RawRankingType,
+  Sex,
+  TypeBouldering,
+  TypeBoulderingRound
+} from '~/definitions'
 
-  @Component
+@Component
 export default class FormRoundCompetition extends Vue {
   @Prop(String) genre!: Sex
   @Prop(String) category!: CategoryName

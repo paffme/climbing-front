@@ -31,7 +31,7 @@
           <div class="tile is-4 is-parent">
             <StatsBlock
               :number="dashboardStats.totalCompetitions"
-              description="Compétitions totales"
+              description="Compétitions"
               type="is-danger"
             />
           </div>
