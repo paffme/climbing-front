@@ -1,5 +1,5 @@
 <template>
-  <div class="BtnEditOrRegisterCompetition is-pulled-right">
+  <div class="BtnEditOrRegisterCompetition">
     <template v-if="userHasRole">
       <BtnEditCompetition :competition-id="competitionId" />
     </template>

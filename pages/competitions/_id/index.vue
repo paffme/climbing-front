@@ -13,15 +13,17 @@
           </div>
           <div class="column is-3">
             <template v-if="!competition.cancelled && !competitionIsEnded">
-              <BtnEditOrRegisterCompetition
-                :is-loading="editOrRegisterBtn.status.isLoading"
-                :success="editOrRegisterBtn.status.success"
-                :is-already-register="isAlreadyRegister"
-                :competition-id="competition.id"
-                :is-authenticated="isAutenthicated"
-                :user-has-role="userHasRole"
-                @register="onRegisterCompetition"
-              />
+              <div class="is-pulled-right">
+                <BtnEditOrRegisterCompetition
+                  :is-loading="editOrRegisterBtn.status.isLoading"
+                  :success="editOrRegisterBtn.status.success"
+                  :is-already-register="isAlreadyRegister"
+                  :competition-id="competition.id"
+                  :is-authenticated="isAutenthicated"
+                  :user-has-role="userHasRole"
+                  @register="onRegisterCompetition"
+                />
+              </div>
             </template>
           </div>
         </div>
@@ -104,7 +106,8 @@
                   >
                 </li>
                 <li>
-                  Lieu : <b-tag>{{ competition.city | capitalize }}</b-tag>
+                  Lieu :
+                  <b-tag>{{ competition.city | capitalize }}</b-tag>
                 </li>
                 <li>
                   Heure d'accueil :
@@ -144,38 +147,23 @@
                   </span>
                 </li>
               </ul>
-
-              <div>
-                <div class="is-pulled-left">
-                  <b-button
-                    tag="nuxt-link"
-                    :to="{
-                      name: 'competitions-id-rank',
-                      params: { id: competition.id }
-                    }"
-                  >
-                    Voir classement
-                  </b-button>
-                </div>
-                <div
-                  v-if="!competition.cancelled && !competitionIsEnded"
-                  class="is-pulled-right"
-                >
-                  <BtnEditOrRegisterCompetition
-                    :is-loading="editOrRegisterBtn.status.isLoading"
-                    :success="editOrRegisterBtn.status.success"
-                    :is-already-register="isAlreadyRegister"
-                    :competition-id="competition.id"
-                    :is-authenticated="isAutenthicated"
-                    :user-has-role="userHasRole"
-                    @register="onRegisterCompetition"
-                  />
-                </div>
-              </div>
             </div>
           </div>
           <div class="column is-6">
             <GoogleMapComponent :competition="competition" />
+          </div>
+          <div class="column is-12">
+            <RegisteredUserComponent :climbers="registeredClimbers">
+              <BtnEditOrRegisterCompetition
+                :is-loading="editOrRegisterBtn.status.isLoading"
+                :success="editOrRegisterBtn.status.success"
+                :is-already-register="isAlreadyRegister"
+                :competition-id="competition.id"
+                :is-authenticated="isAutenthicated"
+                :user-has-role="userHasRole"
+                @register="onRegisterCompetition"
+              />
+            </RegisteredUserComponent>
           </div>
         </div>
       </div>
@@ -212,13 +200,15 @@ import BtnEditOrRegisterCompetition from '~/components/Button/BtnEditOrRegisterC
 import BreadcrumbComponent from '~/components/BreadcrumbComponent.vue'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import GoogleMapComponent from '~/components/GoogleMapComponent.vue'
+import RegisteredUserComponent from '~/components/RegisteredUserComponent.vue'
 
 @Component({
   components: {
     GoBackBtn,
     BtnEditOrRegisterCompetition,
     BreadcrumbComponent,
-    GoogleMapComponent
+    GoogleMapComponent,
+    RegisteredUserComponent
   },
   middleware: ['setHeader'],
   filters: {
@@ -249,6 +239,8 @@ export default class OneCompetition extends Vue {
   isAlreadyRegister: boolean = false
   isLoading = true
 
+  climbers = 20
+
   userHasRole: boolean = false
   competitionIsEnded: boolean = false
   // @ts-ignore
@@ -264,6 +256,8 @@ export default class OneCompetition extends Vue {
       success: false
     }
   }
+
+  registeredClimbers: CompetitionsRegistrations[] | null = null
 
   async mounted() {
     const competitionId = this.$route.params.id
@@ -284,11 +278,17 @@ export default class OneCompetition extends Vue {
       this.isAlreadyRegister = await this.checkIfUserIsRegisterToCompetition(
         competitionId
       )
-      console.log('this.isAlreadyRegister', this.isAlreadyRegister)
+
       this.competitionIsEnded = this.checkCompetitionIsEnded(
         this.competition.endDate
       )
       await this.checkUserRole(competitionId)
+
+      this.registeredClimbers = await this.getRegisteredClimberList(
+        competitionId
+      )
+
+      console.log('this.registeredClimbers', this.registeredClimbers)
       this.isLoading = false
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
@@ -316,6 +316,10 @@ export default class OneCompetition extends Vue {
         type: 'is-success',
         message: 'Vous êtes désormais inscrit à la compétition'
       })
+
+      this.registeredClimbers = await this.getRegisteredClimberList(
+        this.competition.id
+      )
     } catch (err) {
       this.editOrRegisterBtn.status.isLoading = false
       AxiosHelper.HandleAxiosError(this, err)
@@ -338,7 +342,7 @@ export default class OneCompetition extends Vue {
 
       const isRegistered = registrations.find(
         (registration: CompetitionsRegistrations) => {
-          return registration.userId === this.credentials.id
+          return registration.user.id === this.credentials.id
         }
       )
 
@@ -349,7 +353,6 @@ export default class OneCompetition extends Vue {
     }
   }
 
-  // WIP
   async checkUserRole(competitionId: number) {
     if (!this.isAutenthicated) {
       console.log('ERROR - Utilisateur non authentifié')
@@ -387,6 +390,16 @@ export default class OneCompetition extends Vue {
       )
     }
   }
+
+  async getRegisteredClimberList(
+    competitionId: number
+  ): Promise<CompetitionsRegistrations[]> {
+    const registeredClimbers = await ApiHelper.GetRegistrationsForACompetition(
+      competitionId
+    )
+
+    return registeredClimbers.data
+  }
 }
 </script>
 
@@ -395,19 +408,24 @@ export default class OneCompetition extends Vue {
   flex-direction: column;
   align-items: center;
 }
+
 ul {
   margin: 0;
 }
+
 #detail {
   flex-direction: column;
+
   li {
     justify-content: space-between;
     display: flex;
   }
+
   li.detail_text {
     display: block;
   }
 }
+
 .category-list {
   display: flex;
   justify-content: space-between;
@@ -416,6 +434,7 @@ ul {
   margin: 0 0 0 10px;
   padding: 0;
 }
+
 li.category {
   margin: 0 0 5px 0;
 }
