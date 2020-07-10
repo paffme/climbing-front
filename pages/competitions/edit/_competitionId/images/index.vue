@@ -11,7 +11,7 @@
     </div>
     <div class="column is-offset-3 is-6 upload">
       <div v-if="blocId" class="image">
-        <AnnotationComponent />
+        <AnnotationComponent :dimImg="{height: 444, width: 840}"/>
       </div>
       <div class="tags">
         <span
@@ -74,6 +74,8 @@ export default class ImagePage extends Vue {
   @Prop(Object) role!: APIUserCompetitionRoles
   @Prop(Object) rounds!: APIBoulderingRounds
 
+  picture: API
+
   roundId: number | null = null
   blocId: number | null = null
   groupId: number | null = null
@@ -109,7 +111,7 @@ export default class ImagePage extends Vue {
         groupId,
         boulderId
       )
-      console.log('photos', photos)
+      return photos
     } catch (err) {
       console.log('err', err)
       if (err.response?.data?.code === 'BOULDER_HAS_NO_PHOTO') {

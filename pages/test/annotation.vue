@@ -1,6 +1,6 @@
 <template>
 	<div class="annotator">
-		<AnnotationComponent/>
+		<AnnotationComponent :dimImg="{'height': 444, 'width': 840}"/>
 	</div>
 </template>
 

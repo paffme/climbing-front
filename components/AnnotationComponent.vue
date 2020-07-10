@@ -1,22 +1,39 @@
 <template>
 	<div>
 		<div class="field">
-			<b-switch :value="false" @input="modeDelete" type="is-danger" v-model="deleting">
-				Suppresion au click
-			</b-switch>
+
+			<section>
+				<div class="block">
+					<b-radio v-model="climbingHoldType" name="name" native-value="start" type="is-success" :disabled="!drawing">
+						Début
+					</b-radio>
+					<b-radio v-model="climbingHoldType" name="name" native-value="other" type="is-info" :disabled="!drawing">
+						Autre
+					</b-radio>
+					<b-radio v-model="climbingHoldType" name="name" native-value="zone" type="is-warning" :disabled="!drawing">
+						Zone
+					</b-radio>
+					<b-radio v-model="climbingHoldType" name="name" native-value="top" type="is-danger" :disabled="!drawing">
+						Top
+					</b-radio>
+					<b-switch :value="false" @input="modeDelete" type="is-danger" v-model="deleting">
+						Mode Suppression
+					</b-switch>
+				</div>
+			</section>
 		</div>
 		<div class="annotator">
 			<v-annotator
 					:drawing="drawing"
 					:grid="[0, 0]"
-					:height="444"
-					:inertia="true"
+					:height="dimImg.height"
 					:min-size="[5, 5]"
 					:no-interact="noInteract"
 					:no-select="false"
-					:width="840"
+					:width="dimImg.width"
 					@draw-end="drawFinish"
 					@select="deleteBox"
+					@unselect="unselected"
 			>
 				<img
 						:src="urlImage || require('~/assets/NL_135_ESCALADE.jpg')"
@@ -26,65 +43,62 @@
 						width="100%"
 				/>
 				<template v-for="(hold,i) in holds.boundingBoxes">
-					<rect :height="Math.abs(hold[2] - hold[0])" :id="i" :style="{'cursor': cursor}"
+					<rect :height="Math.abs(hold[2] - hold[0])" :id="i" :key="i"
 					      :width="Math.abs(hold[3] - hold[1])" :x="hold[1]"
 					      :y="hold[0]" fill="none"
-					      slot="annotation"/>
+					      slot="annotation"
+					      :style="{'cursor': cursor, 'stroke': getColorFromType(holds.type[i])}">
+					</rect>
 				</template>
-				<rect slot="drawing" stroke="red"/>
+				<rect slot="drawing" :stroke="getColorFromType(climbingHoldType)"></rect>
 			</v-annotator>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-  import { Component, Prop, Vue } from "vue-property-decorator";
+  import { Component, Prop, Vue, Watch } from "vue-property-decorator";
   import VAnnotator from "vue-annotator";
 
   @Component({ components: { VAnnotator } })
   export default class AnnotationComponent extends Vue {
     @Prop(String) urlImage !: string;
+    @Prop(Object) dimImg !: {height: number, width: number};
+
+    climbingHoldType = 'start'
 
     deleting = false;
     drawing = true;
     noInteract = false;
-    cursor = "auto";
+
+	  cursor = "auto"
+
     holds = {
+      type: ["other", "other", "other", "other"],
       boundingBoxes: [
         [338, 293, 347, 309],
         [240, 626, 255, 653],
         [340, 789, 356, 810],
-        [89, 724, 113, 744],
-        [3, 210, 33, 232],
-        [147, 163, 166, 182],
-        [142, 673, 166, 704],
-        [242, 293, 272, 319],
-        [234, 205, 257, 228],
-        [291, 295, 302, 306],
-        [143, 341, 160, 360],
-        [223, 726, 255, 756],
-        [233, 780, 263, 820],
-        [43, 771, 64, 793],
-        [93, 342, 114, 359],
-        [384, 293, 394, 308],
-        [53, 344, 77, 368],
-        [287, 75, 300, 92],
-        [104, 34, 117, 60],
-        [335, 243, 353, 265],
-        [18, 81, 37, 104],
-        [275, 536, 306, 558],
-        [379, 512, 389, 523],
-        [387, 388, 397, 399],
-        [91, 597, 110, 610],
-        [0, 769, 15, 791],
-        [313, 748, 332, 763],
-        [46, 822, 59, 838],
-        [336, 112, 347, 131]
+        [89, 724, 113, 744]
       ]
     };
 
+    getColorFromType(type: string): string {
+      switch (type.toUpperCase()) {
+        case "START":
+          return "#23d160"
+        case "OTHER":
+          return "#209cee"
+        case "ZONE":
+          return "#ffdd57"
+        case "TOP":
+          return "#ff3860"
+	      default:
+	        return "#209cee"
+      }
+    }
+
     modeDelete(mode: boolean) {
-      console.log(mode);
       if (mode) {
         this.drawing = false;
         this.noInteract = true;
@@ -99,6 +113,12 @@
     deleteBox(obj: any) {
       if (this.deleting) {
         this.holds.boundingBoxes.splice(obj.node.id, 1);
+        this.holds.type.splice(obj.node.id, 1);
+
+        if(obj.node.nextElementSibling !== null &&
+            obj.node.nextElementSibling.nodeName === "g") {
+          document.getElementById(obj.node.nextElementSibling.id)!.remove()
+        }
       }
     }
 
@@ -109,23 +129,25 @@
         element.node.y.baseVal.value + element.node.height.baseVal.value,
         element.node.x.baseVal.value + element.node.width.baseVal.value
       ]);
-      if (element != null && element.node != null)
-        document.getElementById(element.node.id).remove();
+      this.holds.type.push(this.climbingHoldType)
+      document.getElementById(element.node.id)!.remove();
     }
 
-    created() {
+    unselected(element: any) {
+      if(element.node.nextElementSibling !== null &&
+        element.node.nextElementSibling.nodeName === "g") {
+        document.getElementById(element.node.nextElementSibling.id)!.remove()
+      }
     }
   }
 </script>
 
 <style scoped lang="scss">
 	.annotator {
-		width: 500px;
-		height: 500px;
+		touch-action: none;
 	}
 
 	rect {
-		stroke: #ff0000;
 		stroke-width: 2px;
 		fill: rgba(205, 212, 214, 0.01);
 		touch-action: none;
