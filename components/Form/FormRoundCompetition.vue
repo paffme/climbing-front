@@ -37,6 +37,7 @@
           v-for="(type, key, index) in rankingtypes"
           :key="index"
           :value="key"
+          :disabled="rankingTypeRule(type)"
         >
           {{ type }}
         </option>
@@ -102,20 +103,20 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import {
-  BoulderingRoundInput,
-  BoulderingRoundInputEdit,
-  CategoryName,
-  FormBoulderingRound,
-  RankingType,
-  RawRankingType,
-  Sex,
-  TypeBouldering,
-  TypeBoulderingRound
-} from '~/definitions'
+  import { Component, Prop, Vue } from "vue-property-decorator";
+  import {
+    BoulderingRoundInput,
+    BoulderingRoundInputEdit,
+    CategoryName,
+    FormBoulderingRound,
+    RankingType,
+    RawRankingType,
+    Sex,
+    TypeBouldering,
+    TypeBoulderingRound
+  } from "~/definitions";
 
-@Component
+  @Component
 export default class FormRoundCompetition extends Vue {
   @Prop(String) genre!: Sex
   @Prop(String) category!: CategoryName
@@ -174,7 +175,14 @@ export default class FormRoundCompetition extends Vue {
         ? 1
         : this.maxGroups
     this.Form.input.groups = 1
-    console.log('this.maxGroups', this.maxGroups)
+  }
+
+  rankingTypeRule(type: RankingType) {
+    if (this.Form.input.type === TypeBoulderingRound.QUALIFIER) return false
+
+    if (type === RankingType.CIRCUIT) return false
+
+    return true
   }
 }
 </script>
