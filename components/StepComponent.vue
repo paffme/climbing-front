@@ -81,7 +81,7 @@
       :type="{ 'is-success': isProfileSuccess }"
     >
       <h1 class="title has-text-centered">
-        Tours
+        Tour
       </h1>
       <p class="notification is-warning has-text-centered">
         Pour qu'une phase soit disponible le status de cette doit être
@@ -122,6 +122,37 @@
       <h1 class="title has-text-centered">
         Résultat
       </h1>
+      <div class="notification">
+        <h2 class="subtitle is-size-4">
+          Tour informations
+        </h2>
+        <div id="action">
+          <template v-if="selectedRound && selectedRound.rankingType">
+            <div class="actions">
+              <span>Type de round</span>
+              <b-tag type="is-info">
+                {{ rankingType[selectedRound.rankingType] }}
+              </b-tag>
+            </div>
+            <div class="actions">
+              <span>Quota</span>
+              <b-tag type="is-info">
+                {{ selectedRound.quota }}
+              </b-tag>
+            </div>
+            <div class="actions">
+              <span>Status</span>
+              <b-tag
+                :type="[
+                  selectedRound.state !== 'ENDED' ? 'is-primary' : 'is-danger'
+                ]"
+              >
+                {{ stateRound[selectedRound.state] }}
+              </b-tag>
+            </div>
+          </template>
+        </div>
+      </div>
       <template v-if="finalStepError || !selectedRound">
         Aucun ID ne correspond aux critères demandées
       </template>
@@ -139,10 +170,12 @@ import {
   APICompetition,
   CategoryName,
   QueryParamsRank,
+  RankingType,
   RawStateRound,
   Sex,
   TypeBouldering,
-  TypeBoulderingRound
+  TypeBoulderingRound,
+  StateRound
 } from '~/definitions'
 import WordingCategory from '~/utils/wordingCategory'
 
@@ -156,6 +189,8 @@ export default class RankingsStepComponent extends Vue {
   type = TypeBoulderingRound
   typeBouldering = TypeBouldering
   category = CategoryName
+  rankingType = RankingType
+  stateRound = StateRound
   wordingCategory = WordingCategory
   selectedRound: any = null
 
@@ -291,5 +326,14 @@ export default class RankingsStepComponent extends Vue {
 .choice {
   display: flex !important;
   justify-content: space-evenly;
+}
+#action {
+  display: flex;
+  justify-content: space-around;
+}
+.actions {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 </style>

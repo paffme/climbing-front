@@ -35,8 +35,8 @@ export enum SlugRoleName {
 
 export enum RankingType {
   CIRCUIT = 'Circuit',
-  UNLIMITED_CONTEST = 'Illimité',
-  LIMITED_CONTEST = 'Limité'
+  UNLIMITED_CONTEST = 'Contest à essais illimités',
+  LIMITED_CONTEST = 'Contest à essais limités'
 }
 
 export enum RawRankingType {
