@@ -73,7 +73,7 @@
     <b-step-item
       step="3"
       :label="
-        userChoice.type ? `Phase (${typeBouldering[userChoice.type]})` : 'Phase'
+        userChoice.type ? `Tours (${typeBouldering[userChoice.type]})` : 'Tours'
       "
       :clickable="isStepsClickable"
       :type="{ 'is-success': isProfileSuccess }"
@@ -144,7 +144,7 @@ import {
 } from '~/definitions'
 
 @Component
-export default class StepComponent extends Vue {
+export default class RankingsStepComponent extends Vue {
   @Prop(Object) rounds!: APIBoulderingRounds
   @Prop(Object) competition!: APICompetition
   @Prop(Boolean) rating!: boolean

@@ -2,7 +2,7 @@
   <div class="columns is-multiline">
     <template>
       <div class="column is-offset-3 is-6">
-        <NoteClimberComponent
+        <CarousselBoulderImage
           :competition-id="round.competitionId"
           :round-id="round.id"
           :group-id="group.id"
@@ -11,6 +11,9 @@
         />
       </div>
       <div class="column is-offset-3 is-6">
+        <p v-show="results.alreadyNote" class="notification has-text-centered">
+          Utilisateur déjà noté
+        </p>
         <b-field label="Nom des grimpeurs">
           <b-select
             v-model="blocToSend.userId"
@@ -48,13 +51,13 @@ import {
   BoulderingResultWithCredentials,
   BoulderResultWithNote
 } from '~/definitions'
-import NoteClimberComponent from '~/components/ResultClimberComponent/NoteClimberComponent.vue'
+import CarousselBoulderImage from '~/components/ResultClimberComponent/NoteClimberComponent.vue'
 import FormClimber from '~/components/Form/FormClimber.vue'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 
 @Component({
-  components: { NoteClimberComponent, FormClimber }
+  components: { CarousselBoulderImage, FormClimber }
 })
 export default class ResultClimberComponent extends Vue {
   @Prop(Object) group!: APIBoulderingGroupsClimbers
@@ -103,6 +106,7 @@ export default class ResultClimberComponent extends Vue {
   async getResult() {
     if (!this.blocToSend.blocId || !this.blocToSend.userId)
       throw new Error('Pas de bloc to Send')
+
     const competitionId = parseInt(this.$route.params.competitionId, 10)
 
     if (!competitionId) throw new Error('Competition ID introuvable')
@@ -116,6 +120,7 @@ export default class ResultClimberComponent extends Vue {
         this.blocToSend.userId
       )
 
+      console.log('getResult', this.round)
       this.results = {
         climberId: result.data.climberId,
         top: result.data.top,

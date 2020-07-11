@@ -2,7 +2,7 @@
   <div class="card">
     <header class="card-header">
       <p class="card-header-title">
-        Nouveau round
+        Nouveau tour
       </p>
     </header>
     <div class="content is-flex">

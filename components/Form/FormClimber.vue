@@ -19,7 +19,7 @@
             <th>
               <FormClimberRadio
                 :data="result.top"
-                :disabled="isEdition || result.alreadyNote || !isJudge"
+                :disabled="isEdition || !isJudge"
                 @onSelect="selectTop"
               />
             </th>
@@ -47,7 +47,7 @@
               <td>
                 <FormClimberRadio
                   :data="result.zone"
-                  :disabled="isEdition || !isJudge || result.alreadyNote"
+                  :disabled="isEdition || !isJudge"
                   @onSelect="selectZone"
                 />
               </td>
@@ -56,10 +56,9 @@
               <b-button
                 type="is-info"
                 native-type="submit"
-                :disabled="!isJudge || result.alreadyNote || isDisabled"
+                :disabled="!isJudge || isDisabled"
               >
                 Envoyer les résultats
-                {{ result.alreadyNote ? '(Déjà noté)' : '' }}
               </b-button>
             </td>
           </tr>

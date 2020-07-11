@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="content">
-      <StepComponent
+      <RankingsStepComponent
         :competition="competition"
         :rounds="rounds"
         :rating="false"
@@ -78,7 +78,7 @@
             </p>
           </div>
         </template>
-      </StepComponent>
+      </RankingsStepComponent>
     </div>
   </div>
 </template>
@@ -98,7 +98,7 @@ import {
 } from '~/definitions'
 import GoogleMapComponent from '~/components/GoogleMapComponent.vue'
 import UnlimitedRoundRanking from '~/components/Table/UnlimitedRoundRanking.vue'
-import StepComponent from '~/components/StepComponent.vue'
+import RankingsStepComponent from '~/components/StepComponent.vue'
 import CompetitionsDetails from '~/components/CompetitionDetails.vue'
 import CircuitRoundRanking from '~/components/Table/CircuitRoundRanking.vue'
 import GoBackBtn from '~/components/Button/GoBackBtn.vue'
@@ -131,7 +131,7 @@ async function fetchCompetition(
 @Component({
   components: {
     GoogleMapComponent,
-    StepComponent,
+    RankingsStepComponent,
     CircuitRoundRanking,
     UnlimitedRoundRanking,
     CompetitionsDetails,
