@@ -370,7 +370,6 @@ export default class OneCompetition extends Vue {
         competitionId,
         userId
       )
-      console.log('roles', response.data)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
       for (const [key, value] of Object.entries(response.data)) {
         if (value) {

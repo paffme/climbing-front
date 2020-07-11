@@ -487,7 +487,7 @@ async function updateUser(
 
 async function getRegistrationsByUser(
   userId: number
-): Promise<AxiosResponse<APICompetition[]>> {
+): Promise<AxiosResponse<CompetitionsRegistrations[]>> {
   return axios.get(API_URL.getRegistrationsByUser(userId))
 }
 
