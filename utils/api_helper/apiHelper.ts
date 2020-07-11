@@ -683,48 +683,6 @@ async function getGroupRankingPdf(
 ): Promise<AxiosResponse<APIHolds>> {
   return axios({
     url: API_URL.getGroupRankingPdf(competitionId, roundId, groupId),
-    method: "GET",
-    responseType: "blob"
-  });
-}
-
-async function getRoundRankingPdf(
-  competitionId: number,
-  roundId: number
-): Promise<AxiosResponse<APIHolds>> {
-  return axios({
-    url: API_URL.getRoundRankingPdf(competitionId, roundId),
-    method: "GET",
-    responseType: "blob"
-  });
-}
-
-async function getGeneralRankingPdf(
-  competitionId: number
-): Promise<AxiosResponse<APIHolds>> {
-  return axios({
-    url: API_URL.getGeneralRankingPdf(competitionId),
-    method: "GET",
-    responseType: "blob"
-  });
-}
-
-async function getHolds(
-  competitionId: number,
-  roundId: number,
-  groupId: number,
-  boulderId: number
-): Promise<AxiosResponse<APIHolds>> {
-  return axios.get(API_URL.getHolds(competitionId, roundId, groupId, boulderId))
-}
-
-async function getGroupRankingPdf(
-  competitionId: number,
-  roundId: number,
-  groupId: number
-): Promise<AxiosResponse<APIHolds>> {
-  return axios({
-    url: API_URL.getGroupRankingPdf(competitionId, roundId, groupId),
     method: 'GET',
     responseType: 'blob'
   })
