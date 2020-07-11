@@ -40,9 +40,7 @@
       </b-table-column>
 
       <b-table-column field="point" label="Point" sortable>
-        <b-tag
-          :type="props.row.point ? 'is-success' : 'is-danger'"
-        >
+        <b-tag :type="props.row.point ? 'is-success' : 'is-danger'">
           {{ props.row.point }}
         </b-tag>
       </b-table-column>
