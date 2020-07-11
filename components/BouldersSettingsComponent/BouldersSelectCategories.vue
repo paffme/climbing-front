@@ -1,5 +1,5 @@
 <template>
-  <b-field v-if="categoryCanBeSelected" label="Selectionner la catégories">
+  <b-field v-if="categoryCanBeSelected" label="Selectionner la catégorie">
     <b-select
       v-model="selected"
       placeholder="Selectionner une catégorie"
@@ -12,7 +12,7 @@
           :key="category.category + key"
           :value="{ category: category.category, genre }"
         >
-          {{ category.category + ' - ' }}
+          {{ wordingCategory(category.category, false) + ' - ' }}
           {{ genre === 'male' ? 'Homme' : 'Femme' }}
         </option>
       </template>
@@ -23,6 +23,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { CategoriesSelect, CurrentCategory } from '~/definitions'
+import WordingCategory from '~/utils/wordingCategory'
 
 @Component
 export default class BouldersSelectCategories extends Vue {
@@ -34,6 +35,7 @@ export default class BouldersSelectCategories extends Vue {
   }
 
   selected: { category: string; genre: string } | null = null
+  wordingCategory = WordingCategory
 
   mounted() {
     const category =

@@ -42,8 +42,6 @@
       <b-table-column field="point" label="Point" sortable>
         <b-tag
           :type="props.row.point ? 'is-success' : 'is-danger'"
-          class="custom-btag"
-          @click.native="editZone(props)"
         >
           {{ props.row.point }}
         </b-tag>

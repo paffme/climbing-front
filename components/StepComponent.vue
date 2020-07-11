@@ -8,7 +8,9 @@
     <b-step-item
       step="1"
       :label="
-        userChoice.category ? `Catégorie (${userChoice.category})` : 'Catégorie'
+        userChoice.category
+          ? `Catégorie (${wordingCategory(userChoice.category)})`
+          : 'Catégorie'
       "
       :clickable="isStepsClickable"
     >
@@ -27,7 +29,7 @@
               type="is-primary"
               @click="updateCategoryUserChoice(category)"
             >
-              {{ category }}
+              {{ wordingCategory(category) }}
             </b-button>
           </template>
         </template>
@@ -142,6 +144,7 @@ import {
   TypeBouldering,
   TypeBoulderingRound
 } from '~/definitions'
+import WordingCategory from '~/utils/wordingCategory'
 
 @Component
 export default class RankingsStepComponent extends Vue {
@@ -153,6 +156,7 @@ export default class RankingsStepComponent extends Vue {
   type = TypeBoulderingRound
   typeBouldering = TypeBouldering
   category = CategoryName
+  wordingCategory = WordingCategory
   selectedRound: any = null
 
   activeStep = 0
