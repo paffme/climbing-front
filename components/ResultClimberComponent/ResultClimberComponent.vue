@@ -20,10 +20,10 @@
         <p v-show="results.alreadyNote" class="notification has-text-centered">
           Utilisateur déjà noté
         </p>
-        <b-field label="Nom des grimpeurs">
+        <b-field label="Sélection du grimpeur">
           <b-select
             v-model="blocToSend.userId"
-            placeholder="Selectionner un grimpeur"
+            placeholder="Sélectionnez un grimpeur"
             expanded
             @input="getResult"
           >
