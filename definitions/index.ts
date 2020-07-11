@@ -189,11 +189,9 @@ export type SubscriptionCredentials = {
   lastName: string
   sex: Sex
   club: string
-  dateBirth: number
   password: string
   passwordConfirmation: string
-  birthDay: Date
-  birthYear?: number
+  birthYear: number
 }
 
 export type DTOSubscriptionCredentials = {

@@ -53,19 +53,22 @@
               <b-field label="club">
                 <b-input v-model="credentials.club" class="club"></b-input>
               </b-field>
-              <b-field label="Date de naissance">
-                <b-datepicker
-                  v-model="credentials.birthDay"
-                  :date-formatter="dateFormatter"
-                  :max-date="maxDate"
-                  :min-date="minDate"
+              <b-field label="Année de naissance">
+                <b-select
+                  v-model="credentials.birthYear"
                   class="birth-date"
-                  editable
                   icon="calendar-today"
-                  placeholder="Cliquer pour selectionner"
+                  placeholder="Sélectionnez votre année de naissance"
                   trap-focus
                 >
-                </b-datepicker>
+                  <option
+                    v-for="birthYear in allowedBirthYears"
+                    :key="birthYear"
+                    :value="birthYear"
+                  >
+                    {{ birthYear }}
+                  </option>
+                </b-select>
               </b-field>
               <b-field label="Mot de passe">
                 <b-input
@@ -125,22 +128,18 @@ import {
 import LogoComponent from '~/components/LogoComponent.vue'
 import { AxiosHelper } from '~/utils/axiosHelper'
 
+const currentYear = new Date().getFullYear()
+
 @Component({
   layout: 'blank',
   components: { LogoComponent },
   middleware: 'isAuth',
   data() {
     return {
-      Sex
-    }
-  },
-  methods: {
-    dateFormatter(dt) {
-      return dt.toLocaleDateString('fr', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      })
+      Sex,
+      allowedBirthYears: new Array(120)
+        .fill(0)
+        .map((_, index) => currentYear - index)
     }
   }
 })
@@ -161,14 +160,10 @@ export default class Subscriptions extends Vue {
     lastName: 'Gbagbo',
     sex: Sex.Male,
     club: 'FFME',
-    birthDay: new Date('9/20/1924'),
-    dateBirth: 0,
+    birthYear: 1975,
     password: 'admin@test.com',
     passwordConfirmation: 'admin@test.com'
   }
-
-  maxDate: Date = new Date()
-  minDate: Date = new Date('1/1/1900')
 
   async subscribeUser(credentials: SubscriptionCredentials): Promise<void> {
     this.form.isLoading = true
@@ -219,7 +214,7 @@ export default class Subscriptions extends Vue {
       firstName: credentials.firstName,
       sex: credentials.sex,
       club: credentials.club,
-      birthYear: credentials.birthDay.getFullYear()
+      birthYear: credentials.birthYear
     }
   }
 
