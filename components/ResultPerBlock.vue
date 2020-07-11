@@ -55,7 +55,7 @@
         Genre
       </h1>
       <p class="notification is-warning has-text-centered">
-        Un round doit être préalablement créé avec le <b>genre</b> souhaité
+        Un tour doit être préalablement créé avec le <b>genre</b> souhaité
       </p>
       <div class="choice">
         <template v-if="checkIfGenreExist(sex.Male)">

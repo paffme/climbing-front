@@ -8,7 +8,7 @@
             <template
               v-if="round.rankingType !== rankingType.UNLIMITED_CONTEST"
             >
-              <th><abbr title="Try">Try</abbr></th>
+              <th><abbr title="Try">Essais à ajouter</abbr></th>
               <th><abbr title="Zone">Zone</abbr></th>
             </template>
             <th><abbr title="results">Résultats</abbr></th>
@@ -55,7 +55,7 @@
                 native-type="submit"
                 :disabled="!isJudge || isDisabled"
               >
-                Envoyer les résultats
+                Envoyer
               </b-button>
             </td>
           </tr>
