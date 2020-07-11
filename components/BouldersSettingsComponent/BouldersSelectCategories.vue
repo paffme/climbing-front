@@ -1,8 +1,8 @@
 <template>
-  <b-field v-if="categoryCanBeSelected" label="Selectionner la catégorie">
+  <b-field v-if="categoryCanBeSelected" label="Sélectionner la catégorie">
     <b-select
       v-model="selected"
-      placeholder="Selectionner une catégorie"
+      placeholder="Sélectionner une catégorie"
       rounded
       @input="$emit('select', selected)"
     >
@@ -12,7 +12,7 @@
           :key="category.category + key"
           :value="{ category: category.category, genre }"
         >
-          {{ wordingCategory(category.category, false) + ' - ' }}
+          {{ wordingCategory(category.category) + ' - ' }}
           {{ genre === 'male' ? 'Homme' : 'Femme' }}
         </option>
       </template>
