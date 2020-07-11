@@ -79,7 +79,7 @@
       </b-modal>
     </template>
     <template v-else>
-      Aucun round
+      Aucun tour
     </template>
   </div>
 </template>

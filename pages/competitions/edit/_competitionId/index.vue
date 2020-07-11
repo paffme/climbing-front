@@ -64,7 +64,7 @@
           <span>Ajout de résultat</span>
         </template>
         <p class="content notification has-text-centered">
-          Veuillez selectionner la compétition que vous souhaitez noter
+          Veuillez selectionner la compétition que vous souhaitez juger
         </p>
         <AddResultPerBlockStepComponent
           :roles="role"

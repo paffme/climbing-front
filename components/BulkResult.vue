@@ -49,7 +49,7 @@
         Genre
       </h1>
       <p class="notification has-text-centered">
-        Un round doit être créé avec le genre souhaité
+        Un tour doit être créé avec le genre souhaité
       </p>
       <div class="choice">
         <b-button
@@ -83,7 +83,7 @@
         Tours
       </h1>
       <p class="notification is-warning has-text-centered">
-        Pour qu'un tour soit actif, le status du round doit être
+        Pour qu'un tour soit actif, le status de celui-ci doit être
         <b>"TERMINEE"</b>
       </p>
       <div class="choice">

@@ -48,7 +48,7 @@
         Genre
       </h1>
       <p class="notification has-text-centered">
-        Veuillez choisir le genre que vous souhaitez noter
+        Veuillez choisir le genre que vous souhaitez juger
       </p>
       <div class="choice">
         <template v-if="checkIfGenreExist(sex.Male)">
@@ -129,13 +129,13 @@
         <div id="action">
           <template v-if="selectedRound && selectedRound.rankingType">
             <div class="actions">
-              <span>Type de round</span>
+              <span>Type de tour</span>
               <b-tag type="is-info">
                 {{ rankingType[selectedRound.rankingType] }}
               </b-tag>
             </div>
             <div class="actions">
-              <span>Quota</span>
+              <span>Quotas</span>
               <b-tag type="is-info">
                 {{ selectedRound.quota }}
               </b-tag>

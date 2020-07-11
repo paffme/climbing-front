@@ -47,7 +47,7 @@
     </template>
     <template v-else>
       <p class="notification">
-        Aucun bloc a noter
+        Aucun bloc à juger
       </p>
     </template>
   </div>
@@ -203,7 +203,7 @@ export default class ResultClimberComponent extends Vue {
       if (err.response.status === 403) {
         this.$buefy.toast.open({
           type: 'is-warning',
-          message: 'Vous ne pouvez noter ce bloc'
+          message: 'Vous ne pouvez pas juger ce bloc'
         })
         return
       }

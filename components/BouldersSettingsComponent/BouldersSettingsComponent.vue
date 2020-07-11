@@ -24,7 +24,7 @@
           </div>
           <div class="create-round">
             <b-button @click="onOpenModalRound">
-              Créer round
+              Créer un tour
             </b-button>
           </div>
         </div>
@@ -217,7 +217,7 @@ export default class BouldersSettingsComponent extends Vue {
       await ApiHelper.EditRound(competitionId, round.id, roundDto)
       this.$buefy.toast.open({
         type: 'is-success',
-        message: 'Round modifié'
+        message: 'Tour modifié'
       })
       this.$emit('loadBouldering')
     } catch (error) {
@@ -230,7 +230,7 @@ export default class BouldersSettingsComponent extends Vue {
       await ApiHelper.DeleteRound(this.competitionId, roundId)
       this.$buefy.toast.open({
         type: 'is-success',
-        message: 'Round supprimé'
+        message: 'Tour supprimé'
       })
       this.$emit('loadBouldering')
     } catch (error) {
@@ -267,7 +267,7 @@ export default class BouldersSettingsComponent extends Vue {
   onDeleteRound(roundId: number) {
     this.$buefy.dialog.confirm({
       type: 'is-danger',
-      message: 'Voulez-vous vraiment supprimer ce round ?',
+      message: 'Voulez-vous vraiment supprimer ce tour ?',
       onConfirm: async () => {
         this.deleteRound(roundId)
       }

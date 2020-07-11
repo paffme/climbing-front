@@ -74,7 +74,7 @@
         <template v-else>
           <div class="has-text-centered">
             <p class="notification is-warning">
-              Aucun classement pour ce type de round
+              Aucun classement pour ce type de tour
             </p>
           </div>
         </template>
@@ -110,7 +110,7 @@ async function getRound(competitionId: number) {
 
     return round.data
   } catch (err) {
-    err({ statusCode: 404, message: 'Round non trouvé' })
+    err({ statusCode: 404, message: 'Tour non trouvé' })
   }
 }
 

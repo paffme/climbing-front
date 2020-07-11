@@ -97,7 +97,7 @@
       :disabled="Form.input.maxTries === 0"
       type="is-success"
     >
-      {{ Form.isEdition ? 'Modifier le round' : 'Créer un round' }}
+      {{ Form.isEdition ? 'Modifier le tour' : 'Créer un tour' }}
     </b-button>
   </form>
 </template>

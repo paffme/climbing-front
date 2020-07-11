@@ -92,7 +92,7 @@
         Tours
       </h1>
       <p class="notification is-warning has-text-centered">
-        Pour qu'un tour puissent être noté, le status du round doit être
+        Pour qu'un tour puissent être noté, le status de celui-ci doit être
         <b>"EN COURS"</b>
       </p>
       <div class="choice">
