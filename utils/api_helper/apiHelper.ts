@@ -24,10 +24,12 @@ import {
   CircuitResult,
   UnlimitedContestResult,
   BoulderingResultDto,
-  RawStateRound, APIBoulderPicture
+  RawStateRound,
+  APIHolds,
+  APIBoulderPicture
 } from "~/definitions";
 import { AxiosResponse } from "~/node_modules/axios";
-import API_URL from '~/utils/api_helper/apiUrl'
+import API_URL from "~/utils/api_helper/apiUrl";
 
 axios.defaults.baseURL = 'https://paffme.hdaroit.fr/api/v1'
 
@@ -98,7 +100,13 @@ export const ApiHelper = {
   GetGroupRankings: getBoulderGroupRankings,
   GetBoulderPhoto: getBoulderPhoto,
   DeleteBoulderPhoto: deleteBoulderPhoto,
-  UpdateBoulderPhoto: updateBoulderPhoto
+  UpdateBoulderPhoto: updateBoulderPhoto,
+  GetHolds: getHolds,
+  PostHolds: addHolds,
+  DeleteHolds: deleteHolds,
+  GetRoundRankingPdf: getRoundRankingPdf,
+  GetGroupRankingPdf: getGroupRankingPdf,
+  GetGeneralRankingPdf: getGeneralRankingPdf
 }
 
 async function addUserInCompetition(
@@ -617,5 +625,75 @@ async function getResultClimber(
       boulderId,
       climberId
     )
-  )
+  );
+}
+
+async function getHolds(
+  competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios.get(API_URL.getHolds(competitionId, roundId, groupId, boulderId));
+}
+
+async function addHolds(
+  holds: APIHolds,
+  competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios({
+    method: "POST",
+    url: API_URL.getHolds(competitionId, roundId, groupId, boulderId),
+    data: holds
+  });
+}
+
+async function deleteHolds(
+  holds: APIHolds,
+  competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios({
+    method: "DELETE",
+    url: API_URL.getHolds(competitionId, roundId, groupId, boulderId),
+    data: holds
+  });
+}
+
+async function getGroupRankingPdf(
+  competitionId: number,
+  roundId: number,
+  groupId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios({
+    url: API_URL.getGroupRankingPdf(competitionId, roundId, groupId),
+    method: "GET",
+    responseType: "blob"
+  });
+}
+
+async function getRoundRankingPdf(
+  competitionId: number,
+  roundId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios({
+    url: API_URL.getRoundRankingPdf(competitionId, roundId),
+    method: "GET",
+    responseType: "blob"
+  });
+}
+
+async function getGeneralRankingPdf(
+  competitionId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios({
+    url: API_URL.getGeneralRankingPdf(competitionId),
+    method: "GET",
+    responseType: "blob"
+  });
 }

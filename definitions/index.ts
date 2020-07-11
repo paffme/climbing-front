@@ -268,6 +268,10 @@ export type BoulderingResult = {
   try?: number
 }
 
+export type BoulderResultWithNote = BoulderingResult & {
+  alreadyNote: boolean
+}
+
 export type BoulderingResultWithCredentials = BoulderingResult & {
   groupId: number
   blocId: number
@@ -461,6 +465,23 @@ export type BoulderingUnlimitedContestRanking = {
   nbTops: number
   points: number
 }
+export type BoulderingUnlimitedContestRankingWithType = BoulderingUnlimitedContestRanking & {
+  ranking: number
+  climber: defaultClimber[]
+  top: boolean
+  nbTop: number
+  point: number
+  type: RawRankingType
+}
+
+export type RawBoulderingUnlimitedContestRankingWithType = {
+  ranking: number | null
+  climber: defaultClimber[] | null
+  top: boolean | null
+  nbTop: number | null
+  point: number | null
+  type: RawRankingType
+}
 
 export type BoulderingUnlimitedContestRankingWithTops = BoulderingUnlimitedContestRanking & {
   tops: boolean[]
@@ -493,5 +514,21 @@ export type UserChoice = { genre?: string; type?: string; category?: string }
 export type QueryParamsRank = {
   cat?: CategoryName
   genre?: string
-  phase?: 'qualif' | 'semi' | 'final'
+  phase?: "qualif" | "semi" | "final"
+}
+
+export type APIHolds = {
+  boundingBoxes: [
+    {
+      coordinates: Array<number>
+      type: TypeHolds
+    }
+  ]
+}
+
+export enum TypeHolds {
+  START = "START",
+  NORMAL = "NORMAL",
+  ZONE = "ZONE",
+  TOP = "TOP"
 }
