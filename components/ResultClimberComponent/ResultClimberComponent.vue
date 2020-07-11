@@ -157,7 +157,6 @@ export default class ResultClimberComponent extends Vue {
         this.blocToSend.userId
       )
 
-      console.log('getResult', this.round)
       this.results = {
         climberId: result.data.climberId,
         top: result.data.top,

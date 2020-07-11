@@ -327,12 +327,12 @@ export type APIBoulderPicture = {
 }
 
 export enum Roles {
-  organizer = "organizer",
-  juryPresident = "juryPresident",
-  judge = "judge",
-  chiefRouteSetter = "chiefRouteSetter",
-  routeSetter = "routeSetter",
-  technicalDelegate = "technicalDelegate"
+  organizer = 'organizer',
+  juryPresident = 'juryPresident',
+  judge = 'judge',
+  chiefRouteSetter = 'chiefRouteSetter',
+  routeSetter = 'routeSetter',
+  technicalDelegate = 'technicalDelegate'
 }
 
 export type Ranking = {
@@ -512,14 +512,14 @@ export type UserChoice = { genre?: string; type?: string; category?: string }
 export type QueryParamsRank = {
   cat?: CategoryName
   genre?: string
-  phase?: "qualif" | "semi" | "final"
+  phase?: 'qualif' | 'semi' | 'final'
 }
 
 export enum TypeHolds {
-  START = "START",
-  NORMAL = "NORMAL",
-  ZONE = "ZONE",
-  TOP = "TOP"
+  START = 'START',
+  NORMAL = 'NORMAL',
+  ZONE = 'ZONE',
+  TOP = 'TOP'
 }
 
 export type APIHolds = {
@@ -530,4 +530,3 @@ export type APIHolds = {
     }
   ]
 }
-

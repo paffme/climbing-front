@@ -1,5 +1,5 @@
 <template>
-  <b-table :data="data" :bordered="true">
+  <b-table :data="data" :bordered="true" :striped="true" class="content">
     <template slot-scope="props">
       <b-table-column field="ranking" label="Classement" sortable>
         {{ props.row.ranking }}

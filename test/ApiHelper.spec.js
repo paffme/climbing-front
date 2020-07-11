@@ -596,26 +596,6 @@ describe('ApiHelper', () => {
       expect(spy).toHaveBeenCalledWith(1, 2, 3, 4, 5)
       expect(result).toEqual('success')
     })
-
-    describe('BoulderPhoto', () => {
-      test('getBoulderPhoto - Should call with rights args', async () => {
-        const spy = jest.spyOn(API_URL, 'boulderPhoto')
-        axios.get.mockResolvedValue('success')
-
-        const result = await ApiHelper.GetBoulderPhoto(1, 2, 3, 4)
-        expect(spy).toHaveBeenCalledWith(1, 2, 3, 4)
-        expect(result).toEqual('success')
-      })
-
-      test('deleteBoulderPhoto - Should call with rights args', async () => {
-        const spy = jest.spyOn(API_URL, 'boulderPhoto')
-        axios.delete.mockResolvedValue('success')
-
-        const result = await ApiHelper.GetBoulderPhoto(1, 2, 3, 4)
-        expect(spy).toHaveBeenCalledWith(1, 2, 3, 4)
-        expect(result).toEqual('success')
-      })
-    })
   })
   test('getHolds - Should call with rights args', async () => {
     const spy = jest.spyOn(API_URL, 'getHolds')

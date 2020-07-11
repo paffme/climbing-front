@@ -15,16 +15,25 @@
         :group-id="parameters.groupId"
       />
       <template v-if="groupRank.type === rawRankingType.UNLIMITED_CONTEST">
+        <template v-for="(bloc, index) in rankingsPerBloc">
+          <div :key="index">
+            <div :key="index" class="content">
+              <p class="subtitle">Bloc n°{{ index + 1 }}</p>
+            </div>
+            <RoundUnlimitedRanking :data="bloc" />
+          </div>
+        </template>
+      </template>
+      <template v-else>
         <div>
-          <p class="notification content">
-            Selectionner le bloc souhaité
-          </p>
-          <template v-for="(bloc, index) in groupRank.data.boulders">
-            <b-button :key="index" class="content" @click="onSelectBloc(index)">
-              Bloc n°{{ bloc }}
-            </b-button>
+          <template v-for="(bloc, index) in rankingsPerBloc">
+            <div :key="index">
+              <div class="content">
+                <p class="subtitle">Bloc n°{{ index + 1 }}</p>
+              </div>
+              <RoundRanking :data="bloc" />
+            </div>
           </template>
-          <UnlimitedGroupRanking :group-rankings="selectedBloc" />
         </div>
       </template>
     </template>
@@ -49,16 +58,25 @@ import {
   BoulderingUnlimitedContestRanking,
   BoulderingUnlimitedContestRankingWithTops,
   DtoUnlimitedContestRanking,
+  RawBoulderingUnlimitedContestRankingWithType,
+  RawCountedRankingWithType,
   RawRankingType
 } from '~/definitions'
 import UnlimitedGroupRanking from '~/components/Table/UnlimitedGroupRanking.vue'
 import GoBackBtn from '~/components/Button/GoBackBtn.vue'
 import BtnDownloadPdf from '~/components/Button/BtnDownloadPdf.vue'
+import CircuitGroupRanking from '~/components/Table/CircuitGroupRanking.vue'
+import boulderFilter from '~/utils/boulderFilter'
+import RoundRanking from '~/components/RoundRanking.vue'
+import RoundUnlimitedRanking from '~/components/RoundUnlimitedRanking.vue'
 
 @Component({
   components: {
+    CircuitGroupRanking,
     CircuitRoundRanking,
     UnlimitedGroupRanking,
+    RoundRanking,
+    RoundUnlimitedRanking,
     GoBackBtn,
     BtnDownloadPdf
   }
@@ -68,6 +86,11 @@ export default class groupsRankPage extends Vue {
   rawRankingType = RawRankingType
 
   selectedBloc: DtoUnlimitedContestRanking | null = null
+  rankingsPerBloc:
+    | RawCountedRankingWithType[]
+    | RawBoulderingUnlimitedContestRankingWithType[]
+    | null = null
+
   parameters: {
     competitionId?: number
     roundId?: number
@@ -75,7 +98,6 @@ export default class groupsRankPage extends Vue {
   } | null = null
 
   async created() {
-    console.log('this.sockets', this.$socket)
     this.parameters = this.getParameters()
 
     if (
@@ -91,8 +113,22 @@ export default class groupsRankPage extends Vue {
         this.parameters.roundId,
         this.parameters.groupId
       )
-      console.log('result', result)
+
       this.groupRank = result.data
+
+      this.rankingsPerBloc = []
+
+      if (!this.groupRank?.data?.boulders) throw new Error('Boulders not found')
+
+      this.groupRank.data.boulders.forEach((_bloc, index) => {
+        if (!this.groupRank) throw new Error('GroupRank not found')
+
+        const filtered = boulderFilter.getGroupsRankings(this.groupRank, index)
+
+        if (!filtered || !this.rankingsPerBloc) return
+
+        this.rankingsPerBloc.push(filtered as any)
+      })
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
     }
