@@ -46,12 +46,12 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { Competition } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
-import TableCompetition from '~/components/Rank.vue'
+import DefaultRankCompetition from '~/components/DefaultRankCompetition.vue'
 import BtnCreateCompetition from '~/components/Button/BtnCreateCompetition.vue'
 import AuthUser from '~/store/authUser'
 
 @Component({
-  components: { TableCompetition, BtnCreateCompetition }
+  components: { TableCompetition: DefaultRankCompetition, BtnCreateCompetition }
 })
 export default class IndexCompetitions extends Vue {
   competitions?: Competition[] | null = null
