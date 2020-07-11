@@ -84,6 +84,7 @@
                                   :competition-id="round.competitionId"
                                   @select="addJudge"
                                   @delete="onDeleteJudge"
+                                  @deleteBloc="onDeleteBloc"
                                 />
                               </li>
                             </ul>
@@ -263,6 +264,34 @@ export default class BouldersGroups extends Vue {
         message: 'Juge supprimé'
       })
       this.$emit('deleteJudge')
+    } catch (err) {
+      AxiosHelper.HandleAxiosError(this, err)
+    }
+  }
+
+  onDeleteBloc(meta: { boulderId: number; groupId: number }) {
+    this.$buefy.dialog.confirm({
+      type: 'is-info',
+      message: 'Voulez-vous vraiment supprimé ce bloc ?',
+      onConfirm: async () => {
+        await this.deleteBloc(meta)
+        this.$emit('deleteJudge')
+      }
+    })
+  }
+
+  async deleteBloc(meta: { boulderId: number; groupId: number }) {
+    try {
+      await ApiHelper.DeleteBoulder(
+        this.round.competitionId,
+        this.round.id,
+        meta.groupId,
+        meta.boulderId
+      )
+      this.$buefy.toast.open({
+        type: 'is-success',
+        message: 'Bloc supprimé'
+      })
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
     }
