@@ -3,6 +3,7 @@
     <b-button size="is-small" @click.native="isActive = !isActive">
       {{ boulder.id }}
     </b-button>
+
     <div class="judges-list">
       <div class="judges">
         <b-modal :has-modal-card="true" :active.sync="isActive">
@@ -44,6 +45,7 @@
                 <b-button
                   type="is-info"
                   tag="nuxt-link"
+                  size="is-small"
                   class="btn"
                   :to="{
                     name: 'competitions-edit-competitionId-images',
@@ -53,10 +55,21 @@
                 >
                   Gestion de l'image du bloc
                 </b-button>
+
+                <b-button
+                  type="is-danger"
+                  class="btn"
+                  size="is-small"
+                  @click="deleteBloc"
+                >
+                  Supprimer bloc
+                </b-button>
+
                 <b-button
                   v-show="selectedJudge && selectedJudge.length == 1"
                   class="btn"
                   type="is-danger"
+                  size="is-small"
                   @click="deleteJudge"
                 >
                   Supprimer juge
@@ -118,6 +131,15 @@ export default class JudgesModal extends Vue {
       }
     })
   }
+
+  async deleteBloc() {
+    const meta = {
+      boulderId: this.currentCompetition.boulderId,
+      groupId: this.currentCompetition.groupId
+    }
+    this.$emit('deleteBloc', meta)
+    this.isActive = false
+  }
 }
 </script>
 
@@ -152,6 +174,7 @@ export default class JudgesModal extends Vue {
 
 .btn {
   margin-top: 10px;
+  margin-right: 10px;
 }
 
 ul {

@@ -103,7 +103,8 @@ export const ApiHelper = {
   GetHolds: getHolds,
   GetRoundRankingPdf: getRoundRankingPdf,
   GetGroupRankingPdf: getGroupRankingPdf,
-  GetGeneralRankingPdf: getGeneralRankingPdf
+  GetGeneralRankingPdf: getGeneralRankingPdf,
+  DeleteBoulder: deleteBoulder
 }
 
 async function addUserInCompetition(
@@ -456,6 +457,16 @@ async function deleteJudgeToBoulder(
   )
 }
 
+async function deleteBoulder(
+  competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number
+): Promise<AxiosResponse<void>> {
+  return axios.delete(
+    API_URL.deleteBoulder(competitionId, roundId, groupId, boulderId)
+  )
+}
 async function deleteUser(userId: number): Promise<AxiosResponse<void>> {
   return axios.delete(API_URL.userByUserId(userId))
 }
