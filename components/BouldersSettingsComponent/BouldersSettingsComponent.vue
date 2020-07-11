@@ -24,7 +24,7 @@
           </div>
           <div class="create-round">
             <b-button @click="onOpenModalRound">
-              Créer round
+              Ajouter tour
             </b-button>
           </div>
         </div>

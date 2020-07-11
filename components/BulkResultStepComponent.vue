@@ -78,8 +78,8 @@
         step="3"
         :label="
           userChoice.type
-            ? `Phase (${typeBouldering[userChoice.type]})`
-            : 'Phase'
+            ? `Tours (${typeBouldering[userChoice.type]})`
+            : 'Tours'
         "
         :clickable="isStepsClickable"
         :type="{ 'is-success': isProfileSuccess }"
@@ -88,7 +88,7 @@
           Tours
         </h1>
         <p class="notification is-warning has-text-centered">
-          Pour qu'une phase soit active, le status du round doit être
+          Pour qu'un tour soit actif, le status du round doit être
           <b>"EN COURS"</b> ou <b>"TERMINEE"</b>
         </p>
         <div class="choice">

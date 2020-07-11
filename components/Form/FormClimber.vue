@@ -29,10 +29,7 @@
               <td>
                 <div class="content">
                   <b-field>
-                    <b-select
-                      v-model="result.try"
-                      :disabled="!isJudge || result.alreadyNote"
-                    >
+                    <b-select v-model="result.try" :disabled="!isJudge">
                       <option
                         v-for="maxTry in round.maxTries || 50"
                         :key="maxTry"
