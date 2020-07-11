@@ -66,7 +66,8 @@
         <p class="content notification has-text-centered">
           Veuillez selectionner la compétition que vous souhaitez noter
         </p>
-        <ResultPerBlockStepComponent
+        <AddResultPerBlockStepComponent
+          :roles="role"
           :competition="competition"
           :rounds="rounds"
         />
@@ -95,8 +96,7 @@ import {
   APICompetition,
   APIUserCompetitionRoles,
   Competition,
-  CompetitionEdit,
-  RoleName
+  CompetitionEdit
 } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import RolesComponent from '~/components/RolesComponent/RolesComponent.vue'
@@ -104,7 +104,7 @@ import BouldersSettingsComponent from '~/components/BouldersSettingsComponent/Bo
 import CompetitionForm from '~/components/Form/CompetitionForm.vue'
 import BtnDeleteCompetition from '~/components/Button/BtnDeleteCompetition.vue'
 import { AxiosHelper } from '~/utils/axiosHelper'
-import ResultPerBlockStepComponent from '~/components/ResultPerBlock.vue'
+import AddResultPerBlockStepComponent from '~/components/ResultPerBlock.vue'
 import BulkResultStepComponent from '~/components/BulkResultStepComponent.vue'
 import Roles from '~/components/RolesComponent/Roles.vue'
 
@@ -116,7 +116,7 @@ import Roles from '~/components/RolesComponent/Roles.vue'
     BtnDeleteCompetition,
     GoBackBtn,
     BouldersSettingsComponent,
-    ResultPerBlockStepComponent,
+    AddResultPerBlockStepComponent,
     BulkResultStepComponent,
     Roles
   },
@@ -130,7 +130,6 @@ import Roles from '~/components/RolesComponent/Roles.vue'
   },
   data() {
     return {
-      role_name: RoleName,
       idCompetition: undefined
     }
   }

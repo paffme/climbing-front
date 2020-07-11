@@ -1,12 +1,18 @@
 <template>
   <div class="columns is-multiline">
-    <template>
+    <template
+      v-if="
+        filteredBoulders &&
+        Array.isArray(filteredBoulders) &&
+        filteredBoulders.length > 0
+      "
+    >
       <div class="column is-offset-3 is-6">
         <CarousselBoulderImage
           :competition-id="round.competitionId"
           :round-id="round.id"
           :group-id="group.id"
-          :boulders="group.boulders"
+          :boulders="filteredBoulders"
           @onChangeBloc="changeBloc"
         />
       </div>
@@ -39,13 +45,20 @@
         />
       </div>
     </template>
+    <template v-else>
+      <p class="notification">
+        Aucun bloc a noter
+      </p>
+    </template>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import {
   APIBoulderingGroupsClimbers,
+  APIBoulders,
+  APIUserCompetitionRoles,
   BoulderingLimitedRounds,
   BoulderingResult,
   BoulderingResultWithCredentials,
@@ -55,13 +68,37 @@ import CarousselBoulderImage from '~/components/ResultClimberComponent/NoteClimb
 import FormClimber from '~/components/Form/FormClimber.vue'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
+import AuthUser from '~/store/authUser'
 
 @Component({
   components: { CarousselBoulderImage, FormClimber }
 })
 export default class ResultClimberComponent extends Vue {
+  @Prop(Object) roles!: APIUserCompetitionRoles
   @Prop(Object) group!: APIBoulderingGroupsClimbers
+  @Watch('group', { immediate: true, deep: true })
+  filterJudge(group: APIBoulderingGroupsClimbers) {
+    if (this.roles.juryPresident) {
+      this.filteredBoulders = group.boulders
+      return
+    }
+
+    if (!this.roles.judge) {
+      this.filteredBoulders = []
+      return
+    }
+
+    this.filteredBoulders = group.boulders.filter((boulder) => {
+      return boulder.judges.find((judge) => {
+        // @ts-ignore
+        return AuthUser.getters?.['Credentials']().id === judge.id
+      })
+    })
+  }
+
   @Prop(Object) round!: BoulderingLimitedRounds
+
+  filteredBoulders: APIBoulders[] | null = null
 
   results: BoulderResultWithNote = {
     climberId: 0,

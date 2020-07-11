@@ -182,6 +182,7 @@
       <template v-else>
         <template v-if="finalGroupToDisplay">
           <ResultClimberComponent
+            :roles="roles"
             :group="finalGroupToDisplay"
             :round="roundtoDisplay"
           />
@@ -198,6 +199,7 @@ import {
   APIBoulderingRounds,
   APIBoulders,
   APICompetition,
+  APIUserCompetitionRoles,
   BoulderingLimitedRounds,
   CategoryName,
   Sex,
@@ -212,9 +214,10 @@ import ResultClimberComponent from '~/components/ResultClimberComponent/ResultCl
 @Component({
   components: { ResultClimberComponent }
 })
-export default class ResultPerBlockStepComponent extends Vue {
+export default class AddResultPerBlockStepComponent extends Vue {
   @Prop(Object) competition!: APICompetition
   @Prop(Object) rounds!: APIBoulderingRounds
+  @Prop(Object) roles!: APIUserCompetitionRoles
 
   sex = Sex
   type = TypeBoulderingRound
