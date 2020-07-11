@@ -29,12 +29,9 @@
               <td>
                 <div class="content">
                   <b-field>
-                    <b-select
-                      v-model="result.try"
-                      :disabled="!isJudge || result.alreadyNote"
-                    >
+                    <b-select v-model="result.try" :disabled="!isJudge">
                       <option
-                        v-for="maxTry in round.maxTries || 50"
+                        v-for="maxTry in round.maxTries || 25"
                         :key="maxTry"
                         :value="maxTry"
                       >
@@ -81,7 +78,7 @@ import FormClimberRadio from '~/components/Form/FormClimberRadio.vue'
 @Component({
   components: { FormClimberRadio }
 })
-export default class FormClimber extends Vue {
+export default class FormAddResultToClimber extends Vue {
   @Prop(Object) result!: BoulderResultWithNote
   @Prop(Object) round!: BoulderingLimitedRounds
   @Prop(Number) groupId!: number

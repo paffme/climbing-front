@@ -36,7 +36,7 @@
             </option>
           </b-select>
         </b-field>
-        <FormClimber
+        <FormAddResultToClimber
           :round="round"
           :result="results"
           :group-id="group.id"
@@ -65,13 +65,13 @@ import {
   BoulderResultWithNote
 } from '~/definitions'
 import CarousselBoulderImage from '~/components/ResultClimberComponent/NoteClimberComponent.vue'
-import FormClimber from '~/components/Form/FormClimber.vue'
+import FormAddResultToClimber from '~/components/Form/FormAddResultToClimber.vue'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import AuthUser from '~/store/authUser'
 
 @Component({
-  components: { CarousselBoulderImage, FormClimber }
+  components: { CarousselBoulderImage, FormAddResultToClimber }
 })
 export default class ResultClimberComponent extends Vue {
   @Prop(Object) roles!: APIUserCompetitionRoles
