@@ -8,7 +8,7 @@
             <template
               v-if="round.rankingType !== rankingType.UNLIMITED_CONTEST"
             >
-              <th><abbr title="Try">Try</abbr></th>
+              <th><abbr title="Try">Essais à ajouter</abbr></th>
               <th><abbr title="Zone">Zone</abbr></th>
             </template>
             <th><abbr title="results">Résultats</abbr></th>
@@ -31,7 +31,7 @@
                   <b-field>
                     <b-select v-model="result.try" :disabled="!isJudge">
                       <option
-                        v-for="maxTry in round.maxTries || 50"
+                        v-for="maxTry in round.maxTries || 25"
                         :key="maxTry"
                         :value="maxTry"
                       >
@@ -52,10 +52,10 @@
             <td>
               <b-button
                 type="is-info"
+                native-type="submit"
                 :disabled="!isJudge || isDisabled"
-                @click="sendResult"
               >
-                Envoyer les résultats
+                Envoyer
               </b-button>
             </td>
           </tr>
@@ -70,6 +70,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import {
   BoulderingLimitedRounds,
   BoulderingResult,
+  BoulderResultWithNote,
   RawRankingType
 } from '~/definitions'
 import FormClimberRadio from '~/components/Form/FormClimberRadio.vue'
@@ -77,8 +78,8 @@ import FormClimberRadio from '~/components/Form/FormClimberRadio.vue'
 @Component({
   components: { FormClimberRadio }
 })
-export default class FormClimber extends Vue {
-  @Prop(Object) result!: BoulderingResult
+export default class FormAddResultToClimber extends Vue {
+  @Prop(Object) result!: BoulderResultWithNote
   @Prop(Object) round!: BoulderingLimitedRounds
   @Prop(Number) groupId!: number
   @Prop(Boolean) isDisabled!: boolean

@@ -42,7 +42,7 @@
             </li>
             <li><b>Type :</b> {{ rankingType[round.rankingType] }}</li>
             <li><b>Catégorie :</b> {{ round.category }}</li>
-            <li><b>Quota :</b> {{ round.quota }}</li>
+            <li><b>Quotas :</b> {{ round.quota }}</li>
             <li v-show="round.maxTries">
               <b>Nombre d'essais :</b> {{ round.maxTries || 0 }}
             </li>

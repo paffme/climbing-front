@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-table
-      :data="internalCompetitions ? internalCompetitions : []"
+      :data="_competitions"
       :hovered="true"
       paginated
       hoverable
@@ -48,7 +48,7 @@
           {{ props.row.city }}
         </b-table-column>
 
-        <b-table-column field="city" label="Apercu">
+        <b-table-column field="city" label="Plus d'infos">
           <nuxt-link :to="'competitions/' + props.row.id">
             <b-button icon-left="arrow-right-bold" type="is-primary" />
           </nuxt-link>
@@ -73,39 +73,11 @@ import { Vue, Component, Prop, PropSync } from 'vue-property-decorator'
 import { Competition, FRTypeCompetition } from '~/definitions'
 
 @Component
-export default class TableCompetition extends Vue {
-  @PropSync('competitions', { type: Array })
-  internalCompetitions!: Competition[]
+export default class DefaultRankCompetition extends Vue {
+  @PropSync('competitions', { type: Array }) _competitions!: Competition[]
 
   @Prop(Number) totalCompetition!: number
   @Prop(Number) perPage!: number
-  columns = [
-    {
-      field: 'name',
-      label: 'ID',
-      width: '40'
-    },
-    {
-      field: 'type',
-      label: 'Type'
-    },
-    {
-      field: 'startDate',
-      label: 'Date début'
-    },
-    {
-      field: 'createdAt',
-      label: 'Date de création'
-    },
-    {
-      field: 'endDate',
-      label: 'Date fin'
-    },
-    {
-      field: 'city',
-      label: 'Ville'
-    }
-  ]
 
   type = FRTypeCompetition
 
@@ -114,7 +86,6 @@ export default class TableCompetition extends Vue {
   }
 
   goTo(row: any) {
-    console.log('goTo', row)
     this.$router.push('/competitions/' + row.id)
   }
 }

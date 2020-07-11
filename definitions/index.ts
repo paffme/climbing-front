@@ -35,8 +35,8 @@ export enum SlugRoleName {
 
 export enum RankingType {
   CIRCUIT = 'Circuit',
-  UNLIMITED_CONTEST = 'Illimité',
-  LIMITED_CONTEST = 'Limité'
+  UNLIMITED_CONTEST = 'Contest à essais illimités',
+  LIMITED_CONTEST = 'Contest à essais limités'
 }
 
 export enum RawRankingType {
@@ -189,11 +189,9 @@ export type SubscriptionCredentials = {
   lastName: string
   sex: Sex
   club: string
-  dateBirth: number
   password: string
   passwordConfirmation: string
-  birthDay: Date
-  birthYear?: number
+  birthYear: number
 }
 
 export type DTOSubscriptionCredentials = {
@@ -248,7 +246,7 @@ export type APIUserCredentials = {
 export type CompetitionsRegistrations = {
   createdAt: string
   updatedAt: string
-  userId: number
+  user: User
   competitionId: number
 }
 
@@ -495,7 +493,7 @@ export type DtoUnlimitedContestRanking = {
 
 export type RawPropsBulkResult = {
   index: number
-  row: RawCountedRankingWithType
+  row: RawCountedRankingWithType | RawBoulderingUnlimitedContestRankingWithType
 }
 
 export type APIGroupRanking = {
@@ -531,4 +529,20 @@ export enum TypeHolds {
   NORMAL = "NORMAL",
   ZONE = "ZONE",
   TOP = "TOP"
+}
+
+export type APIHolds = {
+  boundingBoxes: [
+    {
+      coordinates: Array<number>
+      type: TypeHolds
+    }
+  ]
+}
+
+export enum TypeHolds {
+  START,
+  NORMAL,
+  ZONE,
+  TOP
 }

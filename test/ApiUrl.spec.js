@@ -248,5 +248,34 @@ describe('ApiUrl Helper', () => {
         '/competitions/1/bouldering-rounds/2/groups/3/boulders/4/results/5'
       )
     })
+
+    test('boulderPhoto - Should return a correct URL', () => {
+      expect(API_URL.boulderPhoto(1, 2, 3, 4, 5)).toEqual(
+        '/competitions/1/bouldering-rounds/2/groups/3/boulders/4/photo'
+      )
+    })
+
+    test('getHolds - Should return a correct URL', () => {
+      expect(API_URL.getHolds(1, 2, 3, 4, 5)).toEqual(
+        '/competitions/1/bouldering-rounds/2/groups/3/boulders/4/holds'
+      )
+    })
+    test('getGeneralRankingPdf- Should return a correct URL', () => {
+      expect(API_URL.getGeneralRankingPdf(1)).toEqual(
+        '/competitions/1/rankings/pdf'
+      )
+    })
+
+    test('getRoundRankingPdf - Should return a correct URL', () => {
+      expect(API_URL.getRoundRankingPdf(1, 2, 3)).toEqual(
+        '/competitions/1/bouldering-rounds/2/rankings/pdf'
+      )
+    })
+
+    test('getGroupRankingPdf - Should return a correct URL', () => {
+      expect(API_URL.getGroupRankingPdf(1, 2, 3)).toEqual(
+        '/competitions/1/bouldering-rounds/2/groups/3/rankings/pdf'
+      )
+    })
   })
 })

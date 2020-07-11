@@ -31,7 +31,7 @@
           <div class="tile is-4 is-parent">
             <StatsBlock
               :number="dashboardStats.totalCompetitions"
-              description="Compétitions totales"
+              description="Compétitions"
               type="is-danger"
             />
           </div>
@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import TableCompetition from '~/components/Rank.vue'
+import DefaultRankCompetition from '~/components/DefaultRankCompetition.vue'
 import StatsBlock from '~/components/StatsBlock.vue'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { APICompetition, Competition } from '~/definitions'
@@ -80,7 +80,11 @@ import { AxiosHelper } from '~/utils/axiosHelper'
       isConnected: AuthUser.getters?.['Authenticated']() || false
     }
   },
-  components: { TableCompetition, StatsBlock, BtnCreateCompetition }
+  components: {
+    TableCompetition: DefaultRankCompetition,
+    StatsBlock,
+    BtnCreateCompetition
+  }
 })
 export default class Competitions extends Vue {
   competitions?: Competition[] = []

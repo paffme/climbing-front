@@ -37,6 +37,7 @@
           v-for="(type, key, index) in rankingtypes"
           :key="index"
           :value="key"
+          :disabled="rankingTypeRule(type)"
         >
           {{ type }}
         </option>
@@ -174,7 +175,14 @@ export default class FormRoundCompetition extends Vue {
         ? 1
         : this.maxGroups
     this.Form.input.groups = 1
-    console.log('this.maxGroups', this.maxGroups)
+  }
+
+  rankingTypeRule(type: RankingType) {
+    if (this.Form.input.type === TypeBoulderingRound.QUALIFIER) return false
+
+    if (type === RankingType.CIRCUIT) return false
+
+    return true
   }
 }
 </script>

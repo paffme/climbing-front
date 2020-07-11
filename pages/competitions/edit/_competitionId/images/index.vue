@@ -166,6 +166,7 @@
         });
         AxiosHelper.HandleAxiosError(this, err);
       }
+  
     }
 
     deleteDropFile() {
