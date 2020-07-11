@@ -84,7 +84,7 @@
         Tour
       </h1>
       <p class="notification is-warning has-text-centered">
-        Pour qu'une phase soit disponible le status de cette doit être
+        Pour qu'un tour soit disponible le status de cette doit être
         <b>"EN COURS"</b> ou <b>"TERMINEE"</b>
       </p>
       <div class="choice">
