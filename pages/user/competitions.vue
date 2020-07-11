@@ -37,13 +37,13 @@ import AuthUser from '~/store/authUser'
 export default class RegisteredUserCompetitions extends Vue {
   @Prop(Object) userCredentials!: APIUser
 
-  competitions: APICompetition[] = []
+  competitions: (APICompetition | undefined)[] = []
   async mounted() {
     this.competitions = await this.getCompetitionListForCurrentUser()
   }
 
   async getCompetitionListForCurrentUser(): Promise<
-    APICompetition[] | undefined
+    (APICompetition | undefined)[]
   > {
     try {
       // @ts-ignore
@@ -59,14 +59,11 @@ export default class RegisteredUserCompetitions extends Vue {
 
       const result = await Promise.all(promises)
 
-      const fullCompetitions = result
+      return result
         .map((competition) => {
           return competition?.data
         })
         .filter((competition) => !!competition)
-
-      console.log('competitions', fullCompetitions)
-      return fullCompetitions
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
       return []

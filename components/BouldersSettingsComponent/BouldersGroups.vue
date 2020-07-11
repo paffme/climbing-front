@@ -159,7 +159,6 @@
               <b-button
                 icon-left="plus-circle"
                 type="is-primary"
-                :disabled="roles"
                 @click="createGroup = true"
               >
                 Créer un nouveau groupe
