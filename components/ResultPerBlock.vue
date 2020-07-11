@@ -13,7 +13,9 @@
       :step="1"
       :value="0"
       :label="
-        userChoice.category ? `Catégorie (${userChoice.category})` : 'Catégorie'
+        userChoice.category
+          ? `Catégorie (${wordingCategory(userChoice.category, true)})`
+          : 'Catégorie'
       "
       :clickable="isStepsClickable"
     >
@@ -32,7 +34,7 @@
               type="is-primary"
               @click="updateCategoryUserChoice(category)"
             >
-              {{ category }}
+              {{ wordingCategory(category, true) }}
             </b-button>
           </template>
         </template>
@@ -204,6 +206,7 @@ import {
 } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { AxiosHelper } from '~/utils/axiosHelper'
+import WordingCategory from '~/utils/wordingCategory'
 import ResultClimberComponent from '~/components/ResultClimberComponent/ResultClimberComponent.vue'
 
 @Component({
@@ -217,6 +220,7 @@ export default class ResultPerBlockStepComponent extends Vue {
   type = TypeBoulderingRound
   typeBouldering = TypeBouldering
   category = CategoryName
+  wordingCategory = WordingCategory
 
   availableCategory = new Set()
   groupsToDisplay: APIBoulderingGroupsClimbers[] = []

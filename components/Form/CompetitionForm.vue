@@ -197,17 +197,12 @@ export default class CompetitionForm extends Vue {
       name: this.competition?.name || 'Chalais Savoyard',
       type: this.competition?.type || TypeCompetition.Bouldering,
       open: this.competition?.open || false,
-      agenda:
-        this.competition?.agenda ||
-        '9h00 : Accueil\n...',
-      welcomingDate:
-        this.competition?.welcomingDate || new Date(),
+      agenda: this.competition?.agenda || '9h00 : Accueil\n...',
+      welcomingDate: this.competition?.welcomingDate || new Date(),
       description:
         this.competition?.description || 'Ceci est une simple description',
-      startDate:
-        this.competition?.startDate || new Date(),
-      endDate:
-        this.competition?.endDate || new Date(),
+      startDate: this.competition?.startDate || new Date(),
+      endDate: this.competition?.endDate || new Date(),
       address: this.competition?.address || '19 Avenue Villejuif',
       city: this.competition?.city || 'Choisy',
       postalCode: this.competition?.postalCode || '94420',

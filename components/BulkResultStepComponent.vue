@@ -10,7 +10,7 @@
         step="1"
         :label="
           userChoice.category
-            ? `Catégorie (${userChoice.category})`
+            ? `Catégorie (${wordingCategory(userChoice.category)})`
             : 'Catégorie'
         "
         :clickable="isStepsClickable"
@@ -30,7 +30,7 @@
                 type="is-primary"
                 @click="updateCategoryUserChoice(category)"
               >
-                {{ category }}
+                {{ wordingCategory(category) }}
               </b-button>
             </template>
           </template>
@@ -158,6 +158,7 @@ import {
   TypeBoulderingRound
 } from '~/definitions'
 import BoulderRankingPerBlocs from '~/components/BoulderRankingPerBlocs.vue'
+import WordingCategory from '~/utils/wordingCategory'
 
 @Component({
   components: { BoulderRankingPerBlocs }
@@ -170,6 +171,7 @@ export default class BulkResultStepComponent extends Vue {
   type = TypeBoulderingRound
   typeBouldering = TypeBouldering
   category = CategoryName
+  wordingCategory = WordingCategory
 
   activeStep = 0
   isAnimated = true
