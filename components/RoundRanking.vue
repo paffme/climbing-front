@@ -155,9 +155,8 @@ export default class RoundRanking extends Vue {
   validate(propsBulkResult: PropsBulkResult): boolean {
     try {
       const row: RawCountedRankingWithType = propsBulkResult.row as RawCountedRankingWithType
-      console.log('propsBulkResult', propsBulkResult)
 
-      if (!row.topInTry || !row.zoneInTry)
+      if (typeof row.topInTry !== 'number' || typeof row.zoneInTry !== 'number')
         throw new Error('Essai (zone) ou essai (top) ne peut pas être vide')
 
       if (row.zoneInTry > row.topInTry)
