@@ -10,73 +10,39 @@
       </div>
     </div>
     <div class="column is-offset-3 is-6 upload">
-      <div v-if="blocId" class="image content">
-        <template v-if="photoUrl">
-          <img :src="photoUrl" alt="Boulder bloc" />
-        </template>
-        <template v-else>
-          <div class="has-text-centered">
-            <p class="notification">
-              Aucune photo
-            </p>
-          </div>
-        </template>
-        <b-loading
-          :is-full-page="false"
-          :active.sync="isLoading"
-          :can-cancel="true"
-        ></b-loading>
+      <div class="image" v-if="picture !== null">
+        <AnnotationComponent :boulder-id="boulderId" :competition-id="competition.id" :group-id="groupId"
+                             :img="picture" :round-id="roundId"/>
       </div>
-      <div class="content">
-        <div
-          v-show="Holds && !Holds.boundingBoxes && photoUrl"
-          class="has-text-centered content"
-        >
-          <b-progress></b-progress>
-          <span>Calcul...</span>
-        </div>
-        <b-button
-          v-show="photoUrl"
-          type="is-danger"
-          @click="deletePhoto(competition.id, roundId, groupId, blocId)"
-        >
-          Supprimer
-        </b-button>
-      </div>
-      <div class="tags">
-        <span
-          v-for="(file, index) in dropFiles"
-          :key="index"
-          class="tag is-primary"
-        >
-          {{ file.name }}
+      <div class="tags" v-if="dropFile !== null">
+        <span class="tag is-primary">
+          {{ dropFile.name }}
           <button
-            class="delete is-small"
-            type="button"
-            @click="deleteDropFile(index)"
+              class="delete is-small"
+              type="button"
+              @click="deleteDropFile()"
           ></button>
         </span>
       </div>
       <div>
         <b-field>
-          <b-upload v-model="dropFiles" multiple expanded drag-drop>
+          <b-upload accept="image/jpg,image/jpeg" drag-drop expanded type="file" v-model="dropFile">
             <section class="section">
               <div class="content has-text-centered">
                 <p>
-                  <b-icon icon="upload" size="is-large" />
+                  <b-icon icon="upload" size="is-large"/>
                 </p>
-                <p>Drop your files here or click to upload</p>
+                <p>Ajouter une image ici</p>
               </div>
             </section>
           </b-upload>
         </b-field>
         <b-button
-          v-show="dropFiles && Array.isArray(dropFiles) && dropFiles.length > 0"
-          type="is-info"
-          icon-left="upload"
-          expanded
-          :loading="isLoading"
-          @click="uploadPhoto(competition.id, roundId, groupId, blocId)"
+            @click="uploadPhoto(competition.id, roundId, groupId, boulderId)"
+            type="is-info"
+            icon-left="upload"
+            expanded
+            v-show="dropFile !== null"
         >
           Uploader
         </b-button>
@@ -86,197 +52,133 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
-import {
-  APIBoulderingRounds,
-  APICompetition,
-  APIHolds,
-  APIUserCompetitionRoles
-} from '~/definitions'
-import { ApiHelper } from '~/utils/api_helper/apiHelper'
-import { AxiosHelper } from '~/utils/axiosHelper'
+  import { Vue, Component, Prop } from "vue-property-decorator";
+  import {
+    APIBoulderingRounds, APIBoulderPicture,
+    APICompetition,
+    APIUserCompetitionRoles
+  } from "~/definitions";
+  import { ApiHelper } from "~/utils/api_helper/apiHelper";
+  import { AxiosHelper } from "~/utils/axiosHelper";
+  import AnnotationComponent from "~/components/AnnotationComponent.vue";
 
-@Component({
-  middleware: ['isAuth', 'setHeader']
-})
-export default class ImagePage extends Vue {
-  @Prop(Object) competition!: APICompetition
-  @Prop(Object) role!: APIUserCompetitionRoles
-  @Prop(Object) rounds!: APIBoulderingRounds
+  @Component({
+    components: { AnnotationComponent },
+    middleware: ["isAuth", "setHeader"]
+  })
+  export default class ImagePage extends Vue {
+    @Prop(Object) competition!: APICompetition;
+    @Prop(Object) role!: APIUserCompetitionRoles;
+    @Prop(Object) rounds!: APIBoulderingRounds;
 
-  roundId: number | null = null
-  blocId: number | null = null
-  groupId: number | null = null
+    picture: APIBoulderPicture | null = null;
 
-  hasUploadedPhoto = false
+    roundId: number | null = null;
+    boulderId: number | null = null;
+    groupId: number | null = null;
 
-  dropFiles = []
-  photoUrl: string | null = null
-  isLoading = true
-  Holds: APIHolds | null = null
+    dropFile = null;
+    isLoading = true;
 
-  created() {
-    this.isLoading = true
-    this.roundId = parseInt(this.$route.query.roundId as string, 10)
-    this.blocId = parseInt(this.$route.query.boulderId as string, 10)
-    this.groupId = parseInt(this.$route.query.groupId as string, 10)
+    created() {
+      this.isLoading = true;
+      this.roundId = parseInt(this.$route.query.roundId as string, 10);
+      this.boulderId = parseInt(this.$route.query.boulderId as string, 10);
+      this.groupId = parseInt(this.$route.query.groupId as string, 10);
 
-    if (this.competition.id && this.roundId && this.blocId && this.groupId)
       this.getPhoto(
-        this.competition.id,
-        this.roundId,
-        this.groupId,
-        this.blocId
-      )
-  }
-
-  async getHolds(
-    competitionId: number,
-    roundId: number,
-    groupId: number,
-    boulderId: number
-  ): Promise<APIHolds | null> {
-    try {
-      const result = await ApiHelper.GetHolds(
-        competitionId,
-        roundId,
-        groupId,
-        boulderId
-      )
-
-      return result.data
-    } catch (err) {
-      AxiosHelper.HandleAxiosError(this, err)
-      return null
+          this.competition.id!,
+          this.roundId!,
+          this.groupId!,
+          this.boulderId!
+      );
     }
-  }
 
-  async holdsInterval(
-    competitionId: number,
-    roundId: number,
-    groupId: number,
-    boulderId: number
-  ) {
-    this.Holds = await this.getHolds(competitionId, roundId, groupId, boulderId)
+    async getPhoto(
+        competitionId: number,
+        roundId: number,
+        groupId: number,
+        boulderId: number
+    ) {
 
-    if (this.Holds) return
+      this.picture = null;
 
-    const intervalId = setInterval(async () => {
-      if (!this.Holds) clearInterval(intervalId)
-      this.Holds = await this.getHolds(
-        competitionId,
-        roundId,
-        groupId,
-        boulderId
-      )
-    }, 5000)
-  }
+      try {
+        this.isLoading = true;
+        const photo = await ApiHelper.GetBoulderPhoto(
+            competitionId,
+            roundId,
+            groupId,
+            boulderId
+        );
+        this.picture = photo.data;
+        this.isLoading = false;
 
-  async getPhoto(
-    competitionId: number,
-    roundId: number,
-    groupId: number,
-    boulderId: number
-  ) {
-    try {
-      const photos = await ApiHelper.GetBoulderPhoto(
-        competitionId,
-        roundId,
-        groupId,
-        boulderId
-      )
-      this.photoUrl = photos.data.url
-      this.isLoading = false
-      this.holdsInterval(competitionId, roundId, groupId, boulderId)
-    } catch (err) {
-      this.isLoading = false
-      console.log('err', err)
-      if (err.response?.data?.code === 'BOULDER_HAS_NO_PHOTO') {
-        return
+        console.log(photo.data.url);
+
+      } catch (err) {
+        this.isLoading = false;
+        console.log("err", err);
+        if (err.response?.data?.code === "BOULDER_HAS_NO_PHOTO") {
+          return;
+        }
+        AxiosHelper.HandleAxiosError(this, err);
       }
-      AxiosHelper.HandleAxiosError(this, err)
+    }
+
+    async uploadPhoto(
+        competitionId: number,
+        roundId: number,
+        groupId: number,
+        boulderId: number
+    ) {
+      try {
+        const formData = new FormData();
+        formData.append("photo", this.dropFile!);
+
+        await ApiHelper.UpdateBoulderPhoto(
+            formData,
+            competitionId,
+            roundId,
+            groupId,
+            boulderId
+        );
+
+        this.$buefy.toast.open({
+          type: "is-success",
+          message: "Upload Réussis"
+        });
+        this.dropFile = null;
+
+        if (this.competition.id && this.roundId && this.boulderId && this.groupId)
+          await this.getPhoto(
+              competitionId,
+              roundId,
+              groupId,
+              boulderId
+          );
+
+      } catch (err) {
+        this.$buefy.toast.open({
+          type: "is-danger",
+          message: "Upload Avorté",
+          duration: 1000
+        });
+        AxiosHelper.HandleAxiosError(this, err);
+      }
+  
+    }
+
+    deleteDropFile() {
+      this.dropFile = null;
     }
   }
-
-  async uploadPhoto(
-    competitionId: number,
-    roundId: number,
-    groupId: number,
-    boulderId: number
-  ) {
-    try {
-      console.log('dropFiles', this.dropFiles)
-      const formData = new FormData()
-
-      formData.append('photo', this.dropFiles[0])
-      await ApiHelper.UpdateBoulderPhoto(
-        formData,
-        competitionId,
-        roundId,
-        groupId,
-        boulderId
-      )
-      this.hasUploadedPhoto = true
-      this.$buefy.toast.open({
-        type: 'is-success',
-        message: 'Photo upload succes'
-      })
-      this.dropFiles = []
-      if (
-        !this.competition.id ||
-        !this.roundId ||
-        !this.blocId ||
-        !this.groupId
-      )
-        return
-      this.getPhoto(
-        this.competition.id,
-        this.roundId,
-        this.groupId,
-        this.blocId
-      )
-    } catch (err) {
-      AxiosHelper.HandleAxiosError(this, err)
-    }
-  }
-
-  async deletePhoto(
-    competitionId: number,
-    roundId: number,
-    groupId: number,
-    boulderId: number
-  ) {
-    try {
-      await ApiHelper.DeleteBoulderPhoto(
-        competitionId,
-        roundId,
-        groupId,
-        boulderId
-      )
-      this.$buefy.notification.open({
-        type: 'is-success',
-        message: 'Photo supprimer'
-      })
-      this.photoUrl = null
-    } catch (err) {
-      AxiosHelper.HandleAxiosError(this, err)
-    }
-  }
-
-  deleteDropFile(index: number) {
-    this.dropFiles.splice(index, 1)
-  }
-}
 </script>
 
 <style scoped>
-.upload {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
-
-.progress-wrapper {
-  margin: 0 !important;
-}
+  .upload {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
 </style>

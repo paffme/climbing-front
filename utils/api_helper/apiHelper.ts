@@ -25,10 +25,11 @@ import {
   UnlimitedContestResult,
   BoulderingResultDto,
   RawStateRound,
-  APIHolds
-} from '~/definitions'
-import { AxiosResponse } from '~/node_modules/axios'
-import API_URL from '~/utils/api_helper/apiUrl'
+  APIHolds,
+  APIBoulderPicture
+} from "~/definitions";
+import { AxiosResponse } from "~/node_modules/axios";
+import API_URL from "~/utils/api_helper/apiUrl";
 
 axios.defaults.baseURL = 'https://paffme.hdaroit.fr/api/v1'
 
@@ -101,6 +102,8 @@ export const ApiHelper = {
   DeleteBoulderPhoto: deleteBoulderPhoto,
   UpdateBoulderPhoto: updateBoulderPhoto,
   GetHolds: getHolds,
+  PostHolds: addHolds,
+  DeleteHolds: deleteHolds,
   GetRoundRankingPdf: getRoundRankingPdf,
   GetGroupRankingPdf: getGroupRankingPdf,
   GetGeneralRankingPdf: getGeneralRankingPdf,
@@ -583,35 +586,39 @@ async function getBoulderPhoto(
   roundId: number,
   groupId: number,
   boulderId: number
-): Promise<AxiosResponse<{ url: string }>> {
-  return axios.get(
-    API_URL.boulderPhoto(competitionId, roundId, groupId, boulderId)
-  )
+): Promise<AxiosResponse<APIBoulderPicture>> {
+  return axios({
+    method: "get",
+    maxRedirects: 0,
+    url: API_URL.boulderPhoto(competitionId, roundId, groupId, boulderId)
+  });
 }
+
 async function deleteBoulderPhoto(
   competitionId: number,
   roundId: number,
   groupId: number,
   boulderId: number
-): Promise<AxiosResponse<APIGroupRanking>> {
+): Promise<AxiosResponse<APIBoulderPicture>> {
   return axios.delete(
     API_URL.boulderPhoto(competitionId, roundId, groupId, boulderId)
-  )
+  );
 }
+
 async function updateBoulderPhoto(
   formData: any,
   competitionId: number,
   roundId: number,
   groupId: number,
   boulderId: number
-): Promise<AxiosResponse<APIGroupRanking>> {
+): Promise<AxiosResponse<APIBoulderPicture>> {
   return axios({
-    method: 'put',
+    method: "put",
     url: API_URL.boulderPhoto(competitionId, roundId, groupId, boulderId),
     maxRedirects: 0,
     data: formData,
-    headers: { 'Content-Type': 'multipart/form-data' }
-  })
+    headers: { "Content-Type": "multipart/form-data" }
+  });
 }
 
 async function getResultClimber(
@@ -629,7 +636,77 @@ async function getResultClimber(
       boulderId,
       climberId
     )
-  )
+  );
+}
+
+async function getHolds(
+  competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios.get(API_URL.getHolds(competitionId, roundId, groupId, boulderId));
+}
+
+async function addHolds(
+  holds: APIHolds,
+  competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios({
+    method: "POST",
+    url: API_URL.getHolds(competitionId, roundId, groupId, boulderId),
+    data: holds
+  });
+}
+
+async function deleteHolds(
+  holds: APIHolds,
+  competitionId: number,
+  roundId: number,
+  groupId: number,
+  boulderId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios({
+    method: "DELETE",
+    url: API_URL.getHolds(competitionId, roundId, groupId, boulderId),
+    data: holds
+  });
+}
+
+async function getGroupRankingPdf(
+  competitionId: number,
+  roundId: number,
+  groupId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios({
+    url: API_URL.getGroupRankingPdf(competitionId, roundId, groupId),
+    method: "GET",
+    responseType: "blob"
+  });
+}
+
+async function getRoundRankingPdf(
+  competitionId: number,
+  roundId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios({
+    url: API_URL.getRoundRankingPdf(competitionId, roundId),
+    method: "GET",
+    responseType: "blob"
+  });
+}
+
+async function getGeneralRankingPdf(
+  competitionId: number
+): Promise<AxiosResponse<APIHolds>> {
+  return axios({
+    url: API_URL.getGeneralRankingPdf(competitionId),
+    method: "GET",
+    responseType: "blob"
+  });
 }
 
 async function getHolds(
