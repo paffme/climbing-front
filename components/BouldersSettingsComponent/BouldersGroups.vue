@@ -18,8 +18,8 @@
           >
             {{
               round.state === rawStateRound.PENDING
-                ? 'Démarrer le round'
-                : 'Round en cours'
+                ? 'Démarrer le tour'
+                : 'Tour en cours'
             }}
           </b-button>
         </div>
