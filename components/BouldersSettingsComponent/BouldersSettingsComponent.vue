@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="subtitle">
-      Gestion des rounds
+      Gestion des tours
     </h1>
     <div id="bouldering">
       <!-- Aucune qualification on affiche le template approprié -->
@@ -203,7 +203,7 @@ export default class BouldersSettingsComponent extends Vue {
       await ApiHelper.AddRound(this.competitionId, data)
       this.$buefy.toast.open({
         type: 'is-success',
-        message: 'Round ajouté'
+        message: 'Tour ajouté'
       })
       this.$emit('loadBouldering')
     } catch (error) {

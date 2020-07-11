@@ -18,22 +18,32 @@
                 Compétitions
               </nuxt-link>
             </li>
-            <li class="is-primary">
-              <nuxt-link
-                v-if="competition"
-                :to="`/competitions/${competition.id}`"
-              >
+            <li v-if="competition" class="is-primary">
+              <nuxt-link :to="`/competitions/${competition.id}`">
                 {{ competition.name }}
               </nuxt-link>
             </li>
           </ul>
         </nav>
-        <b-notification v-if="currentRoles">
-          Vous êtes connecté en tant que
-          <template v-for="role in currentRoles">
-            {{ role.toLocaleLowerCase() }},
-          </template>
-        </b-notification>
+        <div class="content">
+          <span v-if="currentRoles" class="notification">
+            Vous êtes connecté en tant que
+            <template v-for="role in currentRoles">
+              {{ role.toLocaleLowerCase() }},
+            </template>
+          </span>
+          <b-button
+            v-if="competition"
+            class="is-pulled-right"
+            tag="nuxt-link"
+            :to="{
+              name: 'competitions-id-rank',
+              params: { id: competition.id }
+            }"
+          >
+            Voir classement
+          </b-button>
+        </div>
         <nuxt-child
           :competition="competition"
           :role="role"
@@ -178,16 +188,22 @@ export default class EditOneCompetitionPage extends Vue {
   }
 
   async loadCompetition() {
+    if (!this.competition || !this.competition.id) return
+
     this.competition = await fetchCompetition(this.competition!.id as number)
   }
 
   async loadRounds() {
-    this.rounds = await fetchRounds(this.competition!.id as number)
+    if (!this.competition || !this.competition.id) return
+
+    this.rounds = await fetchRounds(this.competition.id as number)
   }
 
   async loadRoles() {
+    if (!this.competition || !this.competition.id) return
+
     this.role = await fetchRole(
-      this.competition!.id as number,
+      this.competition.id as number,
       // @ts-ignore
       AuthUser.getters?.['Credentials']().id
     )

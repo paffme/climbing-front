@@ -42,6 +42,12 @@
               tag="nuxt-link"
               :to="{ name: 'user-roles' }"
             />
+            <b-menu-item
+              icon="clipboard-check"
+              label="Mes compétitions"
+              tag="nuxt-link"
+              :to="{ name: 'user-competitions' }"
+            />
           </b-menu-list>
           <b-menu-list label="Actions">
             <template v-if="isConnected">

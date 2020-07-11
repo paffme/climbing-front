@@ -8,7 +8,9 @@
     <b-step-item
       step="1"
       :label="
-        userChoice.category ? `Catégorie (${userChoice.category})` : 'Catégorie'
+        userChoice.category
+          ? `Catégorie (${wordingCategory(userChoice.category)})`
+          : 'Catégorie'
       "
       :clickable="isStepsClickable"
     >
@@ -16,7 +18,7 @@
         Catégorie
       </h1>
       <p v-show="!rounds" class="notification is-warning has-text-centered">
-        Veuillez d'abord créer des rounds
+        Veuillez d'abord créer des tours
       </p>
       <div class="choice">
         <template v-for="(category, index) in availableCategory">
@@ -27,7 +29,7 @@
               type="is-primary"
               @click="updateCategoryUserChoice(category)"
             >
-              {{ category }}
+              {{ wordingCategory(category) }}
             </b-button>
           </template>
         </template>
@@ -73,16 +75,16 @@
     <b-step-item
       step="3"
       :label="
-        userChoice.type ? `Phase (${typeBouldering[userChoice.type]})` : 'Phase'
+        userChoice.type ? `Tours (${typeBouldering[userChoice.type]})` : 'Tours'
       "
       :clickable="isStepsClickable"
       :type="{ 'is-success': isProfileSuccess }"
     >
       <h1 class="title has-text-centered">
-        Phases
+        Tour
       </h1>
       <p class="notification is-warning has-text-centered">
-        Pour qu'une phase soit disponible le status de cette doit être
+        Pour qu'un tour soit disponible le status de cette doit être
         <b>"EN COURS"</b> ou <b>"TERMINEE"</b>
       </p>
       <div class="choice">
@@ -120,6 +122,37 @@
       <h1 class="title has-text-centered">
         Résultat
       </h1>
+      <div class="notification">
+        <h2 class="subtitle is-size-4">
+          Tour informations
+        </h2>
+        <div id="action">
+          <template v-if="selectedRound && selectedRound.rankingType">
+            <div class="actions">
+              <span>Type de round</span>
+              <b-tag type="is-info">
+                {{ rankingType[selectedRound.rankingType] }}
+              </b-tag>
+            </div>
+            <div class="actions">
+              <span>Quota</span>
+              <b-tag type="is-info">
+                {{ selectedRound.quota }}
+              </b-tag>
+            </div>
+            <div class="actions">
+              <span>Status</span>
+              <b-tag
+                :type="[
+                  selectedRound.state !== 'ENDED' ? 'is-primary' : 'is-danger'
+                ]"
+              >
+                {{ stateRound[selectedRound.state] }}
+              </b-tag>
+            </div>
+          </template>
+        </div>
+      </div>
       <template v-if="finalStepError || !selectedRound">
         Aucun ID ne correspond aux critères demandées
       </template>
@@ -137,14 +170,17 @@ import {
   APICompetition,
   CategoryName,
   QueryParamsRank,
+  RankingType,
   RawStateRound,
   Sex,
   TypeBouldering,
-  TypeBoulderingRound
+  TypeBoulderingRound,
+  StateRound
 } from '~/definitions'
+import WordingCategory from '~/utils/wordingCategory'
 
 @Component
-export default class StepComponent extends Vue {
+export default class RankingsStepComponent extends Vue {
   @Prop(Object) rounds!: APIBoulderingRounds
   @Prop(Object) competition!: APICompetition
   @Prop(Boolean) rating!: boolean
@@ -153,6 +189,9 @@ export default class StepComponent extends Vue {
   type = TypeBoulderingRound
   typeBouldering = TypeBouldering
   category = CategoryName
+  rankingType = RankingType
+  stateRound = StateRound
+  wordingCategory = WordingCategory
   selectedRound: any = null
 
   activeStep = 0
@@ -287,5 +326,14 @@ export default class StepComponent extends Vue {
 .choice {
   display: flex !important;
   justify-content: space-evenly;
+}
+#action {
+  display: flex;
+  justify-content: space-around;
+}
+.actions {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 </style>

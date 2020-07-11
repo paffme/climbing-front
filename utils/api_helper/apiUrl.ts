@@ -95,6 +95,13 @@ export default {
     groupId: number
   ) =>
     `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders`,
+  deleteBoulder: (
+    competitionId: number,
+    roundId: number,
+    groupId: number,
+    boulderId: number
+  ) =>
+    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders/${boulderId}`,
   judgeToBoulder: (
     competitionId: number,
     roundId: number,

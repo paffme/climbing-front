@@ -4,7 +4,7 @@
       <span class="subtitle">Toute la configuration de la compétition</span>
     </div>
     <form class="form" @submit.prevent="registerCompetition()">
-      <b-field horizontal label="Nom compétition">
+      <b-field horizontal label="Nom">
         <b-input
           v-model="Form.competition.name"
           class="name"
@@ -13,7 +13,7 @@
         />
       </b-field>
 
-      <b-field horizontal label="Date début / Date fin">
+      <b-field horizontal label="Date de début et de fin">
         <b-field>
           <b-datepicker
             v-model="Form.competition.startDate"
@@ -38,7 +38,7 @@
         </b-field>
       </b-field>
 
-      <b-field horizontal label="Compétition open">
+      <b-field horizontal label="Open">
         <b-switch v-model="Form.competition.open" class="status" />
       </b-field>
       <b-field horizontal label="Date d'accueil">
@@ -56,7 +56,7 @@
       <b-field horizontal label="Type">
         <b-select
           v-model="Form.competition.type"
-          placeholder="Selectionner type de compétition"
+          placeholder="Sélectionner le type de la compétition"
         >
           <option
             v-for="(type, index) in typeCompetiton"
@@ -85,11 +85,11 @@
           class="low-size postal-code"
         />
       </b-field>
-      <b-field class="category-male" horizontal label="Catégorie Homme">
+      <b-field class="category-male" horizontal label="Catégories masculines">
         <div class="block">
           <div class="select-all">
             <b-switch v-model="selectMaleCategories">
-              Selectionner tout
+              Sélectionner tout
             </b-switch>
           </div>
           <template v-for="(category, index) in categories">
@@ -105,11 +105,11 @@
         </div>
       </b-field>
 
-      <b-field class="category-female" horizontal label="Catégorie Femme">
+      <b-field class="category-female" horizontal label="Catégories féminines">
         <div class="block">
           <div class="select-all">
             <b-switch v-model="selectFemaleCategories">
-              Selectionner tout
+              Sélectionner tout
             </b-switch>
           </div>
           <template v-for="(category, index) in categories">
@@ -149,7 +149,7 @@
           class="create-competition"
           @click="registerCompetition"
         >
-          Valider compétition
+          Créer
         </b-button>
       </div>
     </form>
@@ -197,17 +197,12 @@ export default class CompetitionForm extends Vue {
       name: this.competition?.name || 'Chalais Savoyard',
       type: this.competition?.type || TypeCompetition.Bouldering,
       open: this.competition?.open || false,
-      agenda:
-        this.competition?.agenda ||
-        'Lundi rencontre avec le personnel blablabla...',
-      welcomingDate:
-        this.competition?.welcomingDate || new Date('2020-09-25T14:50:54.009Z'),
+      agenda: this.competition?.agenda || '9h00 : Accueil\n...',
+      welcomingDate: this.competition?.welcomingDate || new Date(),
       description:
         this.competition?.description || 'Ceci est une simple description',
-      startDate:
-        this.competition?.startDate || new Date('2020-09-25T14:50:54.009Z'),
-      endDate:
-        this.competition?.endDate || new Date('2020-09-25T14:50:54.009Z'),
+      startDate: this.competition?.startDate || new Date(),
+      endDate: this.competition?.endDate || new Date(),
       address: this.competition?.address || '19 Avenue Villejuif',
       city: this.competition?.city || 'Choisy',
       postalCode: this.competition?.postalCode || '94420',

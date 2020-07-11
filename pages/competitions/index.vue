@@ -33,7 +33,7 @@
     <b-tag rounded type="is-success">
       Compétition actuelle : <b>{{ totalCompetition }}</b>
     </b-tag>
-    <TableCompetition
+    <DefaultRankCompetition
       :competitions.sync="competitions"
       :total-competition="totalCompetition"
       :per-page="perPage"
@@ -46,15 +46,16 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { Competition } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
-import TableCompetition from '~/components/Rank.vue'
+import DefaultRankCompetition from '~/components/DefaultRankCompetition.vue'
 import BtnCreateCompetition from '~/components/Button/BtnCreateCompetition.vue'
 import AuthUser from '~/store/authUser'
+import { AxiosHelper } from '~/utils/axiosHelper'
 
 @Component({
-  components: { TableCompetition, BtnCreateCompetition }
+  components: { DefaultRankCompetition, BtnCreateCompetition }
 })
 export default class IndexCompetitions extends Vue {
-  competitions?: Competition[] | null = null
+  competitions: Competition[] = []
   totalCompetition = 0
   perPage = 5
   page = 1
@@ -67,8 +68,8 @@ export default class IndexCompetitions extends Vue {
       const totalCompetition = await ApiHelper.GetCompetitionsCount()
       this.totalCompetition = totalCompetition.data.count
       await this.loadCompetitions()
-    } catch (e) {
-      console.log(e)
+    } catch (err) {
+      AxiosHelper.HandleAxiosError(this, err)
       this.competitions = []
     }
   }

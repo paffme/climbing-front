@@ -20,7 +20,7 @@
         Catégorie
       </h1>
       <p v-show="!rounds" class="notification is-warning has-text-centered">
-        Veuillez d'abord créer des rounds
+        Veuillez d'abord créer des tours
       </p>
       <div class="choice">
         <div v-for="(category, index) in availableCategory" :key="index">
@@ -74,17 +74,17 @@
     <b-step-item
       step="3"
       :label="
-        userChoice.type ? `Phase (${typeBouldering[userChoice.type]})` : 'Phase'
+        userChoice.type ? `Tour (${typeBouldering[userChoice.type]})` : 'Tour'
       "
       :clickable="isStepsClickable"
       :type="{ 'is-success': isProfileSuccess }"
     >
       <h1 class="title has-text-centered">
-        Phases
+        Tours
       </h1>
       <p class="notification is-warning has-text-centered">
-        Pour qu'une phase soit active, le status du round doit être
-        <b>"EN COURS"</b>
+        Pour qu'un tour soit actif, le status du round doit être
+        <b>"TERMINEE"</b>
       </p>
       <div class="choice">
         <b-button
@@ -225,6 +225,7 @@ import {
   APIRoundRanking,
   CategoryName,
   RawCountedRanking,
+  RawStateRound,
   Sex,
   TypeBouldering,
   TypeBoulderingRound
@@ -309,7 +310,7 @@ export default class BulkResult extends Vue {
     return (
       this.rounds[this.userChoice.category][this.userChoice.genre][type] &&
       this.rounds[this.userChoice.category][this.userChoice.genre][type]
-        .state === 'ONGOING'
+        .state === RawStateRound.ENDED
     )
   }
 

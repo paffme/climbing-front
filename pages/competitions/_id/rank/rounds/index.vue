@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="title">
-      Classement round
+      Classement des tours
     </h1>
     <h2 class="subtitle go_back">
       <GoBackBtn />
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="content">
-      <StepComponent
+      <RankingsStepComponent
         :competition="competition"
         :rounds="rounds"
         :rating="false"
@@ -49,6 +49,11 @@
             >
               Voir classement groupe 2
             </b-button>
+            <BtnDownloadPdf
+              type-competition="rounds"
+              :competition-id="competition.id"
+              :round-id="selectedRound.id"
+            />
           </div>
           <template
             v-if="
@@ -73,14 +78,13 @@
             </p>
           </div>
         </template>
-      </StepComponent>
+      </RankingsStepComponent>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import BulkResultStepComponent from '~/components/BulkResultStepComponent.vue'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import {
   APIBoulderingGroupsClimbers,
@@ -94,10 +98,11 @@ import {
 } from '~/definitions'
 import GoogleMapComponent from '~/components/GoogleMapComponent.vue'
 import UnlimitedRoundRanking from '~/components/Table/UnlimitedRoundRanking.vue'
-import StepComponent from '~/components/StepComponent.vue'
+import RankingsStepComponent from '~/components/StepComponent.vue'
 import CompetitionsDetails from '~/components/CompetitionDetails.vue'
 import CircuitRoundRanking from '~/components/Table/CircuitRoundRanking.vue'
 import GoBackBtn from '~/components/Button/GoBackBtn.vue'
+import BtnDownloadPdf from '~/components/Button/BtnDownloadPdf.vue'
 
 async function getRound(competitionId: number) {
   try {
@@ -125,13 +130,13 @@ async function fetchCompetition(
 
 @Component({
   components: {
-    BulkResultStepComponent,
     GoogleMapComponent,
-    StepComponent,
+    RankingsStepComponent,
     CircuitRoundRanking,
     UnlimitedRoundRanking,
     CompetitionsDetails,
-    GoBackBtn
+    GoBackBtn,
+    BtnDownloadPdf
   },
   async asyncData(ctx) {
     const idCompetition = parseInt(ctx.params.id, 10)
