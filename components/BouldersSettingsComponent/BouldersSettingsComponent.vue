@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="subtitle">
-      Gestion des rounds
+      Gestion des tours
     </h1>
     <div id="bouldering">
       <!-- Aucune qualification on affiche le template approprié -->

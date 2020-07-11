@@ -44,7 +44,7 @@
       >
         <template slot="header">
           <b-icon icon="information-outline"></b-icon>
-          <span>Rounds</span>
+          <span>Tours</span>
         </template>
         <template>
           <div id="boulder-settings">
@@ -66,7 +66,10 @@
         <p class="content notification has-text-centered">
           Veuillez selectionner la compétition que vous souhaitez noter
         </p>
-        <ResultPerBlock :competition="competition" :rounds="rounds" />
+        <ResultPerBlockStepComponent
+          :competition="competition"
+          :rounds="rounds"
+        />
       </b-tab-item>
 
       <b-tab-item v-if="role.juryPresident">
@@ -101,7 +104,7 @@ import BouldersSettingsComponent from '~/components/BouldersSettingsComponent/Bo
 import CompetitionForm from '~/components/Form/CompetitionForm.vue'
 import BtnDeleteCompetition from '~/components/Button/BtnDeleteCompetition.vue'
 import { AxiosHelper } from '~/utils/axiosHelper'
-import ResultPerBlock from '~/components/ResultPerBlock.vue'
+import ResultPerBlockStepComponent from '~/components/ResultPerBlock.vue'
 import BulkResultStepComponent from '~/components/BulkResultStepComponent.vue'
 import Roles from '~/components/RolesComponent/Roles.vue'
 
@@ -113,7 +116,7 @@ import Roles from '~/components/RolesComponent/Roles.vue'
     BtnDeleteCompetition,
     GoBackBtn,
     BouldersSettingsComponent,
-    ResultPerBlock,
+    ResultPerBlockStepComponent,
     BulkResultStepComponent,
     Roles
   },

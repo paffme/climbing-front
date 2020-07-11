@@ -8,14 +8,20 @@
       </p>
       <b-carousel :autoplay="false" @change="onChange">
         <b-carousel-item v-for="(boulder, i) in _boulders" :key="i">
-          <span class="image is-4by3">
-            <img
-              :src="
-                _boulders[index].url ||
-                `https://paffme.hdaroit.fr/storage/boulders/${_boulders[index].id}.jpg`
-              "
-            />
-          </span>
+          <template v-if="_boulders[index].url">
+            <span class="image is-4by3">
+              <img :src="_boulders[index].url" />
+            </span>
+          </template>
+          <template v-else>
+            <section :class="`hero is-medium is-warning`">
+              <div class="hero-body has-text-centered">
+                <h1 class="title">
+                  Image du bloc non disponible
+                </h1>
+              </div>
+            </section>
+          </template>
         </b-carousel-item>
       </b-carousel>
     </template>
@@ -29,7 +35,7 @@ import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { AxiosHelper } from '~/utils/axiosHelper'
 
 @Component
-export default class NoteClimberComponent extends Vue {
+export default class CarousselBoulderImage extends Vue {
   @PropSync('boulders', { type: Array }) _boulders!: {
     id: number
     judges: User[]

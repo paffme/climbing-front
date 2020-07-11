@@ -209,7 +209,7 @@ import ResultClimberComponent from '~/components/ResultClimberComponent/ResultCl
 @Component({
   components: { ResultClimberComponent }
 })
-export default class ResultPerBlock extends Vue {
+export default class ResultPerBlockStepComponent extends Vue {
   @Prop(Object) competition!: APICompetition
   @Prop(Object) rounds!: APIBoulderingRounds
 
@@ -301,18 +301,29 @@ export default class ResultPerBlock extends Vue {
   }
 
   updateTypeUserChoice(type: TypeBoulderingRound) {
-    this.userChoice.type = type
-    if (!this.userChoice.category || !this.userChoice.genre) return
-    this.roundtoDisplay = this.rounds[this.userChoice.category][
-      this.userChoice.genre
-    ][this.userChoice.type]
-    this.idRoundToNote = this.roundtoDisplay?.id as number
+    try {
+      this.userChoice.type = type
 
-    this.finalStepError = !this.idRoundToNote
+      if (!this.userChoice.category || !this.userChoice.genre) return
 
-    if (!this.finalStepError && this.competition.id) {
-      this.stepMove(this.activeStep + 1)
-      this.fetchGroups(this.idRoundToNote)
+      const roundtoDisplay = this.rounds[this.userChoice.category][
+        this.userChoice.genre
+      ][this.userChoice.type]
+
+      if (!roundtoDisplay) throw new Error('Round introuvable')
+
+      this.roundtoDisplay = roundtoDisplay
+
+      this.idRoundToNote = roundtoDisplay.id
+
+      this.finalStepError = !this.idRoundToNote
+
+      if (!this.finalStepError && this.competition.id) {
+        this.stepMove(this.activeStep + 1)
+        this.fetchGroups(this.idRoundToNote)
+      }
+    } catch (err) {
+      AxiosHelper.HandleAxiosError(this, err)
     }
   }
 
@@ -328,6 +339,18 @@ export default class ResultPerBlock extends Vue {
     }
   }
 
+  updateGroupUserChoice(nbGroup: number) {
+    try {
+      this.userChoice.nbGroup = nbGroup
+
+      this.finalGroupToDisplay = this.groupsToDisplay[nbGroup]
+
+      this.stepMove(this.activeStep + 1)
+    } catch (err) {
+      console.log('err', err)
+    }
+  }
+
   async fetchGroups(currentRoundId: number) {
     try {
       if (!this.competition.id) throw new Error('No competition ID')
@@ -336,32 +359,10 @@ export default class ResultPerBlock extends Vue {
         this.competition.id,
         currentRoundId
       )
-      console.log('result', result.data)
+
       this.groupsToDisplay = result.data
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
-    }
-  }
-
-  async updateGroupUserChoice(nbGroup: number) {
-    try {
-      this.userChoice.nbGroup = nbGroup
-      console.log('this.groupsToDisplay', this.groupsToDisplay)
-      console.log('nbGroup', nbGroup)
-      this.finalGroupToDisplay = this.groupsToDisplay[nbGroup]
-
-      console.log(
-        'this.rounds[this.userChoice.category][\n' +
-          '        this.userChoice.genre\n' +
-          '        ][this.userChoice.type]',
-        this.rounds[this.userChoice.category!][this.userChoice.genre!][
-          this.userChoice.type!
-        ]
-      )
-
-      this.stepMove(this.activeStep + 1)
-    } catch (err) {
-      console.log('err', err)
     }
   }
 
