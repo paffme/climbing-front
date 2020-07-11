@@ -40,7 +40,7 @@
                     :is-bulk="isBulk"
                     :data="rankingsPerBloc[boulderIndex]"
                     @bulkEdition="onBulkEdition"
-                  ></RoundUnlimitedRanking>
+                  />
                 </template>
                 <template v-else>
                   <RoundRanking
@@ -67,14 +67,16 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import {
   APIBoulderingGroupsClimbers,
   APIBoulderingRounds,
+  BoulderingLimitedRounds,
+  CircuitResult,
   CountedRankings,
-  PropsBulkResult,
   RankingType,
   RawBoulderingUnlimitedContestRankingWithType,
   RawCountedRanking,
   RawCountedRankingWithType,
   RawRankingType,
   StateRound,
+  UnlimitedContestResult,
   UserChoice
 } from '~/definitions'
 import boulderFilter from '~/utils/boulderFilter'
@@ -91,50 +93,21 @@ export default class BoulderRankingPerBlocs extends Vue {
   @Prop(Object) rounds!: APIBoulderingRounds
   @Prop(Boolean) isBulk!: boolean
   @Prop(Object) userChoice!: UserChoice
+
   @Watch('userChoice', { immediate: true, deep: true })
-  async onUserChoice(userChoice: UserChoice) {
+  onUserChoice(userChoice: UserChoice) {
     // Use to update the user choice
     if (userChoice.category && userChoice.genre && userChoice.type) {
       const currentRound = this.rounds[userChoice.category][userChoice.genre][
         userChoice.type
       ]
 
+      this.currentRound = currentRound
+
       this.roundId = currentRound.id
       this.competitionId = currentRound.competitionId
-      try {
-        const groups = await ApiHelper.GetBoulderingGroups(
-          currentRound.competitionId,
-          currentRound.id
-        )
-        this.groups = groups.data
 
-        for (const group of this.groups) {
-          const rankingPerGroups = await ApiHelper.GetGroupRankings(
-            currentRound.competitionId,
-            currentRound.id,
-            group.id
-          )
-          console.log('rankingPerGroups', rankingPerGroups)
-          if (((rankingPerGroups.data as unknown) as string) === '')
-            throw new Error('Aucun classement trouvé')
-
-          if (!rankingPerGroups.data?.data?.boulders)
-            throw new Error('Aucun classement trouvé')
-
-          rankingPerGroups.data.data.boulders.forEach((bloc, index) => {
-            if (!this.rankingsPerBloc && bloc) return
-            const filtered = boulderFilter.getGroupsRankings(
-              rankingPerGroups.data,
-              index
-            )
-            console.log('filtered', filtered)
-            if (!filtered) return
-            this.rankingsPerBloc.push(filtered)
-          })
-        }
-      } catch (err) {
-        AxiosHelper.HandleAxiosError(this, err)
-      }
+      this.fetchGroup(currentRound)
     }
   }
 
@@ -143,6 +116,8 @@ export default class BoulderRankingPerBlocs extends Vue {
   stateRound = StateRound
   roundId: number = 0
   competitionId: number = 0
+
+  currentRound: BoulderingLimitedRounds | null = null
 
   groups: APIBoulderingGroupsClimbers[] = []
 
@@ -155,21 +130,91 @@ export default class BoulderRankingPerBlocs extends Vue {
 
   visible = true
 
-  onBulkEdition(props: {
+  async onBulkEdition(props: {
     index: number
     row: RawCountedRankingWithType
     groupId: number
     boulderId: number
   }) {
-    console.log('BoulderRanking', props)
-    const propsBulkResult: PropsBulkResult = {
-      ...props,
-      groupId: props.groupId,
-      boulderId: props.boulderId,
-      roundId: this.roundId,
-      competitionId: this.competitionId
+    console.log('onBulkEdition - ', props)
+    let result: CircuitResult[] | UnlimitedContestResult[]
+    if (props.row.type === RawRankingType.UNLIMITED_CONTEST) {
+      result = [
+        {
+          climberId: props.row.climber?.id,
+          boulderId: props.boulderId,
+          type: props.row.type,
+          top: props.row.top
+        }
+      ] as UnlimitedContestResult[]
+    } else {
+      result = [
+        {
+          climberId: props.row.climber?.id,
+          boulderId: props.boulderId,
+          type: props.row.type,
+          topInTries: parseInt((props.row.topInTry as unknown) as string, 10),
+          zoneInTries: parseInt((props.row.zoneInTry as unknown) as string, 10)
+        }
+      ] as CircuitResult[]
     }
-    this.$emit('bulkEdition', propsBulkResult)
+    try {
+      await ApiHelper.AddBulkResult(
+        { results: result },
+        this.competitionId,
+        this.roundId,
+        props.groupId
+      )
+      this.$buefy.snackbar.open({
+        message: 'Les résultats on été mis à jours',
+        actionText: null
+      })
+      if (!this.currentRound) return
+
+      this.fetchGroup(this.currentRound)
+    } catch (err) {
+      AxiosHelper.HandleAxiosError(this, err)
+    }
+  }
+
+  async fetchGroup(currentRound: BoulderingLimitedRounds) {
+    try {
+      const groups = await ApiHelper.GetBoulderingGroups(
+        currentRound.competitionId,
+        currentRound.id
+      )
+      this.groups = groups.data
+
+      for (const group of this.groups) {
+        const rankingPerGroups = await ApiHelper.GetGroupRankings(
+          currentRound.competitionId,
+          currentRound.id,
+          group.id
+        )
+        console.log('rankingPerGroups', rankingPerGroups)
+        if (((rankingPerGroups.data as unknown) as string) === '')
+          throw new Error('Aucun classement trouvé')
+
+        if (!rankingPerGroups.data?.data?.boulders)
+          throw new Error('Aucun classement trouvé')
+
+        this.rankingsPerBloc = []
+
+        rankingPerGroups.data.data.boulders.forEach((bloc, index) => {
+          if (!this.rankingsPerBloc && bloc) return
+          const filtered = boulderFilter.getGroupsRankings(
+            rankingPerGroups.data,
+            index
+          )
+          console.log('filtered', filtered)
+          if (!filtered) return
+          this.rankingsPerBloc.push(filtered)
+          console.log('this.rankingsPerBloc', this.rankingsPerBloc)
+        })
+      }
+    } catch (err) {
+      AxiosHelper.HandleAxiosError(this, err)
+    }
   }
 }
 </script>

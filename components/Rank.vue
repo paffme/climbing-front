@@ -48,7 +48,7 @@
           {{ props.row.city }}
         </b-table-column>
 
-        <b-table-column field="city" label="Apercu">
+        <b-table-column field="city" label="Plus d'infos">
           <nuxt-link :to="'competitions/' + props.row.id">
             <b-button icon-left="arrow-right-bold" type="is-primary" />
           </nuxt-link>

@@ -85,7 +85,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import BulkResultStepComponent from '~/components/BulkResultStepComponent.vue'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import {
   APIBoulderingGroupsClimbers,
@@ -131,7 +130,6 @@ async function fetchCompetition(
 
 @Component({
   components: {
-    BulkResultStepComponent,
     GoogleMapComponent,
     StepComponent,
     CircuitRoundRanking,

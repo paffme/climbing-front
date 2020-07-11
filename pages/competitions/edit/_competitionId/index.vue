@@ -78,7 +78,6 @@
           :is-bulk="isBulk"
           :competition="competition"
           :rounds="rounds"
-          @bulkEdition="onBulkEdition"
         />
       </b-tab-item>
     </template>
@@ -92,13 +91,9 @@ import {
   APIBoulderingRounds,
   APICompetition,
   APIUserCompetitionRoles,
-  CircuitResult,
   Competition,
   CompetitionEdit,
-  PropsBulkResult,
-  RawRankingType,
-  RoleName,
-  UnlimitedContestResult
+  RoleName
 } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import RolesComponent from '~/components/RolesComponent/RolesComponent.vue'
@@ -181,46 +176,6 @@ export default class EditOneCompetition extends Vue {
 
   loadRoles() {
     this.$emit('onFetchRole')
-  }
-
-  async onBulkEdition(props: PropsBulkResult) {
-    console.log('EditOneCompetition', props)
-    let result: CircuitResult[] | UnlimitedContestResult[]
-    if (props.row.type === RawRankingType.UNLIMITED_CONTEST) {
-      result = [
-        {
-          climberId: props.row.climber?.id,
-          boulderId: props.boulderId,
-          type: props.row.type,
-          top: props.row.top
-        }
-      ] as UnlimitedContestResult[]
-    } else {
-      result = [
-        {
-          climberId: props.row.climber?.id,
-          boulderId: props.boulderId,
-          type: props.row.type,
-          topInTries: parseInt((props.row.topInTry as unknown) as string, 10),
-          zoneInTries: parseInt((props.row.zoneInTry as unknown) as string, 10)
-        }
-      ] as CircuitResult[]
-    }
-    try {
-      await ApiHelper.AddBulkResult(
-        { results: result },
-        props.competitionId,
-        props.roundId,
-        props.groupId
-      )
-      this.$buefy.snackbar.open({
-        message: 'Les résultats on été mis à jours',
-        actionText: null
-      })
-      this.$emit('onFetchRound')
-    } catch (err) {
-      AxiosHelper.HandleAxiosError(this, err)
-    }
   }
 }
 </script>

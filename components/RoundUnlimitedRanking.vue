@@ -31,8 +31,8 @@
           <b-input
             v-model="props.row.nbTop"
             :custom-class="'custom-input'"
-            :disabled="!isBulk"
-            @blur="editTopInTry(props)"
+            :disabled="true"
+            @blur="editNbTop(props)"
           >
             {{ props.row.nbTop }}
           </b-input>
@@ -74,22 +74,16 @@ export default class RoundUnlimitedRanking extends Vue {
   editTop(propsBulkResult: PropsBulkResult) {
     if (!this.isBulk) return
     propsBulkResult.row.top = !propsBulkResult.row.top
+
     this.$emit('bulkEdition', this.DTOBulkResult(propsBulkResult))
   }
 
-  editTopInTry(propsBulkResult: PropsBulkResult) {
+  editNbTop(propsBulkResult: PropsBulkResult) {
     if (!this.isBulk) return
-    this.$emit('bulkEdition', this.DTOBulkResult(propsBulkResult))
-  }
 
-  editZone(propsBulkResult: PropsBulkResult) {
-    if (!this.isBulk) return
-    propsBulkResult.row.zone = !propsBulkResult.row.zone
-    this.$emit('bulkEdition', this.DTOBulkResult(propsBulkResult))
-  }
+    const row = propsBulkResult.row as RawBoulderingUnlimitedContestRankingWithType
 
-  editZoneInTry(propsBulkResult: PropsBulkResult) {
-    if (!this.isBulk) return
+    if (!row.top && row.nbTop && row.nbTop > 0) row.top = true
     this.$emit('bulkEdition', this.DTOBulkResult(propsBulkResult))
   }
 
