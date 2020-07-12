@@ -56,7 +56,7 @@
     </div>
     <div class="annotator">
       <v-annotator
-          :drawing="drawing && annotationLoaded "
+          :drawing="drawing && annotationLoaded"
           :grid="[0, 0]"
           :height="img.height"
           :min-size="[5, 5]"
