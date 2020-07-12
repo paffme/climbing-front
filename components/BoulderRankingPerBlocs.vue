@@ -165,7 +165,7 @@ export default class BoulderRankingPerBlocs extends Vue {
         props.groupId
       )
       this.$buefy.snackbar.open({
-        message: 'Les résultats on été mis à jours',
+        message: 'Les résultats sont à jour',
         actionText: null
       })
       if (!this.currentRound) return

@@ -28,14 +28,14 @@
 
       <b-table-column
         field="topInTry"
-        label="Top (nb essais)"
+        label="Essais (top)"
         numeric
         sortable
         :visible="typeRanking !== rawRankingType.UNLIMITED_CONTEST"
       >
         <form>
           <b-input
-            v-model="props.row.topInTry"
+            v-model.number="props.row.topInTry"
             :custom-class="'custom-input'"
             :disabled="!isBulk"
             :visible="typeRanking !== rawRankingType.UNLIMITED_CONTEST"
@@ -63,14 +63,14 @@
 
       <b-table-column
         field="zoneInTry"
-        label="Zone (nb zone)"
+        label="Essais (zone)"
         numeric
         sortable
         :visible="typeRanking !== rawRankingType.UNLIMITED_CONTEST"
       >
         <form>
           <b-input
-            v-model="props.row.zoneInTry"
+            v-model.number="props.row.zoneInTry"
             custom-class="custom-input"
             :disabled="!isBulk"
             :visible="typeRanking !== rawRankingType.UNLIMITED_CONTEST"
@@ -108,13 +108,12 @@ export default class RoundRanking extends Vue {
 
   editTop(propsBulkResult: PropsBulkResult) {
     if (!this.isBulk) return
+    if (!this.validate(propsBulkResult)) return
 
     const row: RawCountedRankingWithType = propsBulkResult.row as RawCountedRankingWithType
 
     row.top = !row.top
-
     if (!row.top) row.topInTry = 0
-
     if (row.top && row.topInTry === 0) row.topInTry = 1
 
     this.$emit('bulkEdition', this.DTOBulkResult(propsBulkResult))
@@ -122,23 +121,25 @@ export default class RoundRanking extends Vue {
 
   editTopInTry(propsBulkResult: PropsBulkResult) {
     if (!this.isBulk) return
+    if (!this.validate(propsBulkResult)) return
 
     const row: RawCountedRankingWithType = propsBulkResult.row as RawCountedRankingWithType
 
-    if (row.topInTry && row.topInTry > 0 && !row.top) row.top = true
+    if (typeof row.topInTry === 'number') {
+      row.top = row.topInTry > 0
+    }
 
     this.$emit('bulkEdition', this.DTOBulkResult(propsBulkResult))
   }
 
   editZone(propsBulkResult: PropsBulkResult) {
     if (!this.isBulk) return
+    if (!this.validate(propsBulkResult)) return
 
     const row: RawCountedRankingWithType = propsBulkResult.row as RawCountedRankingWithType
 
     row.zone = !row.zone
-
     if (!row.zone) row.zoneInTry = 0
-
     if (row.zone && row.zoneInTry === 0) row.zoneInTry = 1
 
     this.$emit('bulkEdition', this.DTOBulkResult(propsBulkResult))
@@ -146,8 +147,13 @@ export default class RoundRanking extends Vue {
 
   editZoneInTry(propsBulkResult: PropsBulkResult) {
     if (!this.isBulk) return
-
     if (!this.validate(propsBulkResult)) return
+
+    const row: RawCountedRankingWithType = propsBulkResult.row as RawCountedRankingWithType
+
+    if (typeof row.zoneInTry === 'number') {
+      row.zone = row.zoneInTry > 0
+    }
 
     this.$emit('bulkEdition', this.DTOBulkResult(propsBulkResult))
   }
@@ -159,10 +165,10 @@ export default class RoundRanking extends Vue {
       if (typeof row.topInTry !== 'number' || typeof row.zoneInTry !== 'number')
         throw new Error('Essai (zone) ou essai (top) ne peut pas être vide')
 
-      if (row.zoneInTry > row.topInTry)
-        throw new Error(
-          "Le nombre d'essai (zone) ne peut pas être supérieur au nombre d'essai (top)"
-        )
+      // if (row.zoneInTry > row.topInTry)
+      //   throw new Error(
+      //     "Le nombre d'essai (zone) ne peut pas être supérieur au nombre d'essai (top)"
+      //   )
 
       return true
     } catch (err) {

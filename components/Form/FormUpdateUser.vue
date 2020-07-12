@@ -133,7 +133,7 @@ export default class FormUpdateUser extends Vue {
       })
       this.$buefy.toast.open({
         type: 'is-success',
-        message: 'Mot de passe mise à jours'
+        message: 'Mot de passe à jour'
       })
       this.showPassword = false
     } catch (err) {
