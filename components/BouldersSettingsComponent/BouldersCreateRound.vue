@@ -1,7 +1,9 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <span class="card-header-title">Ajout de la création d'un round</span>
+      <span class="card-header-title">
+        Création d'un tour
+      </span>
     </div>
     <div class="card-content">
       <FormRoundCompetition

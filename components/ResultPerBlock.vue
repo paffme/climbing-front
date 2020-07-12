@@ -13,7 +13,9 @@
       :step="1"
       :value="0"
       :label="
-        userChoice.category ? `Catégorie (${userChoice.category})` : 'Catégorie'
+        userChoice.category
+          ? `Catégorie (${wordingCategory(userChoice.category, true)})`
+          : 'Catégorie'
       "
       :clickable="isStepsClickable"
     >
@@ -21,7 +23,7 @@
         Catégorie
       </h1>
       <p v-show="!rounds" class="notification is-warning has-text-centered">
-        Veuillez d'abord créer des rounds, pour pouvoir y entrer des résultats
+        Veuillez d'abord créer des tours, pour pouvoir y entrer des résultats
       </p>
       <div class="choice">
         <template v-for="(category, index) in availableCategory">
@@ -32,7 +34,7 @@
               type="is-primary"
               @click="updateCategoryUserChoice(category)"
             >
-              {{ category }}
+              {{ wordingCategory(category, true) }}
             </b-button>
           </template>
         </template>
@@ -53,7 +55,11 @@
         Genre
       </h1>
       <p class="notification is-warning has-text-centered">
-        Un round doit être préalablement créé avec le <b>genre</b> souhaité
+        Un tour doit être préalablement créé avec le
+        <b>
+          genre
+        </b>
+        souhaité
       </p>
       <div class="choice">
         <template v-if="checkIfGenreExist(sex.Male)">
@@ -81,17 +87,19 @@
       :step="3"
       :value="2"
       :label="
-        userChoice.type ? `Phase (${typeBouldering[userChoice.type]})` : 'Phase'
+        userChoice.type ? `Tour (${typeBouldering[userChoice.type]})` : 'Tour'
       "
       :clickable="isStepsClickable"
       :type="{ 'is-success': isProfileSuccess }"
     >
       <h1 class="title has-text-centered">
-        Phases
+        Tours
       </h1>
       <p class="notification is-warning has-text-centered">
-        Pour qu'une phase puissent être noté, le status du round doit être
-        <b>"EN COURS"</b>
+        Pour qu'un tour puissent être noté, le status de celui-ci doit être
+        <b>
+          "EN COURS"
+        </b>
       </p>
       <div class="choice">
         <template
@@ -180,6 +188,7 @@
       <template v-else>
         <template v-if="finalGroupToDisplay">
           <ResultClimberComponent
+            :roles="roles"
             :group="finalGroupToDisplay"
             :round="roundtoDisplay"
           />
@@ -196,6 +205,7 @@ import {
   APIBoulderingRounds,
   APIBoulders,
   APICompetition,
+  APIUserCompetitionRoles,
   BoulderingLimitedRounds,
   CategoryName,
   Sex,
@@ -204,19 +214,22 @@ import {
 } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { AxiosHelper } from '~/utils/axiosHelper'
+import WordingCategory from '~/utils/wordingCategory'
 import ResultClimberComponent from '~/components/ResultClimberComponent/ResultClimberComponent.vue'
 
 @Component({
   components: { ResultClimberComponent }
 })
-export default class ResultPerBlock extends Vue {
+export default class AddResultPerBlockStepComponent extends Vue {
   @Prop(Object) competition!: APICompetition
   @Prop(Object) rounds!: APIBoulderingRounds
+  @Prop(Object) roles!: APIUserCompetitionRoles
 
   sex = Sex
   type = TypeBoulderingRound
   typeBouldering = TypeBouldering
   category = CategoryName
+  wordingCategory = WordingCategory
 
   availableCategory = new Set()
   groupsToDisplay: APIBoulderingGroupsClimbers[] = []
@@ -301,18 +314,29 @@ export default class ResultPerBlock extends Vue {
   }
 
   updateTypeUserChoice(type: TypeBoulderingRound) {
-    this.userChoice.type = type
-    if (!this.userChoice.category || !this.userChoice.genre) return
-    this.roundtoDisplay = this.rounds[this.userChoice.category][
-      this.userChoice.genre
-    ][this.userChoice.type]
-    this.idRoundToNote = this.roundtoDisplay?.id as number
+    try {
+      this.userChoice.type = type
 
-    this.finalStepError = !this.idRoundToNote
+      if (!this.userChoice.category || !this.userChoice.genre) return
 
-    if (!this.finalStepError && this.competition.id) {
-      this.stepMove(this.activeStep + 1)
-      this.fetchGroups(this.idRoundToNote)
+      const roundtoDisplay = this.rounds[this.userChoice.category][
+        this.userChoice.genre
+      ][this.userChoice.type]
+
+      if (!roundtoDisplay) throw new Error('Round introuvable')
+
+      this.roundtoDisplay = roundtoDisplay
+
+      this.idRoundToNote = roundtoDisplay.id
+
+      this.finalStepError = !this.idRoundToNote
+
+      if (!this.finalStepError && this.competition.id) {
+        this.stepMove(this.activeStep + 1)
+        this.fetchGroups(this.idRoundToNote)
+      }
+    } catch (err) {
+      AxiosHelper.HandleAxiosError(this, err)
     }
   }
 
@@ -328,6 +352,18 @@ export default class ResultPerBlock extends Vue {
     }
   }
 
+  updateGroupUserChoice(nbGroup: number) {
+    try {
+      this.userChoice.nbGroup = nbGroup
+
+      this.finalGroupToDisplay = this.groupsToDisplay[nbGroup]
+
+      this.stepMove(this.activeStep + 1)
+    } catch (err) {
+      console.log('err', err)
+    }
+  }
+
   async fetchGroups(currentRoundId: number) {
     try {
       if (!this.competition.id) throw new Error('No competition ID')
@@ -336,32 +372,10 @@ export default class ResultPerBlock extends Vue {
         this.competition.id,
         currentRoundId
       )
-      console.log('result', result.data)
+
       this.groupsToDisplay = result.data
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
-    }
-  }
-
-  async updateGroupUserChoice(nbGroup: number) {
-    try {
-      this.userChoice.nbGroup = nbGroup
-      console.log('this.groupsToDisplay', this.groupsToDisplay)
-      console.log('nbGroup', nbGroup)
-      this.finalGroupToDisplay = this.groupsToDisplay[nbGroup]
-
-      console.log(
-        'this.rounds[this.userChoice.category][\n' +
-          '        this.userChoice.genre\n' +
-          '        ][this.userChoice.type]',
-        this.rounds[this.userChoice.category!][this.userChoice.genre!][
-          this.userChoice.type!
-        ]
-      )
-
-      this.stepMove(this.activeStep + 1)
-    } catch (err) {
-      console.log('err', err)
     }
   }
 

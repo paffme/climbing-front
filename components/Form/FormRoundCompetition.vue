@@ -32,11 +32,17 @@
     </b-field>
 
     <b-field label="Type de classement" :label-position="labelPosition">
-      <b-select v-model="Form.input.rankingType" required expanded>
+      <b-select
+        v-model="Form.input.rankingType"
+        required
+        expanded
+        @input="updateMaxGroups"
+      >
         <option
           v-for="(type, key, index) in rankingtypes"
           :key="index"
           :value="key"
+          :disabled="rankingTypeRule(type)"
         >
           {{ type }}
         </option>
@@ -96,7 +102,7 @@
       :disabled="Form.input.maxTries === 0"
       type="is-success"
     >
-      {{ Form.isEdition ? 'Modifier le round' : 'Créer un round' }}
+      {{ Form.isEdition ? 'Modifier le tour' : 'Créer un tour' }}
     </b-button>
   </form>
 </template>
@@ -165,7 +171,6 @@ export default class FormRoundCompetition extends Vue {
   }
 
   updateMaxGroups() {
-    console.log('this.Form.input.type', this.Form.input.type)
     this.maxGroups =
       this.Form.input.type === TypeBoulderingRound.QUALIFIER ? 2 : 1
 
@@ -174,7 +179,14 @@ export default class FormRoundCompetition extends Vue {
         ? 1
         : this.maxGroups
     this.Form.input.groups = 1
-    console.log('this.maxGroups', this.maxGroups)
+  }
+
+  rankingTypeRule(type: RankingType) {
+    if (this.Form.input.type === TypeBoulderingRound.QUALIFIER) return false
+
+    if (type === RankingType.CIRCUIT) return false
+
+    return true
   }
 }
 </script>

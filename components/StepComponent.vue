@@ -8,7 +8,9 @@
     <b-step-item
       step="1"
       :label="
-        userChoice.category ? `Catégorie (${userChoice.category})` : 'Catégorie'
+        userChoice.category
+          ? `Catégorie (${wordingCategory(userChoice.category)})`
+          : 'Catégorie'
       "
       :clickable="isStepsClickable"
     >
@@ -16,7 +18,7 @@
         Catégorie
       </h1>
       <p v-show="!rounds" class="notification is-warning has-text-centered">
-        Veuillez d'abord créer des rounds
+        Veuillez d'abord créer des tours
       </p>
       <div class="choice">
         <template v-for="(category, index) in availableCategory">
@@ -27,7 +29,7 @@
               type="is-primary"
               @click="updateCategoryUserChoice(category)"
             >
-              {{ category }}
+              {{ wordingCategory(category) }}
             </b-button>
           </template>
         </template>
@@ -46,7 +48,7 @@
         Genre
       </h1>
       <p class="notification has-text-centered">
-        Veuillez choisir le genre que vous souhaitez noter
+        Veuillez choisir le genre que vous souhaitez juger
       </p>
       <div class="choice">
         <template v-if="checkIfGenreExist(sex.Male)">
@@ -73,17 +75,23 @@
     <b-step-item
       step="3"
       :label="
-        userChoice.type ? `Phase (${typeBouldering[userChoice.type]})` : 'Phase'
+        userChoice.type ? `Tours (${typeBouldering[userChoice.type]})` : 'Tours'
       "
       :clickable="isStepsClickable"
       :type="{ 'is-success': isProfileSuccess }"
     >
       <h1 class="title has-text-centered">
-        Phases
+        Tour
       </h1>
       <p class="notification is-warning has-text-centered">
-        Pour qu'une phase soit disponible le status de cette doit être
-        <b>"EN COURS"</b> ou <b>"TERMINEE"</b>
+        Pour qu'un tour soit disponible le status de cette doit être
+        <b>
+          "EN COURS"
+        </b>
+        ou
+        <b>
+          "TERMINEE"
+        </b>
       </p>
       <div class="choice">
         <template v-if="checkIfTypeExist(type.QUALIFIER)">
@@ -120,11 +128,48 @@
       <h1 class="title has-text-centered">
         Résultat
       </h1>
+      <div class="notification">
+        <h2 class="subtitle is-size-4">
+          Tour informations
+        </h2>
+        <div id="action">
+          <template v-if="selectedRound && selectedRound.rankingType">
+            <div class="actions">
+              <span>
+                Type de tour
+              </span>
+              <b-tag type="is-info">
+                {{ rankingType[selectedRound.rankingType] }}
+              </b-tag>
+            </div>
+            <div class="actions">
+              <span>
+                Quotas
+              </span>
+              <b-tag type="is-info">
+                {{ selectedRound.quota }}
+              </b-tag>
+            </div>
+            <div class="actions">
+              <span>
+                Status
+              </span>
+              <b-tag
+                :type="
+                  selectedRound.state !== 'ENDED' ? 'is-primary' : 'is-danger'
+                "
+              >
+                {{ stateRound[selectedRound.state] }}
+              </b-tag>
+            </div>
+          </template>
+        </div>
+      </div>
       <template v-if="finalStepError || !selectedRound">
         Aucun ID ne correspond aux critères demandées
       </template>
       <template v-else>
-        <slot></slot>
+        <slot> </slot>
       </template>
     </b-step-item>
   </b-steps>
@@ -137,14 +182,17 @@ import {
   APICompetition,
   CategoryName,
   QueryParamsRank,
+  RankingType,
   RawStateRound,
   Sex,
   TypeBouldering,
-  TypeBoulderingRound
+  TypeBoulderingRound,
+  StateRound
 } from '~/definitions'
+import WordingCategory from '~/utils/wordingCategory'
 
 @Component
-export default class StepComponent extends Vue {
+export default class RankingsStepComponent extends Vue {
   @Prop(Object) rounds!: APIBoulderingRounds
   @Prop(Object) competition!: APICompetition
   @Prop(Boolean) rating!: boolean
@@ -153,6 +201,9 @@ export default class StepComponent extends Vue {
   type = TypeBoulderingRound
   typeBouldering = TypeBouldering
   category = CategoryName
+  rankingType = RankingType
+  stateRound = StateRound
+  wordingCategory = WordingCategory
   selectedRound: any = null
 
   activeStep = 0
@@ -180,7 +231,6 @@ export default class StepComponent extends Vue {
   }
 
   setUserChoice(query: QueryParamsRank) {
-    console.log('query', query)
     if (query.cat) {
       const cat: string = query.cat.charAt(0).toUpperCase() + query.cat.slice(1)
       // @ts-ignore
@@ -237,7 +287,6 @@ export default class StepComponent extends Vue {
       const roundExist = !!this.rounds[this.userChoice.category][
         this.userChoice.genre
       ][type]
-      console.log('roundExist', roundExist)
       if (!roundExist) return false
 
       if (!this.rating) return true
@@ -245,8 +294,6 @@ export default class StepComponent extends Vue {
       const canBeRating =
         this.rounds[this.userChoice.category][this.userChoice.genre][type]
           .state === RawStateRound.ONGOING
-
-      console.log('canBeRating', canBeRating)
 
       return canBeRating
     } catch (err) {
@@ -266,8 +313,6 @@ export default class StepComponent extends Vue {
   updateCategoryUserChoice(category: CategoryName) {
     try {
       // Check if a category with his name exists
-      console.log('category', category)
-      console.log('this.rounds', this.rounds)
       const data = this.rounds[category]
       if (!data) throw new Error(`Category ${category} dont exist`)
       this.userChoice.category = category
@@ -287,5 +332,14 @@ export default class StepComponent extends Vue {
 .choice {
   display: flex !important;
   justify-content: space-evenly;
+}
+#action {
+  display: flex;
+  justify-content: space-around;
+}
+.actions {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 </style>

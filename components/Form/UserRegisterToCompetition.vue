@@ -34,11 +34,9 @@ export default class UserRegisterToCompetition extends Vue {
   @Prop(Boolean) isLoading!: boolean
   @Prop(Boolean) success!: boolean
   @Watch('success')
-  onSuccessChanged(newVal: boolean, old: boolean) {
+  onSuccessChanged(newVal: boolean) {
     // @ts-ignore
     if (newVal) this.$parent.close()
-    console.log('onSuccessChanged', newVal)
-    console.log('onSuccessChanged', old)
   }
 }
 </script>

@@ -31,7 +31,7 @@
           <div class="tile is-4 is-parent">
             <StatsBlock
               :number="dashboardStats.totalCompetitions"
-              description="Compétitions totales"
+              description="Compétitions"
               type="is-danger"
             />
           </div>
@@ -43,9 +43,13 @@
           <div class="column is-12">
             <b-notification :closable="false">
               <div class="is-flex competition_title">
-                <span class="subtitle">Compétitions à venir</span>
+                <span class="subtitle">
+                  Compétitions à venir
+                </span>
                 <nuxt-link to="competitions">
-                  <span>Autres compétitions</span>
+                  <span>
+                    Autres compétitions
+                  </span>
                 </nuxt-link>
               </div>
               <TableCompetition
@@ -64,7 +68,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import TableCompetition from '~/components/Rank.vue'
+import DefaultRankCompetition from '~/components/DefaultRankCompetition.vue'
 import StatsBlock from '~/components/StatsBlock.vue'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { APICompetition, Competition } from '~/definitions'
@@ -80,7 +84,11 @@ import { AxiosHelper } from '~/utils/axiosHelper'
       isConnected: AuthUser.getters?.['Authenticated']() || false
     }
   },
-  components: { TableCompetition, StatsBlock, BtnCreateCompetition }
+  components: {
+    TableCompetition: DefaultRankCompetition,
+    StatsBlock,
+    BtnCreateCompetition
+  }
 })
 export default class Competitions extends Vue {
   competitions?: Competition[] = []
@@ -99,8 +107,6 @@ export default class Competitions extends Vue {
       this.dashboardStats.nbClimber = await this.fetchNbClimber()
       this.dashboardStats.futureCompetitions = await this.countCompetition(true)
       this.dashboardStats.totalCompetitions = await this.countCompetition()
-
-      console.log('this.competitions', this.competitions)
     } catch (err) {
       console.log('error Created - Index', err)
       this.competitions = []
@@ -137,7 +143,6 @@ export default class Competitions extends Vue {
         this.perPage,
         futureCompetitions()
       )
-      console.log('axiosResponse', axiosResponse)
       return axiosResponse.data
     } catch (err) {
       console.log('fetchFutureCompetitions - ERR', err)

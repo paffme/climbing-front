@@ -36,15 +36,41 @@
             </b-tag>
           </div>
           <ul>
-            <li><b>Nom :</b> {{ round.name }}</li>
             <li>
-              <b>Genre :</b> {{ round.sex === 'male' ? 'Homme' : 'Femme' }}
+              <b>
+                Nom :
+              </b>
+              {{ round.name }}
             </li>
-            <li><b>Type :</b> {{ rankingType[round.rankingType] }}</li>
-            <li><b>Catégorie :</b> {{ round.category }}</li>
-            <li><b>Quota :</b> {{ round.quota }}</li>
+            <li>
+              <b>
+                Genre :
+              </b>
+              {{ round.sex === 'male' ? 'Homme' : 'Femme' }}
+            </li>
+            <li>
+              <b>
+                Type :
+              </b>
+              {{ rankingType[round.rankingType] }}
+            </li>
+            <li>
+              <b>
+                Catégorie :
+              </b>
+              {{ round.category }}
+            </li>
+            <li>
+              <b>
+                Quotas :
+              </b>
+              {{ round.quota }}
+            </li>
             <li v-show="round.maxTries">
-              <b>Nombre d'essais :</b> {{ round.maxTries || 0 }}
+              <b>
+                Nombre d'essais :
+              </b>
+              {{ round.maxTries || 0 }}
             </li>
           </ul>
         </div>
@@ -79,13 +105,13 @@
       </b-modal>
     </template>
     <template v-else>
-      Aucun round
+      Aucun tour
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import {
   APIBoulderingGroups,
   APIBoulderingGroupsClimbers,
@@ -107,6 +133,11 @@ import { AxiosHelper } from '~/utils/axiosHelper'
 export default class BouldersDisplay extends Vue {
   @Prop(String) qualificationRound!: TypeBoulderingRound
   @Prop(Object) round!: BoulderingLimitedRounds
+  @Watch('round', { immediate: false, deep: true })
+  onRoundChange() {
+    this.refreshBouldersGroups()
+  }
+
   @Prop(Object) roles!: APIUserCompetitionRoles
   modalIsActive = false
   groups: APIBoulderingGroupsClimbers[] = []
@@ -115,7 +146,7 @@ export default class BouldersDisplay extends Vue {
   rawStateRound = RawStateRound
   rankingType = RankingType
 
-  async created() {
+  async mounted() {
     await this.refreshBouldersGroups()
   }
 
@@ -123,7 +154,6 @@ export default class BouldersDisplay extends Vue {
     try {
       const groups = await ApiHelper.GetBoulderingGroups(competitionId, roundId)
       this.groups = groups.data
-      console.log('groups', this.groups)
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
     }
@@ -167,7 +197,6 @@ export default class BouldersDisplay extends Vue {
   }
 
   async onCreateBloc(groupId: number) {
-    console.log('onCreateBloc', groupId)
     try {
       await ApiHelper.AddBoulder(
         this.round.competitionId,
@@ -186,7 +215,6 @@ export default class BouldersDisplay extends Vue {
   }
 
   async refreshBouldersGroups() {
-    console.log('refresh')
     await this.getBouldersGroups(this.round.competitionId, this.round.id)
   }
 }

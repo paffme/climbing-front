@@ -32,6 +32,7 @@ module.exports = {
     'comma-dangle': ['error', 'never'],
     'no-console': 'off',
     'vue/max-attributes-per-line': 'off',
+    'vue/singleline-html-element-content-newline': ['off'],
     'import/no-mutable-exports': 'off',
     'vue/html-closing-bracket-spacing': 'off',
     'vue/html-closing-bracket-newline': 'off',

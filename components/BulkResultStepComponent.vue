@@ -10,7 +10,7 @@
         step="1"
         :label="
           userChoice.category
-            ? `Catégorie (${userChoice.category})`
+            ? `Catégorie (${wordingCategory(userChoice.category)})`
             : 'Catégorie'
         "
         :clickable="isStepsClickable"
@@ -19,7 +19,7 @@
           Catégorie
         </h1>
         <p v-show="!rounds" class="notification is-warning has-text-centered">
-          Veuillez d'abord créer des rounds
+          Veuillez d'abord créer des tours afin de pouvoir ajouter des résultats
         </p>
         <div class="choice">
           <template v-for="(category, index) in availableCategory">
@@ -30,7 +30,7 @@
                 type="is-primary"
                 @click="updateCategoryUserChoice(category)"
               >
-                {{ category }}
+                {{ wordingCategory(category) }}
               </b-button>
             </template>
           </template>
@@ -50,7 +50,7 @@
           Genre
         </h1>
         <p class="notification has-text-centered">
-          Veuillez choisir le genre que vous souhaitez noter
+          Veuillez choisir le genre que vous souhaitez juger
         </p>
         <div class="choice">
           <template v-if="checkIfGenreExist(sex.Male)">
@@ -77,19 +77,23 @@
       <b-step-item
         step="3"
         :label="
-          userChoice.type
-            ? `Phase (${typeBouldering[userChoice.type]})`
-            : 'Phase'
+          userChoice.type ? `Tour (${typeBouldering[userChoice.type]})` : 'Tour'
         "
         :clickable="isStepsClickable"
         :type="{ 'is-success': isProfileSuccess }"
       >
         <h1 class="title has-text-centered">
-          Phases
+          Tours
         </h1>
         <p class="notification is-warning has-text-centered">
-          Pour qu'une phase soit active, le status du round doit être
-          <b>"TERMINEE"</b>
+          Pour qu'un tour soit actif, le status de celui-ci doit être
+          <b>
+            "EN COURS"
+          </b>
+          ou
+          <b>
+            "TERMINEE"
+          </b>
         </p>
         <div class="choice">
           <template v-if="checkIfTypeExist(type.QUALIFIER)">
@@ -139,7 +143,6 @@
             :is-bulk="isBulk"
             :rounds="rounds"
             :user-choice="userChoice"
-            @bulkEdition="onBulkEdition"
           />
         </template>
       </b-step-item>
@@ -153,13 +156,13 @@ import {
   APIBoulderingRounds,
   APICompetition,
   CategoryName,
-  PropsBulkResult,
   RawStateRound,
   Sex,
   TypeBouldering,
   TypeBoulderingRound
 } from '~/definitions'
 import BoulderRankingPerBlocs from '~/components/BoulderRankingPerBlocs.vue'
+import WordingCategory from '~/utils/wordingCategory'
 
 @Component({
   components: { BoulderRankingPerBlocs }
@@ -172,6 +175,7 @@ export default class BulkResultStepComponent extends Vue {
   type = TypeBoulderingRound
   typeBouldering = TypeBouldering
   category = CategoryName
+  wordingCategory = WordingCategory
 
   activeStep = 0
   isAnimated = true
@@ -228,7 +232,7 @@ export default class BulkResultStepComponent extends Vue {
 
     const canBeRating =
       this.rounds[this.userChoice.category][this.userChoice.genre][type]
-        .state === RawStateRound.ENDED
+        .state === RawStateRound.ENDED || RawStateRound.ONGOING
     if (!canBeRating) return false
 
     return true
@@ -253,11 +257,6 @@ export default class BulkResultStepComponent extends Vue {
 
   stepMove(stepNumber: number) {
     this.activeStep = stepNumber
-  }
-
-  onBulkEdition(props: PropsBulkResult) {
-    console.log('StepComponent', props)
-    this.$emit('bulkEdition', props)
   }
 }
 </script>

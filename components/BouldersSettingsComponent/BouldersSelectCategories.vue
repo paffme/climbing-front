@@ -1,8 +1,8 @@
 <template>
-  <b-field v-if="categoryCanBeSelected" label="Selectionner la catégories">
+  <b-field v-if="categoryCanBeSelected" label="Sélectionner la catégorie">
     <b-select
       v-model="selected"
-      placeholder="Selectionner une catégorie"
+      placeholder="Sélectionner une catégorie"
       rounded
       @input="$emit('select', selected)"
     >
@@ -12,7 +12,8 @@
           :key="category.category + key"
           :value="{ category: category.category, genre }"
         >
-          {{ category.category + ' - ' + genre }}
+          {{ wordingCategory(category.category) + ' - ' }}
+          {{ genre === 'male' ? 'Homme' : 'Femme' }}
         </option>
       </template>
     </b-select>
@@ -22,14 +23,9 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { CategoriesSelect, CurrentCategory } from '~/definitions'
+import WordingCategory from '~/utils/wordingCategory'
 
-@Component({
-  data() {
-    return {
-      selected: null
-    }
-  }
-})
+@Component
 export default class BouldersSelectCategories extends Vue {
   @Prop(Array) categoryCanBeSelected!: CategoriesSelect[]
   @Prop(Object) currentSelect!: CurrentCategory
@@ -39,11 +35,27 @@ export default class BouldersSelectCategories extends Vue {
   }
 
   selected: { category: string; genre: string } | null = null
+  wordingCategory = WordingCategory
 
-  created() {
+  mounted() {
+    const category =
+      (this.categoryCanBeSelected &&
+        this.categoryCanBeSelected[0] &&
+        this.categoryCanBeSelected[0].category) ||
+      undefined
+    const genre =
+      (this.categoryCanBeSelected &&
+        this.categoryCanBeSelected[0] &&
+        this.categoryCanBeSelected[0].genre &&
+        this.categoryCanBeSelected[0].genre[0]) ||
+      undefined
+    if (!category && !genre) {
+      this.selected = null
+      return
+    }
     this.selected = {
-      category: this.categoryCanBeSelected[0].category,
-      genre: this.categoryCanBeSelected[0].genre[0]
+      category,
+      genre
     }
   }
 }

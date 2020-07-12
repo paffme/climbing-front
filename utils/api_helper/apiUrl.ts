@@ -95,6 +95,13 @@ export default {
     groupId: number
   ) =>
     `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders`,
+  deleteBoulder: (
+    competitionId: number,
+    roundId: number,
+    groupId: number,
+    boulderId: number
+  ) =>
+    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders/${boulderId}`,
   judgeToBoulder: (
     competitionId: number,
     roundId: number,
@@ -150,5 +157,22 @@ export default {
     groupId: number,
     boulderId: number
   ): string =>
-    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders/${boulderId}/photo`
+    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders/${boulderId}/photo`,
+  getHolds: (
+    competitionId: number,
+    roundId: number,
+    groupId: number,
+    boulderId: number
+  ): string =>
+    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/boulders/${boulderId}/holds`,
+  getGeneralRankingPdf: (competitionId: number): string =>
+    `/${RouteName.competitions}/${competitionId}/rankings/pdf`,
+  getGroupRankingPdf: (
+    competitionId: number,
+    roundId: number,
+    groupId: number
+  ): string =>
+    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/groups/${groupId}/rankings/pdf`,
+  getRoundRankingPdf: (competitionId: number, roundId: number): string =>
+    `/${RouteName.competitions}/${competitionId}/bouldering-rounds/${roundId}/rankings/pdf`
 }

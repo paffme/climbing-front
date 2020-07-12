@@ -3,6 +3,7 @@
     <b-button size="is-small" @click.native="isActive = !isActive">
       {{ boulder.id }}
     </b-button>
+
     <div class="judges-list">
       <div class="judges">
         <b-modal :has-modal-card="true" :active.sync="isActive">
@@ -10,10 +11,11 @@
             <div class="card-header">
               <h1 class="card-header-title">
                 Gestion du bloc
-                <b-tag>ID {{ boulder.id }}</b-tag>
+                <b-tag> ID {{ boulder.id }} </b-tag>
               </h1>
             </div>
             <div class="card-content content-judge">
+              <p>Assigner un juge par son nom (sensible à la casse) :</p>
               <div class="content">
                 <SearchUser @select="onSelect" />
               </div>
@@ -24,7 +26,9 @@
                   boulder.judges.length > 0
                 "
               >
-                <p>Listes des juges du bloc</p>
+                <p>
+                  Listes des juges du bloc
+                </p>
                 <b-field>
                   <b-select v-model="selectedJudge" multiple native-size="4">
                     <option
@@ -38,12 +42,15 @@
                 </b-field>
               </template>
               <template v-else>
-                <p>Aucun juges</p>
+                <p>
+                  Aucun juge assigné actuellement
+                </p>
               </template>
               <div class="is-flex buttons-actions">
                 <b-button
                   type="is-info"
                   tag="nuxt-link"
+                  size="is-small"
                   class="btn"
                   :to="{
                     name: 'competitions-edit-competitionId-images',
@@ -51,12 +58,23 @@
                     params: { competitionId }
                   }"
                 >
-                  Gestion de l'image du bloc
+                  Photo du bloc
                 </b-button>
+
+                <b-button
+                  type="is-danger"
+                  class="btn"
+                  size="is-small"
+                  @click="deleteBloc"
+                >
+                  Supprimer ce bloc
+                </b-button>
+
                 <b-button
                   v-show="selectedJudge && selectedJudge.length == 1"
                   class="btn"
                   type="is-danger"
+                  size="is-small"
                   @click="deleteJudge"
                 >
                   Supprimer juge
@@ -118,6 +136,15 @@ export default class JudgesModal extends Vue {
       }
     })
   }
+
+  async deleteBloc() {
+    const meta = {
+      boulderId: this.currentCompetition.boulderId,
+      groupId: this.currentCompetition.groupId
+    }
+    this.$emit('deleteBloc', meta)
+    this.isActive = false
+  }
 }
 </script>
 
@@ -152,6 +179,7 @@ export default class JudgesModal extends Vue {
 
 .btn {
   margin-top: 10px;
+  margin-right: 10px;
 }
 
 ul {

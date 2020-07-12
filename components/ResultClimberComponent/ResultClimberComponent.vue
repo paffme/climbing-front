@@ -1,20 +1,29 @@
 <template>
   <div class="columns is-multiline">
-    <template>
+    <template
+      v-if="
+        filteredBoulders &&
+        Array.isArray(filteredBoulders) &&
+        filteredBoulders.length > 0
+      "
+    >
       <div class="column is-offset-3 is-6">
-        <NoteClimberComponent
+        <CarousselBoulderImage
           :competition-id="round.competitionId"
           :round-id="round.id"
           :group-id="group.id"
-          :boulders="group.boulders"
+          :boulders="filteredBoulders"
           @onChangeBloc="changeBloc"
         />
       </div>
       <div class="column is-offset-3 is-6">
-        <b-field label="Nom des grimpeurs">
+        <p v-show="results.alreadyNote" class="notification has-text-centered">
+          Utilisateur déjà noté
+        </p>
+        <b-field label="Sélection du grimpeur">
           <b-select
             v-model="blocToSend.userId"
-            placeholder="Selectionner un grimpeur"
+            placeholder="Sélectionnez un grimpeur"
             expanded
             @input="getResult"
           >
@@ -27,38 +36,69 @@
             </option>
           </b-select>
         </b-field>
-        <FormClimber
+        <FormAddResultToClimber
           :round="round"
           :result="results"
           :group-id="group.id"
-          :is-disabled="!this.blocToSend.blocId || !this.blocToSend.userId"
+          :is-disabled="!blocToSend.blocId || !blocToSend.userId"
           @onSendNote="processNote"
         />
       </div>
+    </template>
+    <template v-else>
+      <p class="notification">
+        Aucun bloc à juger
+      </p>
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import {
   APIBoulderingGroupsClimbers,
+  APIBoulders,
+  APIUserCompetitionRoles,
   BoulderingLimitedRounds,
   BoulderingResult,
   BoulderingResultWithCredentials,
   BoulderResultWithNote
 } from '~/definitions'
-import NoteClimberComponent from '~/components/ResultClimberComponent/NoteClimberComponent.vue'
-import FormClimber from '~/components/Form/FormClimber.vue'
+import CarousselBoulderImage from '~/components/ResultClimberComponent/NoteClimberComponent.vue'
+import FormAddResultToClimber from '~/components/Form/FormAddResultToClimber.vue'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
+import AuthUser from '~/store/authUser'
 
 @Component({
-  components: { NoteClimberComponent, FormClimber }
+  components: { CarousselBoulderImage, FormAddResultToClimber }
 })
 export default class ResultClimberComponent extends Vue {
+  @Prop(Object) roles!: APIUserCompetitionRoles
   @Prop(Object) group!: APIBoulderingGroupsClimbers
+  @Watch('group', { immediate: true, deep: true })
+  filterJudge(group: APIBoulderingGroupsClimbers) {
+    if (this.roles.juryPresident) {
+      this.filteredBoulders = group.boulders
+      return
+    }
+
+    if (!this.roles.judge) {
+      this.filteredBoulders = []
+      return
+    }
+
+    this.filteredBoulders = group.boulders.filter((boulder) => {
+      return boulder.judges.find((judge) => {
+        // @ts-ignore
+        return AuthUser.getters?.['Credentials']().id === judge.id
+      })
+    })
+  }
+
   @Prop(Object) round!: BoulderingLimitedRounds
+
+  filteredBoulders: APIBoulders[] | null = null
 
   results: BoulderResultWithNote = {
     climberId: 0,
@@ -103,6 +143,7 @@ export default class ResultClimberComponent extends Vue {
   async getResult() {
     if (!this.blocToSend.blocId || !this.blocToSend.userId)
       throw new Error('Pas de bloc to Send')
+
     const competitionId = parseInt(this.$route.params.competitionId, 10)
 
     if (!competitionId) throw new Error('Competition ID introuvable')
@@ -142,8 +183,6 @@ export default class ResultClimberComponent extends Vue {
     data: BoulderingResult
     info: { blocId: number; groupId: number }
   }) {
-    console.log('sendNote - ResultPerBlock', note)
-
     try {
       await ApiHelper.AddBoulderingResult(
         note.data,
@@ -161,7 +200,7 @@ export default class ResultClimberComponent extends Vue {
       if (err.response.status === 403) {
         this.$buefy.toast.open({
           type: 'is-warning',
-          message: 'Vous ne pouvez noter ce bloc'
+          message: 'Vous ne pouvez pas juger ce bloc'
         })
         return
       }

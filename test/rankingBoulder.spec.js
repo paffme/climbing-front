@@ -110,4 +110,65 @@ describe('rankingBoulder', () => {
       }
     })
   })
+
+  test('getGeneralRankings', () => {
+    const data = {
+      veteran: {
+        male: [
+          {
+            ranking: 1,
+            climber: {
+              id: 8,
+              firstName: 'Homme',
+              lastName: 'Veteran',
+              club: 'FFME'
+            }
+          }
+        ],
+        female: [
+          {
+            ranking: 1,
+            climber: {
+              id: 8,
+              firstName: 'Homme',
+              lastName: 'Veteran',
+              club: 'FFME'
+            }
+          }
+        ]
+      },
+      minime: {
+        female: [
+          {
+            ranking: 1,
+            climber: {
+              id: 8,
+              firstName: 'Homme',
+              lastName: 'Veteran',
+              club: 'FFME'
+            }
+          }
+        ]
+      },
+      poussin: {
+        male: [
+          {
+            ranking: 1,
+            climber: {
+              id: 8,
+              firstName: 'Homme',
+              lastName: 'Veteran',
+              club: 'FFME'
+            }
+          }
+        ]
+      }
+    }
+
+    expect(boulderFilter.getGeneralRankings(data)).toStrictEqual([
+      { category: 'veteran', genre: ['female', 'male'] },
+      { category: 'minime', genre: ['female'] },
+      { category: 'poussin', genre: ['male'] }
+    ])
+  })
 })

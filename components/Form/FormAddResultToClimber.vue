@@ -4,14 +4,30 @@
       <table class="table">
         <thead>
           <tr>
-            <th><abbr title="Top">Top</abbr></th>
+            <th>
+              <abbr title="Top">
+                Top
+              </abbr>
+            </th>
             <template
               v-if="round.rankingType !== rankingType.UNLIMITED_CONTEST"
             >
-              <th><abbr title="Try">Try</abbr></th>
-              <th><abbr title="Zone">Zone</abbr></th>
+              <th>
+                <abbr title="Try">
+                  Essais à ajouter
+                </abbr>
+              </th>
+              <th>
+                <abbr title="Zone">
+                  Zone
+                </abbr>
+              </th>
             </template>
-            <th><abbr title="results">Résultats</abbr></th>
+            <th>
+              <abbr title="results">
+                Résultats
+              </abbr>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -19,7 +35,7 @@
             <th>
               <FormClimberRadio
                 :data="result.top"
-                :disabled="isEdition || result.alreadyNote || !isJudge"
+                :disabled="isEdition || !isJudge"
                 @onSelect="selectTop"
               />
             </th>
@@ -29,12 +45,9 @@
               <td>
                 <div class="content">
                   <b-field>
-                    <b-select
-                      v-model="result.try"
-                      :disabled="!isJudge || result.alreadyNote"
-                    >
+                    <b-select v-model="result.try" :disabled="!isJudge">
                       <option
-                        v-for="maxTry in round.maxTries || 50"
+                        v-for="maxTry in round.maxTries || 25"
                         :key="maxTry"
                         :value="maxTry"
                       >
@@ -47,7 +60,7 @@
               <td>
                 <FormClimberRadio
                   :data="result.zone"
-                  :disabled="isEdition || !isJudge || result.alreadyNote"
+                  :disabled="isEdition || !isJudge"
                   @onSelect="selectZone"
                 />
               </td>
@@ -56,10 +69,9 @@
               <b-button
                 type="is-info"
                 native-type="submit"
-                :disabled="!isJudge || result.alreadyNote || isDisabled"
+                :disabled="!isJudge || isDisabled"
               >
-                Envoyer les résultats
-                {{ result.alreadyNote ? '(Déjà noté)' : '' }}
+                Envoyer
               </b-button>
             </td>
           </tr>
@@ -82,7 +94,7 @@ import FormClimberRadio from '~/components/Form/FormClimberRadio.vue'
 @Component({
   components: { FormClimberRadio }
 })
-export default class FormClimber extends Vue {
+export default class FormAddResultToClimber extends Vue {
   @Prop(Object) result!: BoulderResultWithNote
   @Prop(Object) round!: BoulderingLimitedRounds
   @Prop(Number) groupId!: number
@@ -132,12 +144,10 @@ export default class FormClimber extends Vue {
         top: this.result.top
       }
     }
-    console.log('result', result)
     this.$emit('onSendNote', result)
   }
 
   selectZone(value: boolean) {
-    console.log('selectZone', value)
     this.result.zone = value
   }
 
