@@ -7,7 +7,7 @@
         filteredBoulders.length > 0
       "
     >
-      <div class="column is-offset-3 is-6">
+      <div class="column is-12">
         <CarousselBoulderImage
           :competition-id="round.competitionId"
           :round-id="round.id"
