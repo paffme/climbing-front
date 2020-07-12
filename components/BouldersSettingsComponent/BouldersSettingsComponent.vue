@@ -19,6 +19,7 @@
           <div class="select-input">
             <BouldersSelectCategories
               :category-can-be-selected="categoriesCanBeSelected"
+              :current-select="selectedCategory"
               @select="onSelect"
             />
           </div>
@@ -109,23 +110,23 @@
 
 <script lang="ts">
 import _ from 'lodash'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import BouldersSelectCategories from '~/components/BouldersSettingsComponent/BouldersSelectCategories.vue'
 import BouldersDisplay from '~/components/BouldersSettingsComponent/BouldersDisplay.vue'
 import {
   APIBoulderingRounds,
-  CategoriesSelect,
-  CategoryDisplay,
-  TempCategoriesSelect,
-  TypeBoulderingRound,
-  CategoryName,
-  Sex,
-  CurrentCategory,
-  BoulderingRoundInputEdit,
+  APIUserCompetitionRoles,
   BoulderingRoundCreateInput,
   BoulderingRoundInput,
+  BoulderingRoundInputEdit,
+  CategoriesSelect,
+  CategoryDisplay,
+  CategoryName,
+  CurrentCategory,
   RawRankingType,
-  APIUserCompetitionRoles
+  Sex,
+  TempCategoriesSelect,
+  TypeBoulderingRound
 } from '~/definitions'
 import BouldersEmpty from '~/components/BouldersSettingsComponent/BouldersEmpty.vue'
 import BouldersDisplayEmpty from '~/components/BouldersSettingsComponent/BouldersDisplayEmpty.vue'
@@ -183,6 +184,7 @@ export default class BouldersSettingsComponent extends Vue {
 
   // .DATA
   categoriesCanBeSelected: CategoriesSelect[] | null = null
+  selectedCategory: CurrentCategory | null = null
   categoriesDisplayed: CategoryDisplay = {
     qualification: null,
     semi: null,
@@ -191,7 +193,7 @@ export default class BouldersSettingsComponent extends Vue {
   // ./DATA
 
   // .PERSO FUNCTION
-  async onCreateRound(value: any) {
+  async onCreateRound(value: BoulderingRoundInput) {
     try {
       const data = this.roundCreateDto(value)
       if (!data) throw new Error('Des champs sont manquants')
@@ -201,6 +203,11 @@ export default class BouldersSettingsComponent extends Vue {
         message: 'Tour ajouté'
       })
       this.$emit('loadBouldering')
+      if (!value.sex || !value.category) return
+      this.selectedCategory = {
+        genre: value.sex!,
+        category: value.category
+      }
     } catch (error) {
       AxiosHelper.HandleAxiosError(this, error)
     }

@@ -9,7 +9,7 @@
     </h2>
     <template v-if="groupRank">
       <BtnDownloadPdf
-        type-competition="rounds"
+        type-competition="groups"
         :competition-id="parameters.competitionId"
         :round-id="parameters.roundId"
         :group-id="parameters.groupId"
