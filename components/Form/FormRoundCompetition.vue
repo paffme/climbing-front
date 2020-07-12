@@ -32,7 +32,12 @@
     </b-field>
 
     <b-field label="Type de classement" :label-position="labelPosition">
-      <b-select v-model="Form.input.rankingType" required expanded>
+      <b-select
+        v-model="Form.input.rankingType"
+        required
+        expanded
+        @input="updateMaxGroups"
+      >
         <option
           v-for="(type, key, index) in rankingtypes"
           :key="index"
@@ -166,7 +171,6 @@ export default class FormRoundCompetition extends Vue {
   }
 
   updateMaxGroups() {
-    console.log('this.Form.input.type', this.Form.input.type)
     this.maxGroups =
       this.Form.input.type === TypeBoulderingRound.QUALIFIER ? 2 : 1
 

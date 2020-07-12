@@ -1,7 +1,9 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <span class="card-header-title">Edition d'un tour</span>
+      <span class="card-header-title">
+        Edition d'un tour
+      </span>
     </div>
     <div class="card-content">
       <FormRoundCompetition :round="round" @createRound="onEditRound" />

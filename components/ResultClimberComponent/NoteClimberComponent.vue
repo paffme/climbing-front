@@ -54,8 +54,6 @@ export default class CarousselBoulderImage extends Vue {
 
   @Watch('boulders', { immediate: true, deep: true })
   async onBoulderFetchPhotos(boulders: APIBoulders[]) {
-    console.log('onBoulderFetchPhotos - boulders', boulders)
-    console.log('competitionId', this.competitionId)
     boulders.forEach(async (boulder, index) => {
       try {
         const result = await ApiHelper.GetBoulderPhoto(
@@ -64,11 +62,8 @@ export default class CarousselBoulderImage extends Vue {
           this.groupId,
           boulder.id
         )
-
-        console.log('result', result)
         this.boulders[index].img = result.data
         this.Boulders.push(this.boulders[index])
-        console.log('this.boulders[index]', this.Boulders)
       } catch (err) {
         console.log('err', err)
         this.Boulders.push(this.boulders[index])

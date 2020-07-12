@@ -4,14 +4,30 @@
       <table class="table">
         <thead>
           <tr>
-            <th><abbr title="Top">Top</abbr></th>
+            <th>
+              <abbr title="Top">
+                Top
+              </abbr>
+            </th>
             <template
               v-if="round.rankingType !== rankingType.UNLIMITED_CONTEST"
             >
-              <th><abbr title="Try">Essais à ajouter</abbr></th>
-              <th><abbr title="Zone">Zone</abbr></th>
+              <th>
+                <abbr title="Try">
+                  Essais à ajouter
+                </abbr>
+              </th>
+              <th>
+                <abbr title="Zone">
+                  Zone
+                </abbr>
+              </th>
             </template>
-            <th><abbr title="results">Résultats</abbr></th>
+            <th>
+              <abbr title="results">
+                Résultats
+              </abbr>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -128,12 +144,10 @@ export default class FormAddResultToClimber extends Vue {
         top: this.result.top
       }
     }
-    console.log('result', result)
     this.$emit('onSendNote', result)
   }
 
   selectZone(value: boolean) {
-    console.log('selectZone', value)
     this.result.zone = value
   }
 

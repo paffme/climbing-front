@@ -14,7 +14,7 @@ module.exports = {
       modules: true
     }
   },
-  ignorePatterns: ['cypress/', 'scripts/'],
+  ignorePatterns: ['cypress/'],
   extends: [
     // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
     // préférer utiliser `plugin:vue/strongly-recommended` ou `plugin:vue/recommended` pour des règles stictes.
@@ -32,6 +32,7 @@ module.exports = {
     'comma-dangle': ['error', 'never'],
     'no-console': 'off',
     'vue/max-attributes-per-line': 'off',
+    'vue/singleline-html-element-content-newline': ['off'],
     'import/no-mutable-exports': 'off',
     'vue/html-closing-bracket-spacing': 'off',
     'vue/html-closing-bracket-newline': 'off',

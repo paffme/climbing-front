@@ -4,7 +4,9 @@
       <p>
         <b-icon icon="emoticon-sad" size="is-large" />
       </p>
-      <p>Aucun classement n'a été trouvée</p>
+      <p>
+        Aucun classement n'a été trouvée
+      </p>
     </div>
   </section>
 </template>

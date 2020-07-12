@@ -49,8 +49,6 @@ export default class BouldersSelectCategories extends Vue {
         this.categoryCanBeSelected[0].genre &&
         this.categoryCanBeSelected[0].genre[0]) ||
       undefined
-    console.log('category', category)
-    console.log('genre', genre)
     if (!category && !genre) {
       this.selected = null
       return

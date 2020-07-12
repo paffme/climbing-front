@@ -12,7 +12,9 @@
         </nuxt-link>
       </li>
       <li class="is-active">
-        <a href="#" aria-current="page">{{ currentPage }}</a>
+        <a href="#" aria-current="page">
+          {{ currentPage }}
+        </a>
       </li>
     </ul>
   </nav>

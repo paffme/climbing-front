@@ -107,11 +107,15 @@
                 </li>
                 <li>
                   Lieu :
-                  <b-tag>{{ competition.city | capitalize }}</b-tag>
+                  <b-tag>
+                    {{ competition.city | capitalize }}
+                  </b-tag>
                 </li>
                 <li>
                   Heure d'accueil :
-                  <span>{{ competition.welcomingDate | formatDate }}</span>
+                  <span>
+                    {{ competition.welcomingDate | formatDate }}
+                  </span>
                 </li>
                 <li>
                   Catégorie:
@@ -287,8 +291,6 @@ export default class OneCompetition extends Vue {
       this.registeredClimbers = await this.getRegisteredClimberList(
         competitionId
       )
-
-      console.log('this.registeredClimbers', this.registeredClimbers)
       this.isLoading = false
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
@@ -376,8 +378,6 @@ export default class OneCompetition extends Vue {
           this.userHasRole = true
         }
       }
-
-      console.log('this.userHasRole', this.userHasRole)
     } catch (err) {
       if (err.response.status === 401 && this.isAutenthicated) {
         return this.$router.push('/login')

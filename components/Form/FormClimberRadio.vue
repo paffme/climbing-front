@@ -9,7 +9,7 @@
           type="is-danger"
           @input="$emit('onSelect', false)"
         >
-          <b-icon icon="close"></b-icon>
+          <b-icon icon="close"> </b-icon>
         </b-radio-button>
         <b-radio-button
           v-model="syncedName"
@@ -18,7 +18,7 @@
           type="is-success"
           @input="$emit('onSelect', true)"
         >
-          <b-icon icon="check"></b-icon>
+          <b-icon icon="check"> </b-icon>
         </b-radio-button>
       </b-field>
     </div>

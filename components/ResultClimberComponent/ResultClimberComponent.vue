@@ -40,7 +40,7 @@
           :round="round"
           :result="results"
           :group-id="group.id"
-          :is-disabled="!this.blocToSend.blocId || !this.blocToSend.userId"
+          :is-disabled="!blocToSend.blocId || !blocToSend.userId"
           @onSendNote="processNote"
         />
       </div>
@@ -183,8 +183,6 @@ export default class ResultClimberComponent extends Vue {
     data: BoulderingResult
     info: { blocId: number; groupId: number }
   }) {
-    console.log('sendNote - ResultPerBlock', note)
-
     try {
       await ApiHelper.AddBoulderingResult(
         note.data,

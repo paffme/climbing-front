@@ -19,7 +19,6 @@ function setHeaderAuthorizationToken(token?: string): void {
 }
 
 function removeHeaderAuthorizationToken(): void {
-  console.log('removeHeaderAuthorizationToken')
   delete axios.defaults.headers.Authorization
   delete axios.defaults.headers.authorization
 }

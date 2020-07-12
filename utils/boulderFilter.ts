@@ -86,7 +86,6 @@ export default {
     | undefined {
     const type = apiGroupRanking.type
     if (type === RawRankingType.UNLIMITED_CONTEST) {
-      console.log('Is Unlimited contest', blocNumber)
       return handleGroupUnlimited(apiGroupRanking, blocNumber)
     } else {
       if (!apiGroupRanking.data.rankings) return
@@ -133,7 +132,6 @@ function handleGroupCircuit(
       if (ranking.zonesInTries[blocNumber] >= 0)
         result.zoneInTry = ranking.zonesInTries[blocNumber]
 
-      console.log('result', result)
       if (typeof result.top !== 'boolean' && typeof result.zone !== 'boolean')
         return null
 
@@ -149,7 +147,6 @@ function handleGroupUnlimited(
   return ((apiGroupRanking.data
     .rankings as unknown) as BoulderingUnlimitedContestRankingWithTops[]).map(
     (ranking) => {
-      console.log('ranking', ranking)
       const result: RawBoulderingUnlimitedContestRankingWithType = {
         type: apiGroupRanking.type,
         top: ranking.tops[blocNumber],
@@ -158,8 +155,6 @@ function handleGroupUnlimited(
         ranking: ranking.ranking,
         climber: ranking.climber
       }
-
-      console.log('handleGroupUnlimited result', result)
       return result
     }
   )

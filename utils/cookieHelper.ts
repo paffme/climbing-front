@@ -62,10 +62,6 @@ export function createCookie(
   expires = 3600,
   path = '/'
 ): void {
-  console.log(
-    'createCookie = ',
-    `${key}=${value}; path=${path}; expires=${formatExpire(expires)}`
-  )
   document.cookie = `${key}=${value}; path=${path}; expires=${formatExpire(
     expires
   )}`

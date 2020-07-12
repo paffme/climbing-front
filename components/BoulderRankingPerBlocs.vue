@@ -136,7 +136,6 @@ export default class BoulderRankingPerBlocs extends Vue {
     groupId: number
     boulderId: number
   }) {
-    console.log('onBulkEdition - ', props)
     let result: CircuitResult[] | UnlimitedContestResult[]
     if (props.row.type === RawRankingType.UNLIMITED_CONTEST) {
       result = [
@@ -191,7 +190,6 @@ export default class BoulderRankingPerBlocs extends Vue {
           currentRound.id,
           group.id
         )
-        console.log('rankingPerGroups', rankingPerGroups)
         if (((rankingPerGroups.data as unknown) as string) === '')
           throw new Error('Aucun classement trouvé')
 
@@ -206,10 +204,8 @@ export default class BoulderRankingPerBlocs extends Vue {
             rankingPerGroups.data,
             index
           )
-          console.log('filtered', filtered)
           if (!filtered) return
           this.rankingsPerBloc.push(filtered)
-          console.log('this.rankingsPerBloc', this.rankingsPerBloc)
         })
       }
     } catch (err) {
