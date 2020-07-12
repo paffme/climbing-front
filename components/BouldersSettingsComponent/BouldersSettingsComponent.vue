@@ -333,10 +333,10 @@ export default class BouldersSettingsComponent extends Vue {
       }
 
       if (haveFemaleCategory) {
-        temp.genre.push('femme' as Sex)
+        temp.genre.push(Sex.Female)
       }
       if (haveMaleCategory) {
-        temp.genre.push('homme' as Sex)
+        temp.genre.push(Sex.Male)
       }
 
       temp.category = key as CategoryName
