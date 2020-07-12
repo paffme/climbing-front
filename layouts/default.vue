@@ -13,11 +13,23 @@
           </section>
         </section>
       </div>
+
+      <footer>
+        <cookie-law theme="dark-lime" :button-text="`J'ai compris.`">
+          <div slot="message">
+            En utilisant les services de PAFFME, vous acceptez notre Utilisation
+            des cookies. Nos partenaires et nous-mêmes opérons mondialement et
+            utilisons des cookies, notamment à des fins de statistiques, de
+            personnalisation et publicitaires.
+          </div>
+        </cookie-law>
+      </footer>
     </div>
   </div>
 </template>
 
 <script>
+import CookieLaw from 'vue-cookie-law'
 import Sidebar from '~/components/Sidebar'
 import Navbar from '~/components/Navbar'
 import { NAVBAR_METADATA } from '~/constants'
@@ -25,7 +37,8 @@ import { NAVBAR_METADATA } from '~/constants'
 export default {
   components: {
     Sidebar,
-    Navbar
+    Navbar,
+    CookieLaw
   },
   data() {
     return {
