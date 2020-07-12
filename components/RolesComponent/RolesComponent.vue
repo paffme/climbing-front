@@ -1,6 +1,6 @@
 <template>
   <div class="panel">
-    <p class="panel-heading">Liste des {{ roleName }}</p>
+    <p class="panel-heading">Liste des {{ displayPluralRoleName }}</p>
     <div class="panel-block">
       <div class="panel-block-content">
         <template
@@ -14,13 +14,15 @@
           <RolesButton
             class="rolesbtn is-pulled-right"
             @click="modalIsActive = true"
+            :role-name="roleName"
           ></RolesButton>
         </template>
         <template v-else>
-          <RolesEmptyComponent :role-name="roleName" />
+          <RolesEmptyComponent :role-name="displayRoleName" />
           <RolesButton
             class="rolesbtn is-pulled-right"
             @click="modalIsActive = true"
+            :role-name="roleName"
           ></RolesButton>
         </template>
       </div>
@@ -37,6 +39,7 @@
     >
       <RolesModalComponent
         :suggested-users="suggestedUsers"
+        :role-name="roleName"
         @input="fetchSuggestedUsers"
         @select="onSelect"
       ></RolesModalComponent>
@@ -54,6 +57,7 @@ import RolesButton from '~/components/RolesComponent/RolesButton.vue'
 import RolesModalComponent from '~/components/RolesComponent/RolesModalComponent.vue'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { RolesBuilder } from '~/utils/api_helper/RolesBuilder'
+import { getRoleName, getPluralRoleName } from '~/utils/wording-role'
 
 @Component({
   components: {
@@ -72,6 +76,9 @@ export default class RolesComponent extends Vue {
   suggestedUsers: { name: string; id: number }[] | null = null
   userWithRoles: User[] = []
   rolesApi: RolesAPI | null = null
+
+  displayRoleName = getRoleName(this.roleName)
+  displayPluralRoleName = getPluralRoleName(this.roleName)
 
   async created() {
     this.rolesApi = RolesBuilder.getRoles(this.roleName)
@@ -138,8 +145,8 @@ export default class RolesComponent extends Vue {
     this.$buefy.dialog.confirm({
       type: 'is-danger',
       hasIcon: true,
-      title: "Suppression d'un role",
-      message: `Voulez vraiment supprimer ${user.firstName} ${user.lastName} ?`,
+      title: `Retirer un ${this.displayRoleName}`,
+      message: `Voulez vraiment retirer ce role à ${user.firstName} ${user.lastName} ?`,
       onConfirm: () => this.remove(user),
       cancelText: 'Non',
       confirmText: 'Oui'
@@ -154,7 +161,7 @@ export default class RolesComponent extends Vue {
       if (err.response.status === 400) {
         this.$buefy.toast.open({
           type: 'is-info',
-          message: 'Vous ne pouvez pas vous supprimer vous même'
+          message: 'Vous ne pouvez pas vous retirer vous même un role'
         })
       }
       console.log(err)

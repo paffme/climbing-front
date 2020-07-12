@@ -29,7 +29,7 @@
           <span v-if="currentRoles" class="notification">
             Vous êtes connecté en tant que
             <template v-for="role in currentRoles">
-              {{ role.toLocaleLowerCase() }},
+              {{ getRoleName(role) }},
             </template>
           </span>
           <b-button
@@ -71,6 +71,7 @@ import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import GoBackBtn from '~/components/Button/GoBackBtn.vue'
 import AuthUser from '~/store/authUser'
+import { getRoleName } from '~/utils/wording-role'
 
 async function fetchRole(
   competitionId?: number,
@@ -142,6 +143,8 @@ export default class EditOneCompetitionPage extends Vue {
   role: APIUserCompetitionRoles | null = null
   rounds: APIBoulderingRounds | null = null
   currentRoles: RoleName[] | null = null
+
+  getRoleName = getRoleName
 
   created() {
     if (!this.role) {
