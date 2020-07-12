@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="block">
-      <span class="subtitle">Configuration des membres du tournois</span>
+      <span class="subtitle">
+        Configuration des membres du tournois
+      </span>
     </div>
     <b-tabs v-model="activeTab">
       <template v-for="(role, index) in roles">

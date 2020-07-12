@@ -50,8 +50,6 @@ import AuthUser from '~/store/authUser'
   async asyncData(ctx) {
     const userId = parseInt(ctx.params.id, 10)
     const user = await ApiHelper.GetUser(userId)
-
-    console.log('user', user)
     return {
       user: user.data
     }

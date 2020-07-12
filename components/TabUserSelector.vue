@@ -14,7 +14,9 @@
             No results found
           </template>
           <template slot-scope="props">
-            <p>{{ `${props.option.firstName} ${props.option.lastName}` }}</p>
+            <p>
+              {{ `${props.option.firstName} ${props.option.lastName}` }}
+            </p>
           </template>
         </b-autocomplete>
       </b-field>
@@ -27,7 +29,9 @@
           class="panel-block is-active"
         >
           <nuxt-link :to="'/user/' + user.id">
-            <p>{{ `${user.firstName} ${user.lastName}` }}</p>
+            <p>
+              {{ `${user.firstName} ${user.lastName}` }}
+            </p>
           </nuxt-link>
           <b-button
             :key="user.id"
@@ -170,7 +174,7 @@ export default class TabUserSelector extends Vue {
       }
       await request(parseInt(this.$route.params.competitionId), userId)
     } catch (err) {
-      console.log(err)
+      console.log('makeAddOrRemoveRequest - Err', err)
     }
   }
 

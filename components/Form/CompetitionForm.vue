@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="block">
-      <span class="subtitle">Toute la configuration de la compétition</span>
+      <span class="subtitle">
+        Toute la configuration de la compétition
+      </span>
     </div>
     <form class="form" @submit.prevent="registerCompetition()">
       <b-field horizontal label="Nom">
@@ -236,7 +238,6 @@ export default class CompetitionForm extends Vue {
 
   formatCategory(sex: Sex, categoryName: object): CompetitionCategories[] {
     return Object.keys(categoryName).map((category) => {
-      console.log('category', category)
       return {
         sex,
         name: category.toLowerCase() as CategoryName

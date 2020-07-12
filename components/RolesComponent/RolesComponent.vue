@@ -125,7 +125,6 @@ export default class RolesComponent extends Vue {
           message: `Possède déjà le role ${this.roleName}`
         })
       }
-      console.log('onSelect event Error - ', err)
     }
   }
 

@@ -15,7 +15,7 @@
         <b-tag
           :key="index"
           :class="['is-info', 'pointer', 'blocs']"
-          @click.native="selectBloc(this, index)"
+          @click.native="selectBloc(index)"
         >
           Bloc {{ index + 1 }}
         </b-tag>
@@ -29,7 +29,9 @@
         </p>
         <ul>
           <li>
-            <b>Top :</b>
+            <b>
+              Top :
+            </b>
             <template v-if="selectedBloc.top">
               <b-tag type="is-success">
                 OK
@@ -43,7 +45,9 @@
           </li>
 
           <li>
-            <b>Zone :</b>
+            <b>
+              Zone :
+            </b>
             <template v-if="selectedBloc.zone">
               <b-tag type="is-success">
                 OK
@@ -57,7 +61,9 @@
           </li>
 
           <li>
-            <b>Zone (nb) :</b>
+            <b>
+              Zone (nb) :
+            </b>
             <template>
               <b-tag type="is-info">
                 {{ selectedBloc.zoneInTry }}
@@ -66,7 +72,9 @@
           </li>
 
           <li>
-            <b>Top (nb) :</b>
+            <b>
+              Top (nb) :
+            </b>
             <template>
               <b-tag type="is-info">
                 {{ selectedBloc.topInTry }}
@@ -100,16 +108,10 @@ export default class BlocDetailsModal extends Vue {
   indexSelectedBloc = 0
 
   mounted() {
-    this.selectBloc('', 0)
+    this.selectBloc(0)
   }
 
-  selectBloc(event: any, index: number) {
-    console.log('event', event)
-    console.log('this._tops[index]', this._tops[index])
-    console.log('this._zones[index]', this._zones[index])
-    console.log('this._zoneInTries[index]', this._zoneInTries[index])
-    console.log('this._topInTries[index]', this._topInTries[index])
-
+  selectBloc(index: number) {
     document
       .getElementsByClassName('blocs')
       [this.indexSelectedBloc].classList.add('is-info')

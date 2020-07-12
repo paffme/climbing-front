@@ -7,7 +7,11 @@
     </header>
     <div class="card-content">
       <span class="description-text"
-        >Trouver un utilisateur via son <b>nom</b> (Sensible à la casse)</span
+        >Trouver un utilisateur via son
+        <b>
+          nom
+        </b>
+        (Sensible à la casse)</span
       >
       <div class="custom-field">
         <SearchUser
@@ -31,7 +35,6 @@ export default class RolesModalComponent extends Vue {
   @Prop(Array) suggestedUsers!: Array<{ name: string; id: number }>
 
   onSelect(user: { name: string; id: number }) {
-    console.log('user', user)
     this.$emit('select', user)
   }
 

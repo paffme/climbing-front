@@ -85,7 +85,6 @@ export default class Login extends Vue {
 
   async fetchToken(loginEvent: LoginEvent): Promise<APIToken | null> {
     try {
-      console.log('authUser', authUser)
       const response = await authUser.fetchToken({
         email: loginEvent.data.email,
         password: loginEvent.data.password

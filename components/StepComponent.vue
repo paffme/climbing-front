@@ -85,7 +85,13 @@
       </h1>
       <p class="notification is-warning has-text-centered">
         Pour qu'un tour soit disponible le status de cette doit être
-        <b>"EN COURS"</b> ou <b>"TERMINEE"</b>
+        <b>
+          "EN COURS"
+        </b>
+        ou
+        <b>
+          "TERMINEE"
+        </b>
       </p>
       <div class="choice">
         <template v-if="checkIfTypeExist(type.QUALIFIER)">
@@ -129,19 +135,25 @@
         <div id="action">
           <template v-if="selectedRound && selectedRound.rankingType">
             <div class="actions">
-              <span>Type de tour</span>
+              <span>
+                Type de tour
+              </span>
               <b-tag type="is-info">
                 {{ rankingType[selectedRound.rankingType] }}
               </b-tag>
             </div>
             <div class="actions">
-              <span>Quotas</span>
+              <span>
+                Quotas
+              </span>
               <b-tag type="is-info">
                 {{ selectedRound.quota }}
               </b-tag>
             </div>
             <div class="actions">
-              <span>Status</span>
+              <span>
+                Status
+              </span>
               <b-tag
                 :type="[
                   selectedRound.state !== 'ENDED' ? 'is-primary' : 'is-danger'
@@ -157,7 +169,7 @@
         Aucun ID ne correspond aux critères demandées
       </template>
       <template v-else>
-        <slot></slot>
+        <slot> </slot>
       </template>
     </b-step-item>
   </b-steps>
@@ -219,7 +231,6 @@ export default class RankingsStepComponent extends Vue {
   }
 
   setUserChoice(query: QueryParamsRank) {
-    console.log('query', query)
     if (query.cat) {
       const cat: string = query.cat.charAt(0).toUpperCase() + query.cat.slice(1)
       // @ts-ignore
@@ -276,7 +287,6 @@ export default class RankingsStepComponent extends Vue {
       const roundExist = !!this.rounds[this.userChoice.category][
         this.userChoice.genre
       ][type]
-      console.log('roundExist', roundExist)
       if (!roundExist) return false
 
       if (!this.rating) return true
@@ -284,8 +294,6 @@ export default class RankingsStepComponent extends Vue {
       const canBeRating =
         this.rounds[this.userChoice.category][this.userChoice.genre][type]
           .state === RawStateRound.ONGOING
-
-      console.log('canBeRating', canBeRating)
 
       return canBeRating
     } catch (err) {
@@ -305,8 +313,6 @@ export default class RankingsStepComponent extends Vue {
   updateCategoryUserChoice(category: CategoryName) {
     try {
       // Check if a category with his name exists
-      console.log('category', category)
-      console.log('this.rounds', this.rounds)
       const data = this.rounds[category]
       if (!data) throw new Error(`Category ${category} dont exist`)
       this.userChoice.category = category

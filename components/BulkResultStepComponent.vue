@@ -87,7 +87,13 @@
         </h1>
         <p class="notification is-warning has-text-centered">
           Pour qu'un tour soit actif, le status de celui-ci doit être
-          <b>"EN COURS"</b> ou <b>"TERMINEE"</b>
+          <b>
+            "EN COURS"
+          </b>
+          ou
+          <b>
+            "TERMINEE"
+          </b>
         </p>
         <div class="choice">
           <template v-if="checkIfTypeExist(type.QUALIFIER)">

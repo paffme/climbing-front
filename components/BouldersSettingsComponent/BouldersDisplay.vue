@@ -36,15 +36,41 @@
             </b-tag>
           </div>
           <ul>
-            <li><b>Nom :</b> {{ round.name }}</li>
             <li>
-              <b>Genre :</b> {{ round.sex === 'male' ? 'Homme' : 'Femme' }}
+              <b>
+                Nom :
+              </b>
+              {{ round.name }}
             </li>
-            <li><b>Type :</b> {{ rankingType[round.rankingType] }}</li>
-            <li><b>Catégorie :</b> {{ round.category }}</li>
-            <li><b>Quotas :</b> {{ round.quota }}</li>
+            <li>
+              <b>
+                Genre :
+              </b>
+              {{ round.sex === 'male' ? 'Homme' : 'Femme' }}
+            </li>
+            <li>
+              <b>
+                Type :
+              </b>
+              {{ rankingType[round.rankingType] }}
+            </li>
+            <li>
+              <b>
+                Catégorie :
+              </b>
+              {{ round.category }}
+            </li>
+            <li>
+              <b>
+                Quotas :
+              </b>
+              {{ round.quota }}
+            </li>
             <li v-show="round.maxTries">
-              <b>Nombre d'essais :</b> {{ round.maxTries || 0 }}
+              <b>
+                Nombre d'essais :
+              </b>
+              {{ round.maxTries || 0 }}
             </li>
           </ul>
         </div>
@@ -123,7 +149,6 @@ export default class BouldersDisplay extends Vue {
     try {
       const groups = await ApiHelper.GetBoulderingGroups(competitionId, roundId)
       this.groups = groups.data
-      console.log('groups', this.groups)
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)
     }
@@ -167,7 +192,6 @@ export default class BouldersDisplay extends Vue {
   }
 
   async onCreateBloc(groupId: number) {
-    console.log('onCreateBloc', groupId)
     try {
       await ApiHelper.AddBoulder(
         this.round.competitionId,
@@ -186,7 +210,6 @@ export default class BouldersDisplay extends Vue {
   }
 
   async refreshBouldersGroups() {
-    console.log('refresh')
     await this.getBouldersGroups(this.round.competitionId, this.round.id)
   }
 }
