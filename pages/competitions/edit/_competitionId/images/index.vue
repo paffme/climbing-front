@@ -17,6 +17,7 @@
           :group-id="groupId"
           :img="picture"
           :round-id="roundId"
+          :no-interact="false"
         />
       </div>
       <div v-if="dropFile !== null" class="tags">

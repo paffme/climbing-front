@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="field">
+    <div v-show="!noInteract" class="field">
       <section>
         <div class="block">
           <b-radio
             v-model="climbingHoldType"
             :disabled="!drawing || !annotationLoaded"
-            :native-value="types[0]"
+            :native-value="typeHolds.START"
             name="name"
             type="is-success"
           >
@@ -15,7 +15,7 @@
           <b-radio
             v-model="climbingHoldType"
             :disabled="!drawing || !annotationLoaded"
-            :native-value="types[1]"
+            :native-value="typeHolds.NORMAL"
             name="name"
             type="is-info"
           >
@@ -24,7 +24,7 @@
           <b-radio
             v-model="climbingHoldType"
             :disabled="!drawing || !annotationLoaded"
-            :native-value="types[2]"
+            :native-value="typeHolds.ZONE"
             name="name"
             type="is-warning"
           >
@@ -33,7 +33,7 @@
           <b-radio
             v-model="climbingHoldType"
             :disabled="!drawing || !annotationLoaded"
-            :native-value="types[3]"
+            :native-value="typeHolds.TOP"
             name="name"
             type="is-danger"
           >
@@ -58,9 +58,9 @@
       <v-annotator
         v-if="holds !== null && img !== null"
         :drawing="drawing && annotationLoaded"
-        :height="img.height"
+        :height="img && img.height"
         :grid="[0, 0]"
-        :width="img.width"
+        :width="img && img.width"
         :min-size="[5, 5]"
         :no-interact="noInteract"
         :no-select="false"
@@ -71,7 +71,7 @@
         <img
           v-if="img !== null"
           id="imgBlock"
-          :src="img.url"
+          :src="img && img.url"
           draggable="false"
           height="100%"
           width="100%"
@@ -102,7 +102,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import VAnnotator from 'vue-annotator'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { APIBoulderPicture, APIHolds, TypeHolds } from '~/definitions'
@@ -112,18 +112,15 @@ import { AxiosHelper } from '~/utils/axiosHelper'
 export default class AnnotationComponent extends Vue {
   @Prop(Object) img!: APIBoulderPicture
   @Prop(Number) competitionId!: number
+  @Prop(Number) roundId!: number
+  @Prop(Number) groupId!: number
+  @Prop(Number) boulderId!: number
+  @Prop(Boolean) noInteract!: boolean
 
-  oldImg: APIBoulderPicture | null = null
-
-  roundId!: number
-  groupId!: number
-  boulderId!: number
-
-  types = [TypeHolds.START, TypeHolds.NORMAL, TypeHolds.ZONE, TypeHolds.TOP]
+  typeHolds = TypeHolds
 
   deleting = false
   drawing = true
-  noInteract = false
 
   cursor = 'auto'
   climbingHoldType = TypeHolds.START
@@ -131,16 +128,16 @@ export default class AnnotationComponent extends Vue {
   holds: APIHolds | null = null
   annotationLoaded = false
 
-  @Watch('oldImg')
-  onUpdateImg() {
-    this.holdsInterval()
-  }
-
-  created() {
-    this.oldImg = this.img
-    this.roundId = parseInt(this.$route.query.roundId as string, 10)
-    this.boulderId = parseInt(this.$route.query.boulderId as string, 10)
-    this.groupId = parseInt(this.$route.query.groupId as string, 10)
+  mounted() {
+    this.roundId = this.roundId
+      ? this.roundId
+      : parseInt(this.$route.query.roundId as string, 10)
+    this.boulderId = this.boulderId
+      ? this.boulderId
+      : parseInt(this.$route.query.boulderId as string, 10)
+    this.groupId = this.groupId
+      ? this.groupId
+      : parseInt(this.$route.query.groupId as string, 10)
 
     this.holdsInterval()
   }
@@ -209,21 +206,22 @@ export default class AnnotationComponent extends Vue {
   async holdsInterval() {
     this.annotationLoaded = false
     const holdList = await this.getHolds()
+    const timeout = 5000
 
-    if (holdList && holdList?.boundingBoxes) {
+    if (holdList && holdList.boundingBoxes) {
       this.holds = holdList
       this.annotationLoaded = true
       return
     }
 
     const intervalId = setInterval(async () => {
-      if (this.holds && this.holds?.boundingBoxes) {
+      if (this.holds && this.holds.boundingBoxes) {
         this.annotationLoaded = true
         clearInterval(intervalId)
+        return
       }
-      const holdList = await this.getHolds()
-      this.holds = holdList!
-    }, 5000)
+      this.holds = await this.getHolds()
+    }, timeout)
   }
 
   async uploadHold(holds: APIHolds) {
