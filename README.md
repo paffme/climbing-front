@@ -31,6 +31,6 @@ To-Do
 ----
 - [x] Installer Typescript
 - [x] Configurer le PWA
-- [x] Installer les tests unitaires (en TS ?)
-- [x] Faire la pipeline
-- [x] Configurer prettier + Installer sur pipeline
+- [ ] Installer les tests unitaires (en TS ?)
+- [ ] Faire la pipeline
+- [ ] Configurer prettier + Installer sur pipeline
