@@ -60,7 +60,9 @@
             <p>
               <b-icon icon="emoticon-sad" size="is-large" />
             </p>
-            <p>Aucune compétition trouvée</p>
+            <p>
+              Aucune compétition trouvée
+            </p>
           </div>
         </section>
       </template>

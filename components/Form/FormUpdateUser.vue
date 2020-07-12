@@ -2,10 +2,10 @@
   <form v-if="user" @submit.prevent="updateCredentials">
     <b-field grouped>
       <b-field label="Prénom" :label-position="labelPosition" expanded>
-        <b-input v-model="user.firstName"></b-input>
+        <b-input v-model="user.firstName"> </b-input>
       </b-field>
       <b-field label="Nom" :label-position="labelPosition" expanded>
-        <b-input v-model="user.lastName"></b-input>
+        <b-input v-model="user.lastName"> </b-input>
       </b-field>
     </b-field>
     <b-field
@@ -13,7 +13,7 @@
       label="mot de passe"
       :label-position="labelPosition"
     >
-      <b-input expanded value="*****" type="password"></b-input>
+      <b-input expanded value="*****" type="password"> </b-input>
       <p class="control">
         <b-button
           class="button is-primary"
@@ -44,8 +44,8 @@
 
       <div v-if="!credentials.passwordIsValid">
         <span class="has-text-danger"
-          ><b-icon icon="close-octagon"></b-icon>Les mots de passes doivent être
-          identiques</span
+          ><b-icon icon="close-octagon"> </b-icon>Les mots de passes doivent
+          être identiques</span
         >
       </div>
 
@@ -59,13 +59,13 @@
       </div>
     </template>
     <b-field label="Email" :label-position="labelPosition">
-      <b-input v-model="user.email"></b-input>
+      <b-input v-model="user.email"> </b-input>
     </b-field>
     <b-field label="Année de naissance" :label-position="labelPosition">
-      <b-input v-model="user.birthYear"></b-input>
+      <b-input v-model="user.birthYear"> </b-input>
     </b-field>
     <b-field label="Club" :label-position="labelPosition">
-      <b-input v-model="user.club"></b-input>
+      <b-input v-model="user.club"> </b-input>
     </b-field>
     <div>
       <b-button native-type="submit" type="is-primary">
@@ -150,8 +150,6 @@ export default class FormUpdateUser extends Vue {
     club?: string
     birthYear: number
   } {
-    console.log('originalEmail', this.originalEmail)
-    console.log('updateed', user.email)
     return {
       firstName: user.firstName,
       lastName: user.lastName,

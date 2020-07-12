@@ -9,8 +9,12 @@
       <div class="media-content">
         <div class="content">
           <p>
-            <strong>{{ competition.name }}</strong>
-            <small>Il y a deux jours</small>
+            <strong>
+              {{ competition.name }}
+            </strong>
+            <small>
+              Il y a deux jours
+            </small>
             <br />
             {{ competition.description }}
             <br />

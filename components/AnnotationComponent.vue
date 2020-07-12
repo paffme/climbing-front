@@ -51,8 +51,10 @@
       </section>
     </div>
     <div v-if="!annotationLoaded" class="has-text-centered content">
-      <b-progress></b-progress>
-      <span>Detection des prises...</span>
+      <b-progress> </b-progress>
+      <span>
+        Detection des prises...
+      </span>
     </div>
     <div class="annotator">
       <v-annotator

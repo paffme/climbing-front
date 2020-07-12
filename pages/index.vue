@@ -43,9 +43,13 @@
           <div class="column is-12">
             <b-notification :closable="false">
               <div class="is-flex competition_title">
-                <span class="subtitle">Compétitions à venir</span>
+                <span class="subtitle">
+                  Compétitions à venir
+                </span>
                 <nuxt-link to="competitions">
-                  <span>Autres compétitions</span>
+                  <span>
+                    Autres compétitions
+                  </span>
                 </nuxt-link>
               </div>
               <TableCompetition
@@ -103,8 +107,6 @@ export default class Competitions extends Vue {
       this.dashboardStats.nbClimber = await this.fetchNbClimber()
       this.dashboardStats.futureCompetitions = await this.countCompetition(true)
       this.dashboardStats.totalCompetitions = await this.countCompetition()
-
-      console.log('this.competitions', this.competitions)
     } catch (err) {
       console.log('error Created - Index', err)
       this.competitions = []
@@ -141,7 +143,6 @@ export default class Competitions extends Vue {
         this.perPage,
         futureCompetitions()
       )
-      console.log('axiosResponse', axiosResponse)
       return axiosResponse.data
     } catch (err) {
       console.log('fetchFutureCompetitions - ERR', err)

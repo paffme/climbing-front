@@ -11,7 +11,7 @@
             <div class="card-header">
               <h1 class="card-header-title">
                 Gestion du bloc
-                <b-tag>ID {{ boulder.id }}</b-tag>
+                <b-tag> ID {{ boulder.id }} </b-tag>
               </h1>
             </div>
             <div class="card-content content-judge">
@@ -26,7 +26,9 @@
                   boulder.judges.length > 0
                 "
               >
-                <p>Listes des juges du bloc</p>
+                <p>
+                  Listes des juges du bloc
+                </p>
                 <b-field>
                   <b-select v-model="selectedJudge" multiple native-size="4">
                     <option

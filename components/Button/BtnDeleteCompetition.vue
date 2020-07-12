@@ -1,8 +1,10 @@
 <template>
   <b-notification :closable="false">
     <div class="content">
-      <b-icon icon="alert-circle has-text-danger"></b-icon>
-      <span class="subtitle">Danger zone</span>
+      <b-icon icon="alert-circle has-text-danger"> </b-icon>
+      <span class="subtitle">
+        Danger zone
+      </span>
     </div>
     <b-button type="is-gray" expanded>
       Supprimer cette compétition

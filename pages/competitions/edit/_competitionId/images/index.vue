@@ -125,8 +125,6 @@ export default class ImagePage extends Vue {
       )
       this.picture = photo.data
       this.isLoading = false
-
-      console.log(photo.data.url)
     } catch (err) {
       this.isLoading = false
       console.log('err', err)

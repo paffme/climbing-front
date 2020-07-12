@@ -26,10 +26,10 @@
     <div v-else>
       <p class="content subtitle">
         Aucun grimpeur inscrit
-        <b-icon icon="emoticon-sad-outline"></b-icon>
+        <b-icon icon="emoticon-sad-outline"> </b-icon>
       </p>
       <div>
-        <slot></slot>
+        <slot> </slot>
       </div>
     </div>
   </div>
