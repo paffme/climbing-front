@@ -111,7 +111,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import {
   APIBoulderingGroups,
   APIBoulderingGroupsClimbers,
@@ -133,6 +133,11 @@ import { AxiosHelper } from '~/utils/axiosHelper'
 export default class BouldersDisplay extends Vue {
   @Prop(String) qualificationRound!: TypeBoulderingRound
   @Prop(Object) round!: BoulderingLimitedRounds
+  @Watch('round', { immediate: false, deep: true })
+  onRoundChange() {
+    this.refreshBouldersGroups()
+  }
+
   @Prop(Object) roles!: APIUserCompetitionRoles
   modalIsActive = false
   groups: APIBoulderingGroupsClimbers[] = []
@@ -141,7 +146,7 @@ export default class BouldersDisplay extends Vue {
   rawStateRound = RawStateRound
   rankingType = RankingType
 
-  async created() {
+  async mounted() {
     await this.refreshBouldersGroups()
   }
 

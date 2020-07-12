@@ -56,9 +56,9 @@
     </div>
     <div class="annotator">
       <v-annotator
+        v-if="holds !== null && img !== null"
         :drawing="drawing && annotationLoaded"
         :grid="[0, 0]"
-        v-if="holds !== null && img !== null"
         :height="img.height"
         :min-size="[5, 5]"
         :no-interact="noInteract"
