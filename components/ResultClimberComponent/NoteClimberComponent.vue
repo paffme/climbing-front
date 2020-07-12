@@ -1,45 +1,55 @@
 <template>
   <div>
-    <template
-      v-if="_boulders && Array.isArray(_boulders) && _boulders.length > 0"
-    >
+    <template v-if="Boulders && Array.isArray(Boulders) && Boulders.length > 0">
       <p class="subtitle notification has-text-centered">
-        Bloc numéro {{ _boulders[index].id }}
+        Bloc numéro {{ Boulders[index].id }}
       </p>
       <b-carousel :autoplay="false" @change="onChange">
-        <b-carousel-item v-for="(boulder, i) in _boulders" :key="i">
-          <template v-if="_boulders[index].url">
-            <span class="image is-4by3">
-              <img :src="_boulders[index].url" />
-            </span>
-          </template>
-          <template v-else>
-            <section :class="`hero is-medium is-warning`">
-              <div class="hero-body has-text-centered">
-                <h1 class="title">
-                  Image du bloc non disponible
-                </h1>
-              </div>
-            </section>
-          </template>
-        </b-carousel-item>
+        <template v-for="(boulder, i) in Boulders">
+          <b-carousel-item :key="i">
+            <template v-if="boulder && boulder.img">
+              <AnnotationComponent
+                :group-id="groupId"
+                :round-id="roundId"
+                :boulder-id="boulder.id"
+                :competition-id="competitionId"
+                :img="boulder.img"
+                :no-interact="true"
+              />
+            </template>
+            <template v-else>
+              <section :class="`hero is-medium is-warning`">
+                <div class="hero-body has-text-centered">
+                  <h1 class="title">
+                    Image du bloc non disponible
+                  </h1>
+                </div>
+              </section>
+            </template>
+          </b-carousel-item>
+        </template>
       </b-carousel>
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, PropSync, Watch, Prop } from 'vue-property-decorator'
-import { APIBoulders, User } from '~/definitions'
+import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
+import { APIBoulderPicture, APIBoulders, User } from '~/definitions'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
-import { AxiosHelper } from '~/utils/axiosHelper'
+import AnnotationComponent from '~/components/AnnotationComponent.vue'
 
-@Component
+@Component({
+  components: { AnnotationComponent }
+})
 export default class CarousselBoulderImage extends Vue {
-  @PropSync('boulders', { type: Array }) _boulders!: {
+  @Prop(Number) competitionId!: number
+  @Prop(Number) roundId!: number
+  @Prop(Number) groupId!: number
+  @Prop(Array) boulders!: {
     id: number
     judges: User[]
-    url: string
+    img: APIBoulderPicture
   }[]
 
   @Watch('boulders', { immediate: true, deep: true })
@@ -47,49 +57,32 @@ export default class CarousselBoulderImage extends Vue {
     console.log('onBoulderFetchPhotos - boulders', boulders)
     console.log('competitionId', this.competitionId)
     boulders.forEach(async (boulder, index) => {
-      const result = await ApiHelper.GetBoulderPhoto(
-        this.competitionId,
-        this.roundId,
-        this.groupId,
-        boulder.id
-      )
+      try {
+        const result = await ApiHelper.GetBoulderPhoto(
+          this.competitionId,
+          this.roundId,
+          this.groupId,
+          boulder.id
+        )
 
-      this._boulders[index].url = result.data.url
+        console.log('result', result)
+        this.boulders[index].img = result.data
+        this.Boulders.push(this.boulders[index])
+        console.log('this.boulders[index]', this.Boulders)
+      } catch (err) {
+        console.log('err', err)
+        this.Boulders.push(this.boulders[index])
+      }
     })
   }
 
-  @Prop(Number) competitionId!: number
-  @Prop(Number) roundId!: number
-  @Prop(Number) groupId!: number
+  Boulders: any = []
+
   index = 0
 
   onChange(value: number) {
     this.index = value
-    this.$emit('onChangeBloc', this._boulders[value].id)
-  }
-
-  async getPhoto(
-    competitionId: number,
-    roundId: number,
-    groupId: number,
-    boulderId: number
-  ) {
-    try {
-      const photos = await ApiHelper.GetBoulderPhoto(
-        competitionId,
-        roundId,
-        groupId,
-        boulderId
-      )
-      console.log('photos', photos)
-      return photos.data.url
-    } catch (err) {
-      console.log('err', err)
-      if (err.response?.data?.code === 'BOULDER_HAS_NO_PHOTO') {
-        return
-      }
-      AxiosHelper.HandleAxiosError(this, err)
-    }
+    this.$emit('onChangeBloc', this.Boulders[value].id)
   }
 }
 </script>
