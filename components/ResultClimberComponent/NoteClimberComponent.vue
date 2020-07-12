@@ -54,6 +54,7 @@ export default class CarousselBoulderImage extends Vue {
 
   @Watch('boulders', { immediate: true, deep: true })
   async onBoulderFetchPhotos(boulders: APIBoulders[]) {
+    this.Boulders = []
     boulders.forEach(async (boulder, index) => {
       try {
         const result = await ApiHelper.GetBoulderPhoto(

@@ -173,9 +173,7 @@ export default class ResultClimberComponent extends Vue {
           try: 1,
           alreadyNote: false
         }
-        return
       }
-      AxiosHelper.HandleAxiosError(this, err)
     }
   }
 
