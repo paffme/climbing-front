@@ -3,14 +3,13 @@
     <div class="column is-12">
       <div class="notification content is-warning">
         <p>
-          Gestion de l'apercu du bloc
+          Photo du bloc
         </p>
         <ol>
+          <li>1) Sélectionnez la photo du bloc via la zone ci-dessous</li>
           <li>
-            Uploader la photo
-          </li>
-          <li>
-            Une fois uploader la photo les blocs seront reconnus par l'IA
+            2) Une intelligence artificielle va ensuite s'éxecuter pour détecter
+            prises et volumes
           </li>
         </ol>
       </div>
@@ -50,9 +49,7 @@
                 <p>
                   <b-icon icon="upload" size="is-large" />
                 </p>
-                <p>
-                  Ajouter une image ici
-                </p>
+                <p>Sélectionnez une image ici</p>
               </div>
             </section>
           </b-upload>
@@ -64,7 +61,7 @@
           expanded
           @click="uploadPhoto(competition.id, roundId, groupId, boulderId)"
         >
-          Uploader
+          Envoyer
         </b-button>
       </div>
     </div>
