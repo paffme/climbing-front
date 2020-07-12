@@ -301,19 +301,17 @@ export default class BouldersSettingsComponent extends Vue {
         category: this.categoriesCanBeSelected![0].category,
         genre: this.categoriesCanBeSelected![0].genre[0]
       }
-    // @ts-ignore
-    const genre = categories.genre === 'homme' ? 'male' : 'female'
 
     this.categoriesDisplayed.qualification =
-      this.rounds?.[categories.category][genre]?.[
+      this.rounds?.[categories.category][categories.genre]?.[
         TypeBoulderingRound.QUALIFIER
       ] || undefined
-    this.categoriesDisplayed.semi = this.rounds[categories.category][genre][
-      TypeBoulderingRound.SEMI_FINAL || undefined
-    ]
-    this.categoriesDisplayed.final = this.rounds[categories.category][genre][
-      TypeBoulderingRound.FINAL
-    ]
+    this.categoriesDisplayed.semi = this.rounds[categories.category][
+      categories.genre
+    ][TypeBoulderingRound.SEMI_FINAL || undefined]
+    this.categoriesDisplayed.final = this.rounds[categories.category][
+      categories.genre
+    ][TypeBoulderingRound.FINAL]
   }
 
   extractCategoryGenre(data: APIBoulderingRounds): CategoriesSelect[] {
@@ -333,10 +331,10 @@ export default class BouldersSettingsComponent extends Vue {
       }
 
       if (haveFemaleCategory) {
-        temp.genre.push('femme' as Sex)
+        temp.genre.push(Sex.Female)
       }
       if (haveMaleCategory) {
-        temp.genre.push('homme' as Sex)
+        temp.genre.push(Sex.Male)
       }
 
       temp.category = key as CategoryName
