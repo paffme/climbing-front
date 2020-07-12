@@ -14,6 +14,7 @@
                 :boulder-id="boulder.id"
                 :competition-id="competitionId"
                 :img="boulder.img"
+                :is-edition="true"
                 :no-interact="true"
               />
             </template>
@@ -54,6 +55,7 @@ export default class CarousselBoulderImage extends Vue {
 
   @Watch('boulders', { immediate: true, deep: true })
   async onBoulderFetchPhotos(boulders: APIBoulders[]) {
+    this.Boulders = []
     boulders.forEach(async (boulder, index) => {
       try {
         const result = await ApiHelper.GetBoulderPhoto(

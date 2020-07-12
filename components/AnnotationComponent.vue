@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="!noInteract" class="field">
+    <div v-show="!isEdition" class="field">
       <section>
         <div class="block">
           <b-radio
@@ -116,6 +116,7 @@ export default class AnnotationComponent extends Vue {
   @Prop(Number) roundId!: number
   @Prop(Number) groupId!: number
   @Prop(Number) boulderId!: number
+  @Prop(Boolean) isEdition!: boolean
   @Prop(Boolean) noInteract!: boolean
 
   typeHolds = TypeHolds
@@ -144,7 +145,6 @@ export default class AnnotationComponent extends Vue {
   }
 
   async tryChangeBoxColor(annotation: any) {
-    console.log(annotation)
     if (
       this.annotationLoaded &&
       !this.deleting &&
@@ -152,7 +152,6 @@ export default class AnnotationComponent extends Vue {
       this.holds!.boundingBoxes[annotation.target.id].type !==
         this.climbingHoldType
     ) {
-      console.log('color update')
       const deletedBox = await this.deleteBox(annotation.target)
 
       const updateBox: APIHolds = {
