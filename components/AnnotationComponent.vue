@@ -1,78 +1,109 @@
 <template>
-	<div>
-		<div class="field">
-			<section>
-				<div class="block">
-					<b-radio :disabled="!drawing || !annotationLoaded" name="name" native-value="START" type="is-success"
-					         v-model="climbingHoldType">
-						Début
-					</b-radio>
-					<b-radio :disabled="!drawing || !annotationLoaded" name="name" native-value="NORMAL" type="is-info"
-					         v-model="climbingHoldType">
-						Autre
-					</b-radio>
-					<b-radio :disabled="!drawing || !annotationLoaded" name="name" native-value="ZONE" type="is-warning"
-					         v-model="climbingHoldType">
-						Zone
-					</b-radio>
-					<b-radio :disabled="!drawing || !annotationLoaded" name="name" native-value="TOP" type="is-danger"
-					         v-model="climbingHoldType">
-						Top
-					</b-radio>
-					<b-switch :value="false" @input="modeDelete" type="is-danger" v-model="deleting">
-						Mode Suppression
-					</b-switch>
-				</div>
-			</section>
-		</div>
-		<div
-				class="has-text-centered content"
-				v-if="!annotationLoaded"
-		>
-			<b-progress></b-progress>
-			<span>Detection des prises...</span>
-		</div>
-		<div class="annotator">
-			<v-annotator
-					:drawing="drawing && annotationLoaded"
-					:height="img.height"
-					:grid="[0, 0]"
-					:width="img.width"
-					:min-size="[5, 5]"
-					:no-interact="noInteract"
-					:no-select="false"
-					v-if="holds !== null && img !== null"
-					@draw-end="drawFinish"
-					@click.native.ctrl="tryChangeBoxColor"
-					@unselect="unselected"
-					@select="tryDeleteBox"
-			>
-				<img :src="img.url"
-				     v-if="img !== null"
-				     draggable="false"
-				     height="100%"
-				     id="imgBlock"
-				     width="100%"
-				/>
-				<template v-for="(hold,i) in holds.boundingBoxes">
-					<rect :height="Math.abs(hold.coordinates[2] - hold.coordinates[0])" :id="i"
-					      :key="i" :style="{'cursor': cursor, 'stroke': getColorFromType(hold.type)}"
-					      :width="Math.abs(hold.coordinates[3] - hold.coordinates[1])"
-					      :x="hold.coordinates[1]"
-					      :y="hold.coordinates[0]"
-					      slot="annotation"
-					      fill="none">
-					</rect>
-				</template>
-				<rect :stroke="getColorFromType(climbingHoldType)" slot="drawing" v-if="holds !== null && !noInteract">
-				</rect>
-			</v-annotator>
-		</div>
-	</div>
+  <div>
+    <div class="field">
+      <section>
+        <div class="block">
+          <b-radio
+              :disabled="!drawing || !annotationLoaded"
+              name="name"
+              native-value="START"
+              type="is-success"
+              v-model="climbingHoldType"
+          >
+            Début
+          </b-radio>
+          <b-radio
+              :disabled="!drawing || !annotationLoaded"
+              name="name"
+              native-value="NORMAL"
+              type="is-info"
+              v-model="climbingHoldType"
+          >
+            Autre
+          </b-radio>
+          <b-radio
+              :disabled="!drawing || !annotationLoaded"
+              name="name"
+              native-value="ZONE"
+              type="is-warning"
+              v-model="climbingHoldType"
+          >
+            Zone
+          </b-radio>
+          <b-radio
+              :disabled="!drawing || !annotationLoaded"
+              name="name"
+              native-value="TOP"
+              type="is-danger"
+              v-model="climbingHoldType"
+          >
+            Top
+          </b-radio>
+          <b-switch
+              :value="false"
+              @input="modeDelete"
+              type="is-danger"
+              v-model="deleting"
+          >
+            Mode Suppression
+          </b-switch>
+        </div>
+      </section>
+    </div>
+    <div class="has-text-centered content" v-if="!annotationLoaded">
+      <b-progress></b-progress>
+      <span>Detection des prises...</span>
+    </div>
+    <div class="annotator">
+      <v-annotator
+          :drawing="drawing && annotationLoaded"
+          :grid="[0, 0]"
+          :height="img.height"
+          :min-size="[5, 5]"
+          :no-interact="noInteract"
+          :no-select="false"
+          :width="img.width"
+          @click.native.ctrl="tryChangeBoxColor"
+          @draw-end="drawFinish"
+          @select="tryDeleteBox"
+          @unselect="unselected"
+          v-if="holds !== null && img !== null"
+      >
+        <img
+            :src="img.url"
+            draggable="false"
+            height="100%"
+            id="imgBlock"
+            v-if="img !== null"
+            width="100%"
+        />
+        <template v-for="(hold, i) in holds.boundingBoxes">
+          <rect
+              :height="Math.abs(hold.coordinates[2] - hold.coordinates[0])"
+              :id="i"
+              :key="i"
+              :style="{ cursor: cursor, stroke: getColorFromType(hold.type) }"
+              :width="Math.abs(hold.coordinates[3] - hold.coordinates[1])"
+              :x="hold.coordinates[1]"
+              :y="hold.coordinates[0]"
+              fill="none"
+              slot="annotation"
+          >
+          </rect>
+        </template>
+        <rect
+            :stroke="getColorFromType(climbingHoldType)"
+            slot="drawing"
+            v-if="holds !== null && !noInteract"
+        >
+        </rect>
+      </v-annotator>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-  import { Component, Prop, PropSync, Vue, Watch } from "vue-property-decorator";
+  import { Component, Prop, Vue, Watch } from "vue-property-decorator";
   import VAnnotator from "vue-annotator";
   import { ApiHelper } from "~/utils/api_helper/apiHelper";
   import { APIBoulderPicture, APIHolds, TypeHolds } from "~/definitions";
@@ -80,14 +111,14 @@
 
   @Component({ components: { VAnnotator } })
   export default class AnnotationComponent extends Vue {
-    @Prop(Object) img !: APIBoulderPicture;
-    @Prop(Number) competitionId !: number;
+    @Prop(Object) img!: APIBoulderPicture;
+    @Prop(Number) competitionId!: number;
 
     oldImg: APIBoulderPicture | null = null;
 
-    roundId !: number;
-    groupId !: number;
-    boulderId !: number;
+    roundId!: number;
+    groupId!: number;
+    boulderId!: number;
 
     deleting = false;
     drawing = true;
@@ -115,18 +146,23 @@
 
     async tryChangeBoxColor(annotation: any) {
       console.log(annotation);
-      if (this.annotationLoaded && !this.deleting &&
-        annotation.toElement.nodeName === "rect" &&
-        this.holds!.boundingBoxes[annotation.target.id].type !== this.climbingHoldType) {
-
+      if (
+          this.annotationLoaded &&
+          !this.deleting &&
+          annotation.toElement.nodeName === "rect" &&
+          this.holds!.boundingBoxes[annotation.target.id].type !==
+          this.climbingHoldType
+      ) {
         console.log("color update");
         const deletedBox = await this.deleteBox(annotation.target);
 
         const updateBox: APIHolds = {
-          boundingBoxes: [{
-            coordinates: deletedBox[0].coordinates,
-            type: this.climbingHoldType
-          }]
+          boundingBoxes: [
+            {
+              coordinates: deletedBox[0].coordinates,
+              type: this.climbingHoldType
+            }
+          ]
         };
 
         await this.uploadHold(updateBox);
@@ -145,8 +181,10 @@
 
       this.deleteHold({ boundingBoxes: [deletedBox[0]] });
 
-      if (box.nextElementSibling !== null &&
-        box.nextElementSibling.nodeName === "g") {
+      if (
+          box.nextElementSibling !== null &&
+          box.nextElementSibling.nodeName === "g"
+      ) {
         document.getElementById(box.nextElementSibling.id)!.remove();
       }
 
@@ -277,7 +315,6 @@
     }
   }
 }
-
 </script>
 
 <style scoped lang="scss">
