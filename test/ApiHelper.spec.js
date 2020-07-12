@@ -596,26 +596,6 @@ describe('ApiHelper', () => {
       expect(spy).toHaveBeenCalledWith(1, 2, 3, 4, 5)
       expect(result).toEqual('success')
     })
-
-    describe('BoulderPhoto', () => {
-      test('getBoulderPhoto - Should call with rights args', async () => {
-        const spy = jest.spyOn(API_URL, 'boulderPhoto')
-        axios.get.mockResolvedValue('success')
-
-        const result = await ApiHelper.GetBoulderPhoto(1, 2, 3, 4)
-        expect(spy).toHaveBeenCalledWith(1, 2, 3, 4)
-        expect(result).toEqual('success')
-      })
-
-      test('deleteBoulderPhoto - Should call with rights args', async () => {
-        const spy = jest.spyOn(API_URL, 'boulderPhoto')
-        axios.delete.mockResolvedValue('success')
-
-        const result = await ApiHelper.GetBoulderPhoto(1, 2, 3, 4)
-        expect(spy).toHaveBeenCalledWith(1, 2, 3, 4)
-        expect(result).toEqual('success')
-      })
-    })
   })
   test('getHolds - Should call with rights args', async () => {
     const spy = jest.spyOn(API_URL, 'getHolds')
@@ -625,33 +605,4 @@ describe('ApiHelper', () => {
     expect(spy).toHaveBeenCalledWith(1, 2, 3, 4)
     expect(result).toEqual('success')
   })
-
-  /* describe('RankingPdf', () => {
-    test('getGeneralRankingPdf - Should call with rights args', async () => {
-      const spy = jest.spyOn(API_URL, 'getGeneralRankingPdf')
-      axios.get.mockResolvedValue('success')
-
-      const result = await ApiHelper.GetGeneralRankingPdf(1)
-      expect(spy).toHaveBeenCalledWith(1)
-      expect(result).toEqual('success')
-    })
-
-    test('getRoundRankingPdf - Should call with rights args', async () => {
-      const spy = jest.spyOn(API_URL, 'getRoundRankingPdf')
-      axios.get.mockResolvedValue('success')
-
-      const result = await ApiHelper.GetRoundRankingPdf(1, 2)
-      expect(spy).toHaveBeenCalledWith(1, 2)
-      expect(result).toEqual('success')
-    })
-
-    test('getGroupRankingPdf - Should call with rights args', async () => {
-      const spy = jest.spyOn(API_URL, 'getGroupRankingPdf')
-      axios.get.mockResolvedValue('success')
-
-      const result = await ApiHelper.GetGroupRankingPdf(1, 2, 3)
-      expect(spy).toHaveBeenCalledWith(1, 2, 3)
-      expect(result).toEqual('success')
-    })
-  }) */
 })

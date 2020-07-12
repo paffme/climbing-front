@@ -1,5 +1,6 @@
 <template>
   <section v-if="groupRankings">
+    {{ groupRankings }}
     <p class="content">
       Nombre de points :
       <b-tag type="is-primary">

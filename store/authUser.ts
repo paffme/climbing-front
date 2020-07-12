@@ -49,7 +49,6 @@ export default class AuthUser extends VuexModule {
 
   get Credentials(): APIUser | undefined {
     const object = getCookieFromObject('credentials')
-    console.log('credentials call', object)
     return object
   }
 

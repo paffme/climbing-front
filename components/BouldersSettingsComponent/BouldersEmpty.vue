@@ -1,6 +1,8 @@
 <template>
   <div class="content is-flex alert">
-    <span class="subtitle">Aucun tour</span>
+    <span class="subtitle">
+      Aucun tour
+    </span>
     <b-button type="is-info" @click="$emit('createRound')">
       Ajouter tour
     </b-button>

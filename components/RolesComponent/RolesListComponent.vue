@@ -5,7 +5,9 @@
         <div class="panel-block">
           <div>
             <b-icon icon="account" size="is-small"> </b-icon>
-            <span>{{ user.firstName }} {{ user.lastName }}#{{ user.id }}</span>
+            <span>
+              {{ user.firstName }} {{ user.lastName }}#{{ user.id }}
+            </span>
           </div>
           <b-button
             class="removeButton"

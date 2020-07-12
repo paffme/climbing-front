@@ -5,16 +5,15 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { RoleName } from '~/definitions'
+import { getRoleName } from '~/utils/wording-role'
 
-@Component({
-  data() {
-    return {
-      text: 'Ajouter un utilisateur'
-    }
-  }
-})
-export default class RolesButton extends Vue {}
+@Component({})
+export default class RolesButton extends Vue {
+  @Prop(String) roleName!: RoleName
+  text = `Ajouter un ${getRoleName(this.roleName)}`
+}
 </script>
 
 <style scoped></style>

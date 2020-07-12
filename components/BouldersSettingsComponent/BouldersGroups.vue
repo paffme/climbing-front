@@ -6,7 +6,7 @@
           <h1 class="title">
             Gestion des groupes et blocs
           </h1>
-          <LabelState :round-id="round.id" :state="round.state"></LabelState>
+          <LabelState :round-id="round.id" :state="round.state"> </LabelState>
         </div>
         <div v-if="round.state !== rawStateRound.ENDED" class="is-pulled-right">
           <b-button
@@ -33,7 +33,9 @@
         "
         class="column is-12"
       >
-        <p>Créer un nouveau groupe :</p>
+        <p>
+          Créer un nouveau groupe :
+        </p>
         <FormCreateBoulderingGroup @create="onCreate" />
       </div>
     </div>
@@ -41,7 +43,7 @@
       <template v-if="groups && Array.isArray(groups) && groups.length > 0">
         <div class="column is-12">
           <p class="subtitle">
-            Apercu des groupes
+            Aperçu des groupes
           </p>
         </div>
         <div v-for="(group, index) in groups" :key="index" class="column is-6">
@@ -59,8 +61,12 @@
                   <div class="column is-6 line-right">
                     <ul>
                       <li>
+                        <div>
+                          <p>Liste des blocs :</p>
+                        </div>
+                      </li>
+                      <li>
                         <div class="line">
-                          <p>Bloc</p>
                           <template
                             v-if="
                               group.boulders &&
@@ -70,8 +76,9 @@
                           >
                             <ul id="boulder-list">
                               <li
-                                v-for="(boulder, index) in group.boulders"
-                                :key="index"
+                                v-for="(boulder,
+                                indexBoulder) in group.boulders"
+                                :key="indexBoulder"
                               >
                                 <JudgesModal
                                   :boulder="boulder"
@@ -90,7 +97,9 @@
                             </ul>
                           </template>
                           <template v-else>
-                            <span>Aucun bloc</span>
+                            <span>
+                              Aucun bloc
+                            </span>
                           </template>
                           <b-icon
                             class="btn"
@@ -99,12 +108,13 @@
                           ></b-icon>
                         </div>
                       </li>
-                      <li>Nom : {{ group.name }}</li>
                     </ul>
                   </div>
                   <div class="column is-6">
                     <div>
-                      <p>Liste des grimpeurs</p>
+                      <p>
+                        Liste des grimpeurs :
+                      </p>
                       <template
                         v-if="
                           group.climbers &&
@@ -129,11 +139,14 @@
                         </b-field>
                       </template>
                       <template v-else>
-                        <span>Aucun grimpeur</span>
+                        <span>
+                          Aucun grimpeur
+                        </span>
                       </template>
                     </div>
                   </div>
                 </div>
+                <p class="group-name">Nom du groupe : {{ group.name }}</p>
               </div>
             </div>
             <footer class="card-footer">
@@ -404,5 +417,8 @@ li {
 }
 .line-right {
   border-right: 1px solid #e2e2e2;
+}
+.group-name {
+  text-align: center;
 }
 </style>

@@ -29,7 +29,6 @@ export default class BtnDownloadPdf extends Vue {
       let response: any = null
       if (this.typeCompetition === 'general' && this.competitionId) {
         response = await ApiHelper.GetGeneralRankingPdf(this.competitionId)
-        console.log('t', response)
       }
       if (
         this.typeCompetition === 'rounds' &&
@@ -40,7 +39,6 @@ export default class BtnDownloadPdf extends Vue {
           this.competitionId,
           this.roundId
         )
-        console.log('t', response)
       }
       if (
         this.typeCompetition === 'groups' &&
@@ -53,7 +51,6 @@ export default class BtnDownloadPdf extends Vue {
           this.roundId,
           this.groupId
         )
-        console.log('t', response)
       }
 
       if (!response) return
@@ -61,8 +58,6 @@ export default class BtnDownloadPdf extends Vue {
       this.isLoading = false
 
       const fileURL = window.URL.createObjectURL(new Blob([response.data]))
-
-      console.log('fileUrl', fileURL)
 
       const fileLink = document.createElement('a')
 

@@ -145,8 +145,8 @@ describe('BouldersSettingsComponent', () => {
     })
     test('Should extract all Categories and Genre', () => {
       const result = [
-        { genre: ['femme', 'homme'], category: 'minime' },
-        { genre: ['femme'], category: 'poussin' }
+        { genre: ['female', 'male'], category: 'minime' },
+        { genre: ['female'], category: 'poussin' }
       ]
       expect(wrapper.vm.extractCategoryGenre(limitedData)).toEqual(result)
     })

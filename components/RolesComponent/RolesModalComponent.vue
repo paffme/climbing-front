@@ -1,13 +1,15 @@
 <template>
   <div class="card">
     <header class="card-header">
-      <p class="card-header-title">
-        Ajouter un nouveau role
-      </p>
+      <p class="card-header-title">Ajouter un {{ displayRoleName }}</p>
     </header>
     <div class="card-content">
       <span class="description-text"
-        >Trouver un utilisateur via son <b>nom</b> (Sensible à la casse)</span
+        >Trouver un utilisateur via son
+        <b>
+          nom
+        </b>
+        (sensible à la casse)</span
       >
       <div class="custom-field">
         <SearchUser
@@ -23,15 +25,19 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import SearchUser from '~/components/Form/SearchUser.vue'
+import { RoleName } from '~/definitions'
+import { getRoleName } from '~/utils/wording-role'
 
 @Component({
   components: { SearchUser }
 })
 export default class RolesModalComponent extends Vue {
   @Prop(Array) suggestedUsers!: Array<{ name: string; id: number }>
+  @Prop() roleName!: RoleName
+
+  displayRoleName = getRoleName(this.roleName)
 
   onSelect(user: { name: string; id: number }) {
-    console.log('user', user)
     this.$emit('select', user)
   }
 

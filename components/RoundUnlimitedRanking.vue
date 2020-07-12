@@ -1,5 +1,5 @@
 <template>
-  <b-table :data="data" :bordered="true">
+  <b-table :data="data" :bordered="true" :striped="true">
     <template slot-scope="props">
       <b-table-column field="ranking" label="Classement" sortable>
         {{ props.row.ranking }}
@@ -95,7 +95,7 @@ export default class RoundUnlimitedRanking extends Vue {
 }
 </script>
 
-<style scoped>
+<style>
 input.input.custom-input {
   box-shadow: none !important;
   border: none !important;

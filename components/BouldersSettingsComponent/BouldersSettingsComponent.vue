@@ -183,7 +183,6 @@ export default class BouldersSettingsComponent extends Vue {
 
   // .DATA
   categoriesCanBeSelected: CategoriesSelect[] | null = null
-  currentCategoryDisplay: CurrentCategory | null = null
   categoriesDisplayed: CategoryDisplay = {
     qualification: null,
     semi: null,
@@ -198,7 +197,6 @@ export default class BouldersSettingsComponent extends Vue {
   async onCreateRound(value: any) {
     try {
       const data = this.roundCreateDto(value)
-      console.log('data', data)
       if (!data) throw new Error('Des champs sont manquants')
       await ApiHelper.AddRound(this.competitionId, data)
       this.$buefy.toast.open({
@@ -292,7 +290,6 @@ export default class BouldersSettingsComponent extends Vue {
 
   updateDisplayedCategories(categories?: CurrentCategory): void {
     if (!this.rounds) {
-      console.log('No boulder has been found')
       return
     }
 
@@ -301,19 +298,17 @@ export default class BouldersSettingsComponent extends Vue {
         category: this.categoriesCanBeSelected![0].category,
         genre: this.categoriesCanBeSelected![0].genre[0]
       }
-    // @ts-ignore
-    const genre = categories.genre === 'homme' ? 'male' : 'female'
 
     this.categoriesDisplayed.qualification =
-      this.rounds?.[categories.category][genre]?.[
+      this.rounds?.[categories.category][categories.genre]?.[
         TypeBoulderingRound.QUALIFIER
       ] || undefined
-    this.categoriesDisplayed.semi = this.rounds[categories.category][genre][
-      TypeBoulderingRound.SEMI_FINAL || undefined
-    ]
-    this.categoriesDisplayed.final = this.rounds[categories.category][genre][
-      TypeBoulderingRound.FINAL
-    ]
+    this.categoriesDisplayed.semi = this.rounds[categories.category][
+      categories.genre
+    ][TypeBoulderingRound.SEMI_FINAL || undefined]
+    this.categoriesDisplayed.final = this.rounds[categories.category][
+      categories.genre
+    ][TypeBoulderingRound.FINAL]
   }
 
   extractCategoryGenre(data: APIBoulderingRounds): CategoriesSelect[] {
@@ -333,10 +328,10 @@ export default class BouldersSettingsComponent extends Vue {
       }
 
       if (haveFemaleCategory) {
-        temp.genre.push('femme' as Sex)
+        temp.genre.push(Sex.Female)
       }
       if (haveMaleCategory) {
-        temp.genre.push('homme' as Sex)
+        temp.genre.push(Sex.Male)
       }
 
       temp.category = key as CategoryName
@@ -376,7 +371,6 @@ export default class BouldersSettingsComponent extends Vue {
   roundCreateDto(
     round: BoulderingRoundInput
   ): BoulderingRoundCreateInput | undefined {
-    console.log('round', round)
     if (
       !round.name ||
       !round.rankingType ||

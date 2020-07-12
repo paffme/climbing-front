@@ -85,7 +85,9 @@
                 <p>
                   <b-icon icon="emoticon-sad" size="is-large" />
                 </p>
-                <p>Aucune compétition trouvée</p>
+                <p>
+                  Aucune compétition trouvée
+                </p>
               </div>
             </section>
           </template>
@@ -153,7 +155,6 @@ export default class GeneralRanking extends Vue {
       const ranking = await ApiHelper.GetCompetitionRankings(
         parseInt(competitionId, 10)
       )
-      console.log('created', ranking)
       if (_.isEmpty(ranking.data)) {
         this.selectedRanking = []
         return
@@ -173,7 +174,6 @@ export default class GeneralRanking extends Vue {
         this.availableCategory?.[0]?.category &&
         this.availableCategory?.[0]?.genre?.[0]
       ) {
-        console.log('here')
         this.selected.genre = this.availableCategory[0].genre[0]
         this.selected.category = this.availableCategory[0].category
         this.selectedRanking = this.Rankings[this.selected.category][
@@ -186,7 +186,6 @@ export default class GeneralRanking extends Vue {
   }
 
   onSelect(selected: { category: CategoryName; genre: Sex }) {
-    console.log('fire', selected)
     this.selected = selected
   }
 

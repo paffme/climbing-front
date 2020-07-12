@@ -5,7 +5,7 @@
     tag="router-link"
     :to="`/competitions/edit/${competitionId}`"
   >
-    Editer cette compétition
+    Gérer cette compétition
   </b-button>
 </template>
 

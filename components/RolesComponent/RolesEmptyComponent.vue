@@ -1,7 +1,11 @@
 <template>
   <div class="panel-block">
     <p>
-      Aucun <i>{{ roleName.toLowerCase() }}</i> n'est défini
+      Aucun
+      <i>
+        {{ roleName.toLowerCase() }}
+      </i>
+      n'est défini
     </p>
   </div>
 </template>
