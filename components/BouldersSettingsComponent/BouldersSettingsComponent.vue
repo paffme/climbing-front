@@ -190,9 +190,6 @@ export default class BouldersSettingsComponent extends Vue {
   }
   // ./DATA
 
-  // .HOOKS
-  // ./HOOKS
-
   // .PERSO FUNCTION
   async onCreateRound(value: any) {
     try {
