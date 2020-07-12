@@ -1,9 +1,7 @@
 <template>
   <div class="card">
     <header class="card-header">
-      <p class="card-header-title">
-        Ajouter un {{ displayRoleName }}
-      </p>
+      <p class="card-header-title">Ajouter un {{ displayRoleName }}</p>
     </header>
     <div class="card-content">
       <span class="description-text"

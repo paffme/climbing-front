@@ -5,7 +5,10 @@
         <p>Photo du bloc</p>
         <ol>
           <li>1) Sélectionnez la photo du bloc via la zone ci-dessous</li>
-          <li>2) Une intelligence artificielle va ensuite s'éxecuter pour détecter prises et volumes</li>
+          <li>
+            2) Une intelligence artificielle va ensuite s'éxecuter pour détecter
+            prises et volumes
+          </li>
         </ol>
       </div>
     </div>

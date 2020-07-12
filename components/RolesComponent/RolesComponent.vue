@@ -13,16 +13,16 @@
           <RolesListComponent :users="userWithRoles" @remove="onRemove" />
           <RolesButton
             class="rolesbtn is-pulled-right"
-            @click="modalIsActive = true"
             :role-name="roleName"
+            @click="modalIsActive = true"
           ></RolesButton>
         </template>
         <template v-else>
           <RolesEmptyComponent :role-name="displayRoleName" />
           <RolesButton
             class="rolesbtn is-pulled-right"
-            @click="modalIsActive = true"
             :role-name="roleName"
+            @click="modalIsActive = true"
           ></RolesButton>
         </template>
       </div>

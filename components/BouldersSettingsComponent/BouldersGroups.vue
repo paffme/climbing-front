@@ -421,7 +421,6 @@ li {
   border-right: 1px solid #e2e2e2;
 }
 
-
 .group-name {
   text-align: center;
 }

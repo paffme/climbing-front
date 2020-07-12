@@ -5,9 +5,9 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component, Prop } from 'vue-property-decorator'
-  import { RoleName } from '~/definitions'
-  import { getRoleName } from '~/utils/wording-role'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { RoleName } from '~/definitions'
+import { getRoleName } from '~/utils/wording-role'
 
 @Component({})
 export default class RolesButton extends Vue {
