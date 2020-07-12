@@ -3,19 +3,19 @@
 		<div class="field">
 			<section>
 				<div class="block">
-					<b-radio :disabled="!drawing || !annotationLoaded" :native-value="types[0]" name="name" type="is-success"
+					<b-radio :disabled="!drawing || !annotationLoaded" name="name" native-value="START" type="is-success"
 					         v-model="climbingHoldType">
 						Début
 					</b-radio>
-					<b-radio :disabled="!drawing || !annotationLoaded" :native-value="types[1]" name="name" type="is-info"
+					<b-radio :disabled="!drawing || !annotationLoaded" name="name" native-value="NORMAL" type="is-info"
 					         v-model="climbingHoldType">
 						Autre
 					</b-radio>
-					<b-radio :disabled="!drawing || !annotationLoaded" :native-value="types[2]" name="name" type="is-warning"
+					<b-radio :disabled="!drawing || !annotationLoaded" name="name" native-value="ZONE" type="is-warning"
 					         v-model="climbingHoldType">
 						Zone
 					</b-radio>
-					<b-radio :disabled="!drawing || !annotationLoaded" :native-value="types[3]" name="name" type="is-danger"
+					<b-radio :disabled="!drawing || !annotationLoaded" name="name" native-value="TOP" type="is-danger"
 					         v-model="climbingHoldType">
 						Top
 					</b-radio>
@@ -43,8 +43,9 @@
 					:no-select="false"
 					v-if="holds !== null && img !== null"
 					@draw-end="drawFinish"
-					@select="deleteBox"
+					@click.native.ctrl="tryChangeBoxColor"
 					@unselect="unselected"
+					@select="tryDeleteBox"
 			>
 				<img :src="img.url"
 				     v-if="img !== null"
@@ -88,8 +89,6 @@
     groupId !: number;
     boulderId !: number;
 
-    types = [TypeHolds.START, TypeHolds.NORMAL, TypeHolds.ZONE, TypeHolds.TOP];
-
     deleting = false;
     drawing = true;
     noInteract = false;
@@ -114,17 +113,44 @@
       this.holdsInterval();
     }
 
-    deleteBox(obj: any) {
-      if (this.deleting) {
-        const deletedHold = this.holds!.boundingBoxes.splice(obj.node.id, 1);
+    async tryChangeBoxColor(annotation: any) {
+      console.log(annotation);
+      if (this.annotationLoaded && !this.deleting &&
+        annotation.toElement.nodeName === "rect" &&
+        this.holds!.boundingBoxes[annotation.target.id].type !== this.climbingHoldType) {
 
-        this.deleteHold({ boundingBoxes: [deletedHold[0]] });
+        console.log("color update");
+        const deletedBox = await this.deleteBox(annotation.target);
 
-        if (obj.node.nextElementSibling !== null &&
-          obj.node.nextElementSibling.nodeName === "g") {
-          document.getElementById(obj.node.nextElementSibling.id)!.remove();
-        }
+        const updateBox: APIHolds = {
+          boundingBoxes: [{
+            coordinates: deletedBox[0].coordinates,
+            type: this.climbingHoldType
+          }]
+        };
+
+        await this.uploadHold(updateBox);
+        this.holds!.boundingBoxes.push(updateBox.boundingBoxes[0]);
       }
+    }
+
+    tryDeleteBox(annotation: any) {
+      if (this.deleting) {
+        this.deleteBox(annotation.node);
+      }
+    }
+
+    private deleteBox(box: any): any {
+      const deletedBox = this.holds!.boundingBoxes.splice(box.id, 1);
+
+      this.deleteHold({ boundingBoxes: [deletedBox[0]] });
+
+      if (box.nextElementSibling !== null &&
+        box.nextElementSibling.nodeName === "g") {
+        document.getElementById(box.nextElementSibling.id)!.remove();
+      }
+
+      return deletedBox;
     }
 
     drawFinish(element: any) {
