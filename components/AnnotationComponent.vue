@@ -152,7 +152,6 @@
 
       return deletedBox;
     }
-  }
 
   drawFinish(element: any) {
     const newHold: APIHolds = {
@@ -278,6 +277,7 @@
     }
   }
 }
+
 </script>
 
 <style scoped lang="scss">
