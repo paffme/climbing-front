@@ -6,13 +6,13 @@
       </p>
       <b-select v-model="selectedRole" expanded @input="getCompetitions">
         <option v-for="(role, index) in roleName" :key="index" :value="role">
-          {{ role }}
+          {{ getRoleName(role) }}
         </option>
       </b-select>
     </div>
     <div id="content" class="column is-9">
       <h1 class="title">
-        {{ selectedRole }}
+        {{ getRoleName(selectedRole) }}
       </h1>
 
       <template v-if="isLoading">
@@ -26,7 +26,7 @@
         v-else-if="!isLoading && competitions && competitions.length === 0"
       >
         <p class="subtitle">
-          Vous n'avez aucun rôle attribué
+          Vous n'avez aucun rôle d'attribué
         </p>
       </template>
       <template v-else>
@@ -47,6 +47,7 @@ import { APICompetition, RoleName } from '~/definitions'
 import { AxiosHelper } from '~/utils/axiosHelper'
 import { RolesBuilder } from '~/utils/api_helper/RolesBuilder'
 import ShowCompetitionComponent from '~/components/ShowCompetitionComponent.vue'
+import { getRoleName } from '~/utils/wording-role'
 
 @Component({
   components: { ShowCompetitionComponent }
@@ -60,6 +61,11 @@ export default class UserRolesCompetitions extends Vue {
 
   created() {
     this.getCompetitions(this.selectedRole)
+  }
+
+  getRoleName(roleName: RoleName): string {
+    const displayRoleName = getRoleName(roleName)
+    return displayRoleName[0].toUpperCase() + displayRoleName.substr(1)
   }
 
   async getCompetitions(role: RoleName) {

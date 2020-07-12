@@ -15,6 +15,7 @@
               </h1>
             </div>
             <div class="card-content content-judge">
+              <p>Assigner un juge par son nom (sensible à la casse) :</p>
               <div class="content">
                 <SearchUser @select="onSelect" />
               </div>
@@ -42,7 +43,7 @@
               </template>
               <template v-else>
                 <p>
-                  Aucun juges
+                  Aucun juge assigné actuellement
                 </p>
               </template>
               <div class="is-flex buttons-actions">
@@ -57,7 +58,7 @@
                     params: { competitionId }
                   }"
                 >
-                  Gestion de l'image du bloc
+                  Photo du bloc
                 </b-button>
 
                 <b-button
@@ -66,7 +67,7 @@
                   size="is-small"
                   @click="deleteBloc"
                 >
-                  Supprimer bloc
+                  Supprimer ce bloc
                 </b-button>
 
                 <b-button
