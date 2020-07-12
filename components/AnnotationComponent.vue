@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="field">
+    <div v-show="!noInteract" class="field">
       <section>
         <div class="block">
           <b-radio
             v-model="climbingHoldType"
             :disabled="!drawing || !annotationLoaded"
+            :native-value="typeHolds.START"
             name="name"
-            native-value="START"
             type="is-success"
           >
             Début
@@ -15,8 +15,8 @@
           <b-radio
             v-model="climbingHoldType"
             :disabled="!drawing || !annotationLoaded"
+            :native-value="typeHolds.NORMAL"
             name="name"
-            native-value="NORMAL"
             type="is-info"
           >
             Autre
@@ -24,8 +24,8 @@
           <b-radio
             v-model="climbingHoldType"
             :disabled="!drawing || !annotationLoaded"
+            :native-value="typeHolds.ZONE"
             name="name"
-            native-value="ZONE"
             type="is-warning"
           >
             Zone
@@ -33,8 +33,8 @@
           <b-radio
             v-model="climbingHoldType"
             :disabled="!drawing || !annotationLoaded"
+            :native-value="typeHolds.TOP"
             name="name"
-            native-value="TOP"
             type="is-danger"
           >
             Top
@@ -58,12 +58,12 @@
       <v-annotator
         v-if="holds !== null && img !== null"
         :drawing="drawing && annotationLoaded"
+        :height="img && img.height"
         :grid="[0, 0]"
-        :height="img.height"
+        :width="img && img.width"
         :min-size="[5, 5]"
         :no-interact="noInteract"
         :no-select="false"
-        :width="img.width"
         @click.native.ctrl="tryChangeBoxColor"
         @draw-end="drawFinish"
         @select="tryDeleteBox"
@@ -72,7 +72,7 @@
         <img
           v-if="img !== null"
           id="imgBlock"
-          :src="img.url"
+          :src="img && img.url"
           draggable="false"
           height="100%"
           width="100%"
@@ -103,7 +103,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import VAnnotator from 'vue-annotator'
 import { ApiHelper } from '~/utils/api_helper/apiHelper'
 import { APIBoulderPicture, APIHolds, TypeHolds } from '~/definitions'
@@ -113,16 +113,15 @@ import { AxiosHelper } from '~/utils/axiosHelper'
 export default class AnnotationComponent extends Vue {
   @Prop(Object) img!: APIBoulderPicture
   @Prop(Number) competitionId!: number
+  @Prop(Number) roundId!: number
+  @Prop(Number) groupId!: number
+  @Prop(Number) boulderId!: number
+  @Prop(Boolean) noInteract!: boolean
 
-  oldImg: APIBoulderPicture | null = null
-
-  roundId!: number
-  groupId!: number
-  boulderId!: number
+  typeHolds = TypeHolds
 
   deleting = false
   drawing = true
-  noInteract = false
 
   cursor = 'auto'
   climbingHoldType = TypeHolds.START
@@ -130,16 +129,16 @@ export default class AnnotationComponent extends Vue {
   holds: APIHolds | null = null
   annotationLoaded = false
 
-  @Watch('oldImg')
-  onUpdateImg() {
-    this.holdsInterval()
-  }
-
-  created() {
-    this.oldImg = this.img
-    this.roundId = parseInt(this.$route.query.roundId as string, 10)
-    this.boulderId = parseInt(this.$route.query.boulderId as string, 10)
-    this.groupId = parseInt(this.$route.query.groupId as string, 10)
+  mounted() {
+    this.roundId = this.roundId
+      ? this.roundId
+      : parseInt(this.$route.query.roundId as string, 10)
+    this.boulderId = this.boulderId
+      ? this.boulderId
+      : parseInt(this.$route.query.boulderId as string, 10)
+    this.groupId = this.groupId
+      ? this.groupId
+      : parseInt(this.$route.query.groupId as string, 10)
 
     this.holdsInterval()
   }

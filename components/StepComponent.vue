@@ -155,9 +155,9 @@
                 Status
               </span>
               <b-tag
-                :type="[
+                :type="
                   selectedRound.state !== 'ENDED' ? 'is-primary' : 'is-danger'
-                ]"
+                "
               >
                 {{ stateRound[selectedRound.state] }}
               </b-tag>

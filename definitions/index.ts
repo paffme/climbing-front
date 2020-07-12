@@ -525,7 +525,7 @@ export enum TypeHolds {
 export type APIHolds = {
   boundingBoxes: [
     {
-      coordinates: Array<number>
+      coordinates?: Array<number>
       type: TypeHolds
     }
   ]
