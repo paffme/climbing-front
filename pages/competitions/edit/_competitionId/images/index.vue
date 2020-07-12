@@ -22,6 +22,7 @@
           :group-id="groupId"
           :img="picture"
           :round-id="roundId"
+          :is-edition="false"
           :no-interact="false"
         />
       </div>

@@ -14,6 +14,7 @@
                 :boulder-id="boulder.id"
                 :competition-id="competitionId"
                 :img="boulder.img"
+                :is-edition="true"
                 :no-interact="true"
               />
             </template>
