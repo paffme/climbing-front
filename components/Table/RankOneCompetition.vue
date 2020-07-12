@@ -28,7 +28,9 @@
           <p>
             <b-icon icon="emoticon-sad" size="is-large" />
           </p>
-          <p>Aucun participant.</p>
+          <p>
+            Aucun participant.
+          </p>
         </div>
       </section>
     </template>
@@ -317,11 +319,7 @@ export default class RankOneCompetition extends Vue {
   }
 
   refreshRankData(sex: Sex, category: CategoryName) {
-    console.log('refreshData - sex :', sex)
-    console.log('refreshData - category :', category)
-    console.log('refreshData - this.datas :', this.datas)
     this.data = this.datas?.[category]?.[sex]
-    console.log('this.data', this.data)
   }
 }
 </script>

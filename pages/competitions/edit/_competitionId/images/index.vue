@@ -2,10 +2,16 @@
   <div class="columns is-multiline">
     <div class="column is-12">
       <div class="notification content is-warning">
-        <p>Gestion de l'apercu du bloc</p>
+        <p>
+          Gestion de l'apercu du bloc
+        </p>
         <ol>
-          <li>Uploader la photo</li>
-          <li>Une fois uploader la photo les blocs seront reconnus par l'IA</li>
+          <li>
+            Uploader la photo
+          </li>
+          <li>
+            Une fois uploader la photo les blocs seront reconnus par l'IA
+          </li>
         </ol>
       </div>
     </div>
@@ -44,7 +50,9 @@
                 <p>
                   <b-icon icon="upload" size="is-large" />
                 </p>
-                <p>Ajouter une image ici</p>
+                <p>
+                  Ajouter une image ici
+                </p>
               </div>
             </section>
           </b-upload>
@@ -125,8 +133,6 @@ export default class ImagePage extends Vue {
       )
       this.picture = photo.data
       this.isLoading = false
-
-      console.log(photo.data.url)
     } catch (err) {
       this.isLoading = false
       console.log('err', err)

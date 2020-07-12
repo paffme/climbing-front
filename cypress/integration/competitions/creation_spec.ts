@@ -59,7 +59,6 @@ describe("Test for Creation of Competition", () => {
     cy.get(".create-competition").click();
 
     cy.url().should(($url) => {
-      console.log("Cypress.config().baseUrl=" + Cypress.config().baseUrl);
 
       expect($url.replace(Cypress.config().baseUrl as string, ""))
         .match(new RegExp("competitions/\\d+"));

@@ -3,8 +3,10 @@
     <template v-if="role">
       <b-tab-item>
         <template slot="header">
-          <b-icon icon="information-outline"></b-icon>
-          <span> Configuration </span>
+          <b-icon icon="information-outline"> </b-icon>
+          <span>
+            Configuration
+          </span>
         </template>
         <template v-if="competition">
           <CompetitionForm
@@ -16,8 +18,10 @@
 
       <b-tab-item v-if="!role.judge || role.juryPresident">
         <template slot="header">
-          <b-icon icon="source-pull"></b-icon>
-          <span> Roles </span>
+          <b-icon icon="source-pull"> </b-icon>
+          <span>
+            Roles
+          </span>
         </template>
         <template>
           <div
@@ -43,8 +47,10 @@
         "
       >
         <template slot="header">
-          <b-icon icon="information-outline"></b-icon>
-          <span>Tours</span>
+          <b-icon icon="information-outline"> </b-icon>
+          <span>
+            Tours
+          </span>
         </template>
         <template>
           <div id="boulder-settings">
@@ -60,8 +66,10 @@
 
       <b-tab-item v-if="role.judge || role.juryPresident">
         <template slot="header">
-          <b-icon icon="information-outline"></b-icon>
-          <span>Ajout de résultat</span>
+          <b-icon icon="information-outline"> </b-icon>
+          <span>
+            Ajout de résultat
+          </span>
         </template>
         <p class="content notification has-text-centered">
           Veuillez selectionner la compétition que vous souhaitez juger
@@ -75,8 +83,10 @@
 
       <b-tab-item v-if="role.juryPresident">
         <template slot="header">
-          <b-icon icon="information-outline"></b-icon>
-          <span>Vue globale des résultats</span>
+          <b-icon icon="information-outline"> </b-icon>
+          <span>
+            Vue globale des résultats
+          </span>
         </template>
         <BulkResultStepComponent
           :is-bulk="isBulk"

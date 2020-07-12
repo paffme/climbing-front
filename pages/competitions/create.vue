@@ -19,7 +19,9 @@
               </nuxt-link>
             </li>
             <li class="is-active">
-              <a href="#" aria-current="page">Création</a>
+              <a href="#" aria-current="page">
+                Création
+              </a>
             </li>
           </ul>
         </nav>
@@ -49,14 +51,12 @@ import { AxiosHelper } from '~/utils/axiosHelper'
 })
 export default class CompetitionCreate extends Vue {
   async onCreateCompetition(competition: Competition) {
-    console.log('onCreateCompetition', competition)
     try {
       const newCompetition = await ApiHelper.CreateCompetition(competition)
       this.$buefy.toast.open({
         type: 'is-success',
         message: 'Compétition créée'
       })
-      console.log('newCOmpetition', newCompetition.data)
       this.$router.push(`/competitions/${newCompetition.data.id}`)
     } catch (err) {
       AxiosHelper.HandleAxiosError(this, err)

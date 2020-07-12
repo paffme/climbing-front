@@ -34,7 +34,7 @@
                 </b-radio>
               </b-field>
               <b-field label="Email" required>
-                <b-input v-model="credentials.email" class="email"></b-input>
+                <b-input v-model="credentials.email" class="email"> </b-input>
               </b-field>
               <b-field grouped group-multiline>
                 <b-field label="Prénom" required>
@@ -51,7 +51,7 @@
                 </b-field>
               </b-field>
               <b-field label="club">
-                <b-input v-model="credentials.club" class="club"></b-input>
+                <b-input v-model="credentials.club" class="club"> </b-input>
               </b-field>
               <b-field label="Année de naissance">
                 <b-select

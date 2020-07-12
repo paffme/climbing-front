@@ -166,7 +166,6 @@ export default class FormRoundCompetition extends Vue {
   }
 
   updateMaxGroups() {
-    console.log('this.Form.input.type', this.Form.input.type)
     this.maxGroups =
       this.Form.input.type === TypeBoulderingRound.QUALIFIER ? 2 : 1
 

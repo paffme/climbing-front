@@ -14,7 +14,9 @@
     </template>
     <template v-else>
       <div class="notification">
-        <p>Vous n'êtes inscrit a aucune compétition</p>
+        <p>
+          Vous n'êtes inscrit a aucune compétition
+        </p>
       </div>
     </template>
   </div>

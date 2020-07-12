@@ -172,7 +172,6 @@ export default class RoundsRankPage extends Vue {
         this.competition.id,
         roundId
       )
-      console.log('result', result)
       return result.data
     } catch (err) {
       // AxiosHelper.HandleAxiosError(this, err)
@@ -191,8 +190,6 @@ export default class RoundsRankPage extends Vue {
         this.competition.id,
         roundId
       )
-
-      console.log('fetchGroups - result', result)
       return result.data
     } catch (err) {
       // AxiosHelper.HandleAxiosError(this, err)
@@ -206,8 +203,6 @@ export default class RoundsRankPage extends Vue {
       genre: (this.$route.query.genre as string) || undefined,
       phase: (this.$route.query.type as any) || undefined
     }
-
-    console.log('buildQuery', query)
 
     return query
   }

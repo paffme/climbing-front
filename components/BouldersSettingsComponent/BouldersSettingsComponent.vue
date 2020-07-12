@@ -183,7 +183,6 @@ export default class BouldersSettingsComponent extends Vue {
 
   // .DATA
   categoriesCanBeSelected: CategoriesSelect[] | null = null
-  currentCategoryDisplay: CurrentCategory | null = null
   categoriesDisplayed: CategoryDisplay = {
     qualification: null,
     semi: null,
@@ -198,7 +197,6 @@ export default class BouldersSettingsComponent extends Vue {
   async onCreateRound(value: any) {
     try {
       const data = this.roundCreateDto(value)
-      console.log('data', data)
       if (!data) throw new Error('Des champs sont manquants')
       await ApiHelper.AddRound(this.competitionId, data)
       this.$buefy.toast.open({
@@ -292,7 +290,6 @@ export default class BouldersSettingsComponent extends Vue {
 
   updateDisplayedCategories(categories?: CurrentCategory): void {
     if (!this.rounds) {
-      console.log('No boulder has been found')
       return
     }
 
@@ -374,7 +371,6 @@ export default class BouldersSettingsComponent extends Vue {
   roundCreateDto(
     round: BoulderingRoundInput
   ): BoulderingRoundCreateInput | undefined {
-    console.log('round', round)
     if (
       !round.name ||
       !round.rankingType ||
