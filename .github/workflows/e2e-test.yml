@@ -1,0 +1,37 @@
+name: E2E Test
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+
+    services:
+      backend:
+        image: private docker registry where the backend is at latests tag
+      postgres:
+        image: postgres:12.2
+        env:
+          POSTGRES_USER: paffme
+          POSTGRES_PASSWORD: paffme
+          POSTGRES_DB: paffme
+        ports:
+        - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          --label postgres=postgres
+    steps:
+    - name: Checkout front
+      uses: actions/checkout@v2
+    - name: Install front dependencies
+      run: yarn install
+    - name: Run front build task
+      run: yarn run generate
+    - name: E2E Test
+      run: yarn cypress:run
